@@ -31,23 +31,23 @@ void motor::reset() {
   /* 
    Resets initial position.
    */
-  
+
   calc_pos();
   calc_vel();
   init_pos = cur_pos;
-  #ifdef DEBUG
+#ifdef DEBUG
   Serial.print("\t Motor initialized @ ");
   Serial.println(init_pos);
-  #endif
+#endif
 }
 
 // ------------------------------------------------
 int motor::run(int dir, int pwm) {
   /*
     Runs the motor. Gives 1
-    Checks if trips tripped. If tripped, gives 0
+   Checks if trips tripped. If tripped, gives 0
    */
-  
+
   if ( trip_left != -1 && digitalRead(trip_left) == HIGH ) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
@@ -116,15 +116,15 @@ void motor::set_params(double Kp , double Ki, double Kd , int lim) {
 int motor::goto_pos(float req_pos) {  
   /*
     Goes to the position defined. returns 0 while moving
-    If tripped, return -1
-    If reached, return 1
+   If tripped, return -1
+   If reached, return 1
    */
   calc_pos();
   calc_vel();
   Input = cur_pos;
-  
+
   target_pos = req_pos;
-  
+
   Setpoint = req_pos;
   motor_pid.Compute();
 
@@ -155,11 +155,4 @@ int motor::goto_pos(float req_pos) {
 int motor::goto_pos() {  
   return goto_pos(target_pos);
 }
-
-
-
-
-
-
-
 

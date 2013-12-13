@@ -1,5 +1,7 @@
 #include<PID_v1.h>
 
+#define PC Serial
+
 #define SAMPLE_ANALOG 100.0
 #define PULLEY_RADIUS 1
 #define NUMBER_OF_TURNS 10
@@ -25,7 +27,7 @@ public:
   float vel, vel_turns;
   float target_pos;
   PID motor_pid; // &Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
-  
+
 
   void reset();
   int run(int, int);
@@ -40,41 +42,48 @@ public:
 
 // Motor class - pin1, pin2, pwm, pot, tripL, tripR
 motor ml(28, 29, 12, A0),
-      mr(28, 29, 12, A0);
+mr(28, 29, 12, A0);
 void setup()
 {
-  Serial.begin(115200);
-  Serial.println("Begun");
+  PC.begin(115200);
+  PC.println("Begun");
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  if ( Serial.available() ) {
+
+  if ( PC.available() ) {
+    /*
+      rL - Motor moves to reset position
+     sL - Sets the motor's initial position to current position
+     vL__ - Moves motor with given pwm
+     mL__ - Moves motor to given position (in cm)
+     q - Stops both motors on the spot
+     */
     ui();
-      
+
   }
-  m1.goto_pos();
+  ml.goto_pos();
   mr.goto_pos();  
-  
+
   /*ml.run(1, 70);
-  
-  while(!Serial.available());
-  Serial.read();
-  
-  ml.run(0, 70);
-  ml.reset();
-  ml.set_params(20, 5, 2, 100);
-  
-  //r_motor.calc_pos();
-  
-  while(!Serial.available());
-  Serial.read();
-  while(1) {
-    ml.goto_pos(-8);
-    Serial.println(ml.cur_pos);
-    delay(100);
-  }*/
+   
+   while(!Serial.available());
+   Serial.read();
+   
+   ml.run(0, 70);
+   ml.reset();
+   ml.set_params(20, 5, 2, 100);
+   
+   //r_motor.calc_pos();
+   
+   while(!Serial.available());
+   Serial.read();
+   while(1) {
+   ml.goto_pos(-8);
+   Serial.println(ml.cur_pos);
+   delay(100);
+   }*/
 
 }
 

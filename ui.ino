@@ -1,78 +1,97 @@
 void ui() {
-  char c = Serial.read();
-  
+  char c = PC.read();
+
   // RESET MODE
   if ( c == 'r' ) { 
-    while(!Serial.available());
-    char c2 = Serial.read();
+    while(!PC.available());
+    char c2 = PC.read();
     if ( c2 == 'l' ) {
+      PC.print("Left motor moving to left trip switch ... ");
       while( ml.run(LEFT, 10) );
+      PC.println("DONE");
     } 
     else if ( c2 == 'r' ) {
-      while( mr.run(LEFT, 10) );
+      PC.print("Right motor moving to left trip switch ... ");
+      while( mr.run(RIGHT, 10) );
+      PC.println("DONE");
     }
   }
-  
+
   // SET MODE
   if ( c == 's' ) { 
-    while(!Serial.available());
-    char c2 = Serial.read();
+    while(!PC.available());
+    char c2 = PC.read();
     if ( c2 == 'l' ) {
       ml.reset();
+      PC.print("Left motor init set at ... ");
+      PC.print(ml.init_pos);
+      PC.print("cm = ");
+      PC.print(ml.init_turns);
+      PC.println("turns");
     } 
     else if ( c2 == 'r' ) {
       mr.reset();
+      PC.print("Right motor init set at ... ");
+      PC.print(ml.init_pos);
+      PC.print("cm = ");
+      PC.print(ml.init_turns);
+      PC.println("turns");
     }
   }
 
   // PWM MODE
   else if ( c == 'v' ) { 
-    while(!Serial.available());
-    char c2 = Serial.read();
+    while(!PC.available());
+    char c2 = PC.read();
     if ( c2 == 'l' ) {
-      int vel = Serial.parseInt();
+      int vel = PC.parseInt();
+      PC.print("Left motor moving at pwm = ");
+      PC.print(vel);
+      PC.print(" ... ");
       if ( vel > 0 )
         while( ml.run(RIGHT, vel) );
       else if ( vel < 0 )
         while( ml.run(LEFT, vel) );
+      PC.println("DONE");
     } 
     else if ( c2 == 'r' ) {
-      int vel = Serial.parseInt();
+      int vel = PC.parseInt();
+      PC.print("Right motor moving at pwm = ");
+      PC.print(vel);
+      PC.print(" ... ");
       if ( vel > 0 )
         while( mr.run(RIGHT, vel) );
       else if ( vel < 0 )
         while( mr.run(LEFT, vel) );
+      PC.println("DONE");
     }      
   }
-  
-  // POSITION MODE
-  else if ( c == 'm' ) { 
-    while(!Serial.available());
-    char c2 = Serial.read();
-    if ( c2 == 'l' ) {
-      float pos = Serial.parseFloat();
-      while( ml.goto_pos(pos) );
-    } 
-    else if ( c2 == 'r' ) {
-      float pos = Serial.parseFloat();
-      while( mr.goto_pos(pos) );
-    }
-  } 
 
   // POSITION MODE
-  else if ( c == 's' ) { 
-    while(!Serial.available());
-    char c2 = Serial.read();
+  else if ( c == 'm' ) { 
+    while(!PC.available());
+    char c2 = PC.read();
     if ( c2 == 'l' ) {
-      ml.run(STOP, 255);
+      float pos = PC.parseFloat();
+      PC.println("Left motor moving to postion = ");
+      PC.print(pos);
+      PC.print(" ... ");
+      while( ml.goto_pos(pos) );
+      PC.println("DONE");
     } 
     else if ( c2 == 'r' ) {
-      mr.run(STOP, 255);
+      float pos = PC.parseFloat();
+      PC.println("Right motor moving to postion = ");
+      PC.print(pos);
+      PC.print(" ... ");
+      while( mr.goto_pos(pos) );
+      PC.println("DONE");
     }
   } 
 
   // POSITION MODE
   else if ( c == 'q' ) { 
+    PC.println("Both motors STOPPED !");
     ml.run(STOP, 255);
     mr.run(STOP, 255);
   } 
