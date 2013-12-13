@@ -7,8 +7,8 @@
 #define NUMBER_OF_TURNS 10
 double K_FACTOR = 2.0 * PI * PULLEY_RADIUS * 10.0 / 1024.0; // cm / analogVal
 
-#define RIGHT 1
-#define LEFT 2
+#define RIGHT 2
+#define LEFT 1
 #define STOP 0
 //#define DEBUG
 
@@ -41,33 +41,36 @@ public:
 };
 
 // Motor class - pin1, pin2, pwm, pot, tripL, tripR
-motor ml(28, 29, 12, A0),
-mr(28, 29, 12, A0);
+motor ml(28, 29, 12, A0), mr(28, 29, 12, A2);
 void setup()
 {
   PC.begin(115200);
   PC.println("Begun");
-
+  ml.set_params(20, 5, 2, 100);
+  ml.run(STOP, 255); 
+  mr.set_params(20, 5, 2, 100);
+  mr.set_trips(A0,A1);
+  mr.run(STOP, 255); 
 }
 
 void loop() {
-
+  
   if ( PC.available() ) {
     /*
       rL - Motor moves to reset position
      sL - Sets the motor's initial position to current position
      vL__ - Moves motor with given pwm
-     mL__ - Moves motor to given position (in cm)
+     mL__ - Moves motor Mto given position (in cm)
      q - Stops both motors on the spot
      */
     ui();
 
   }
-  ml.goto_pos();
-  mr.goto_pos();  
+//  ml.goto_pos();
+//  mr.goto_pos();  
 
   /*ml.run(1, 70);
-   
+  
    while(!Serial.available());
    Serial.read();
    

@@ -7,12 +7,12 @@ void ui() {
     char c2 = PC.read();
     if ( c2 == 'l' ) {
       PC.print("Left motor moving to left trip switch ... ");
-      while( ml.run(LEFT, 10) == 1 );
+      while( ml.run(LEFT, 70) == 1 );
       PC.println("DONE");
     } 
     else if ( c2 == 'r' ) {
-      PC.print("Right motor moving to left trip switch ... ");
-      while( mr.run(RIGHT, 10) );
+      PC.print("Right motor moving to rightn trip switch ... ");
+      while( mr.run(RIGHT, 70) == 1 );
       PC.println("DONE");
     }
   }
@@ -48,21 +48,45 @@ void ui() {
       PC.print("Left motor moving at pwm = ");
       PC.print(vel);
       PC.print(" ... ");
-      if ( vel > 0 )
-        while( ml.run(RIGHT, vel) );
-      else if ( vel < 0 )
-        while( ml.run(LEFT, vel) );
+      if ( vel > 0 ) {
+        while( mr.run(RIGHT, vel) ) {
+          if ( PC.available() && PC.read() == 'q' ) {
+          ml.run(STOP, 255);
+          break;
+          }
+        }
+      }
+      else if ( vel < 0 ) {
+        while( mr.run(LEFT, vel) ) {
+          if ( PC.available() && PC.read() == 'q' ) {
+          ml.run(STOP, 255);
+          break;
+          }
+        }
+      }
       PC.println("DONE");
-    } 
+    }  
     else if ( c2 == 'r' ) {
       int vel = PC.parseInt();
       PC.print("Right motor moving at pwm = ");
       PC.print(vel);
       PC.print(" ... ");
-      if ( vel > 0 )
-        while( mr.run(RIGHT, vel) );
-      else if ( vel < 0 )
-        while( mr.run(LEFT, vel) );
+      if ( vel > 0 ) {
+        while( mr.run(RIGHT, vel) ) {
+          if ( PC.available() && PC.read() == 'q' ) {
+          ml.run(STOP, 255);
+          break;
+          }
+        }
+      }
+      else if ( vel < 0 ) {
+        while( mr.run(LEFT, vel) ) {
+          if ( PC.available() && PC.read() == 'q' ) {
+          ml.run(STOP, 255);
+          break;
+          }
+        }
+      }
       PC.println("DONE");
     }      
   }
@@ -76,7 +100,12 @@ void ui() {
       PC.println("Left motor moving to postion = ");
       PC.print(pos);
       PC.print(" ... ");
-      ml.goto_pos(pos);
+      while ( ml.goto_pos(pos) != 1 ) {
+        if ( PC.available() && PC.read() == 'q' ) {
+          ml.run(STOP, 255);
+          break;
+        }
+      };
       //      PC.println("DONE");
     } 
     else if ( c2 == 'r' ) {
@@ -84,7 +113,12 @@ void ui() {
       PC.println("Right motor moving to postion = ");
       PC.print(pos);
       PC.print(" ... ");
-      mr.goto_pos(pos);
+      while ( mr.goto_pos(pos) != 1 ) {
+        if ( PC.available() && PC.read() == 'q' ) {
+          mr.run(STOP, 255);
+          break;
+        }
+      };
       //      PC.println("DONE");
     }
   } 
@@ -95,7 +129,6 @@ void ui() {
     ml.run(STOP, 255);
     mr.run(STOP, 255);
   } 
-
 }
 
 

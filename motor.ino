@@ -13,17 +13,18 @@ motor::motor(int p1,int p2, int p, int pot) {
   pinMode(pin2, OUTPUT);
   pinMode(pwm_pin, OUTPUT);
   pinMode(pot_pin, INPUT);
+  run(STOP, 255);
 
   trip_left = -1;
   trip_right = -1;
-  lim = 5;
+  pwm_lim = 5;
   Kp = 0.01;
   Ki = Kd = 0;  
 
   motor_pid.init(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
   motor_pid.SetMode(AUTOMATIC);
   motor_pid.SetTunings(Kp, Ki, Kd);
-  motor_pid.SetOutputLimits(-lim, lim);
+  motor_pid.SetOutputLimits(-pwm_lim, pwm_lim);
 }
 
 // ------------------------------------------------
@@ -31,9 +32,9 @@ void motor::reset() {
   /* 
    Resets initial position.
    */
-
+  init_pos = 0;
   calc_pos();
-  calc_vel();
+  //calc_vel();
   init_pos = cur_pos;
 #ifdef DEBUG
   Serial.print("\t Motor initialized @ ");
@@ -47,24 +48,39 @@ int motor::run(int dir, int pwm) {
     Runs the motor. Gives 1
    Checks if trips tripped. If tripped, gives 0
    */
+  calc_pos();
 
-  if ( trip_left != -1 && digitalRead(trip_left) == HIGH ) {
+  if ( trip_left != -1 && digitalRead(trip_left) == HIGH && dir==LEFT) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
+//#ifdef DEBUG
+   // Serial.println("\t Trip switch LEFT pressed for some motor ! ");
+//#endif
     return 0;
   } 
-  if ( trip_right != -1 && digitalRead(trip_right) == HIGH ) {
+  if ( trip_right != -1 && digitalRead(trip_right) == HIGH && dir==RIGHT ) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
+//#ifdef DEBUG
+ //   Serial.println("\t Trip switch RIGHT pressed for some motor ! ");
+//#endif
     return 0;
   }
+#ifdef DEBUG
+//  Serial.print("\t Running motor at pwm = ");
+//  Serial.print(pwm);
+  //Serial.print("\t it is now at : ");
+  Serial.print("Current position ");
+  Serial.println(cur_pos);
+#endif
 
   digitalWrite(pin1, dir / 2);
   digitalWrite(pin2, dir % 2);
   analogWrite(pwm_pin, pwm);
   return 1;
+
 }
 
 // ------------------------------------------------
@@ -79,7 +95,12 @@ void motor::calc_pos() {
 
   cur_pos = cur_turns * K_FACTOR;
   cur_pos -= init_pos;  
-
+  #ifdef DEBUG
+    /*Serial.print("Current position ");
+    Serial.print(cur_pos);
+    Serial.print(" Current turns ");
+    Serial.print(cur_turns);*/
+  #endif
 }
 
 // ------------------------------------------------
@@ -128,8 +149,12 @@ int motor::goto_pos(float req_pos) {
    If reached, return 1
    */
   calc_pos();
-  calc_vel();
+  //calc_vel();
   Input = cur_pos;
+  if(abs(req_pos-cur_pos)<0.5) {
+    run(STOP, 255);
+    return 1;
+  }
 
   target_pos = req_pos;
 
@@ -142,19 +167,19 @@ int motor::goto_pos(float req_pos) {
   Serial.print("\t Setpoint ");
   Serial.print(Setpoint);
   Serial.print("\t Output ");
-  Serial.print(Output);
+  Serial.println(Output);
 #endif
 
   if (Output > 0) {
-    if( run(1, Output) == 0 )
+    if( run(RIGHT, Output) == 0 )
       return -1; 
   }
   else if (Output < 0) {
-    if( run(2, -Output) == 0 )
+    if( run(LEFT, -Output) == 0 )
       return -1; 
   }
   else {
-    run(STOP, 255)
+    run(STOP, 255);
     return 1;
   }
   return 0;
