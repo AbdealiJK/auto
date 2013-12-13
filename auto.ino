@@ -8,17 +8,16 @@
 double K_FACTOR = 2.0 * PI * PULLEY_RADIUS * 10.0 / 1024.0; // cm / analogVal
 
 #define RIGHT 1
-#define LEFT  2
+#define LEFT 2
 #define STOP 0
-//#define DEBUG false
+//#define DEBUG
 
 class motor {
 private:
   long long int time_prev;
   float prev_pos, prev_turns;
   int pin1, pin2, pwm_pin, pot_pin;
-  //   double Input,Output,Setpoint,Kp,Ki,Kd;
-  int lim, trip_left, trip_right;
+  int pwm_lim, trip_left, trip_right;
   double Input, Output, Setpoint, Kp, Ki, Kd;
 
 public:
@@ -36,6 +35,7 @@ public:
   void set_trips(int, int);
   int goto_pos(float);
   int goto_pos();
+  void set_params(double, double, double);
   void set_params(double, double, double, int);
   motor(int, int, int, int); // pin1, pin2, pwm, pot
 };
@@ -86,4 +86,5 @@ void loop() {
    }*/
 
 }
+
 

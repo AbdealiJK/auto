@@ -7,7 +7,7 @@ void ui() {
     char c2 = PC.read();
     if ( c2 == 'l' ) {
       PC.print("Left motor moving to left trip switch ... ");
-      while( ml.run(LEFT, 10) );
+      while( ml.run(LEFT, 10) == 1 );
       PC.println("DONE");
     } 
     else if ( c2 == 'r' ) {
@@ -76,16 +76,16 @@ void ui() {
       PC.println("Left motor moving to postion = ");
       PC.print(pos);
       PC.print(" ... ");
-      while( ml.goto_pos(pos) );
-      PC.println("DONE");
+      ml.goto_pos(pos);
+      //      PC.println("DONE");
     } 
     else if ( c2 == 'r' ) {
       float pos = PC.parseFloat();
       PC.println("Right motor moving to postion = ");
       PC.print(pos);
       PC.print(" ... ");
-      while( mr.goto_pos(pos) );
-      PC.println("DONE");
+      mr.goto_pos(pos);
+      //      PC.println("DONE");
     }
   } 
 
@@ -97,4 +97,5 @@ void ui() {
   } 
 
 }
+
 

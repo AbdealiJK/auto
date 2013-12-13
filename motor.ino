@@ -104,7 +104,15 @@ void motor::set_trips(int l, int r) {
 }
 
 // ------------------------------------------------
-void motor::set_params(double Kp , double Ki, double Kd , int lim) {  
+void motor::set_params(double Kp, double Ki, double Kd) {  
+  /*
+    Sets pid params
+   */
+  motor_pid.SetTunings(Kp, Ki, Kd);
+}
+
+// ------------------------------------------------
+void motor::set_params(double Kp, double Ki, double Kd, int lim) {  
   /*
     Sets pid params
    */
@@ -140,12 +148,13 @@ int motor::goto_pos(float req_pos) {
   if (Output > 0) {
     if( run(1, Output) == 0 )
       return -1; 
-  } 
+  }
   else if (Output < 0) {
     if( run(2, -Output) == 0 )
       return -1; 
-  } 
+  }
   else {
+    run(STOP, 255)
     return 1;
   }
   return 0;
