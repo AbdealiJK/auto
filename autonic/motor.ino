@@ -1,5 +1,5 @@
 // ------------------------------------------------
-motor::motor(int p1,int p2, int p, int aut, int tl, int tr) {
+motor::motor(int p1,int p2, int p, int aut, int pist, int tl, int tr) {
   /*  // pin1, pin2, pwm, autonic, trip_left, trip_right
    Sets the pins 
    Initiates dummy values
@@ -9,6 +9,7 @@ motor::motor(int p1,int p2, int p, int aut, int tl, int tr) {
   pin2 = p2;
   pwm_pin = p;
   autonic_pin = aut;
+  piston_pin = pist;
   trip_left = tl;
   trip_right = tr;
   
@@ -16,12 +17,23 @@ motor::motor(int p1,int p2, int p, int aut, int tl, int tr) {
   pinMode(pin2, OUTPUT);
   pinMode(pwm_pin, OUTPUT);
   pinMode(autonic_pin, INPUT);
+  pinMode(piston_pin, OUTPUT);
   pinMode(trip_left, INPUT);
   pinMode(trip_right, INPUT);
   run(STOP, 255);
-
-  trip_left = -1;
-  trip_right = -1;
+  if ( autonic_pin == 2 )
+    attachInterrupt(0, posr, RISING);
+  else if ( autonic_pin == 3 )
+    attachInterrupt(1, posr, RISING);
+/*  else if ( autonic_pin == 18 )
+    attachInterrupt(1, calc_pos);
+  else if ( autonic_pin == 19 )
+    attachInterrupt(1, calc_pos);
+  else if ( autonic_pin == 20 )
+    attachInterrupt(1, calc_pos);
+  else if ( autonic_pin == 21 )
+    attachInterrupt(1, calc_pos);
+*/
   pwm_lim = 5;
   Kp = 0.01;
   Ki = Kd = 0;  
@@ -31,9 +43,9 @@ motor::motor(int p1,int p2, int p, int aut, int tl, int tr) {
   motor_pid.SetTunings(Kp, Ki, Kd);
   motor_pid.SetOutputLimits(-pwm_lim, pwm_lim);
 
-#ifdef DEBUG
-  Serial.println("\t Motor class initiated ");
-#endif
+//#ifdef DEBUG
+//  PC.println("\t Motor class initiated ");
+//#endif
 }          
 
 // ------------------------------------------------
@@ -43,9 +55,9 @@ void motor::reset() {
    */
   pos = 0;
 
-#ifdef DEBUG
-  Serial.println("\t Motor position reset to 0");
-#endif
+//#ifdef DEBUG
+//  PC.println("\t Motor position reset to 0");
+//#endif
 }
 
 // ------------------------------------------------
@@ -60,26 +72,26 @@ int motor::run(int dir, int pwm) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
-#ifdef DEBUG
-    Serial.println("\t Trip switch LEFT pressed for some motor ! ");
-#endif
+//#ifdef DEBUG
+//    PC.println("\t Trip switch LEFT pressed for some motor ! ");
+//#endif
     return 0;
   } 
   if ( trip_right != -1 && digitalRead(trip_right) == HIGH && dir==RIGHT ) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
-#ifdef DEBUG
-    Serial.println("\t Trip switch RIGHT pressed for some motor ! ");
-#endif
+//#ifdef DEBUG
+//    PC.println("\t Trip switch RIGHT pressed for some motor ! ");
+//#endif
     return 0;
   }
-#ifdef DEBUG
-  Serial.print("\t Running motor at pwm = ");
-  Serial.print(pwm);
-  Serial.print("\t Current position ");
-  Serial.println(cur_pos);
-#endif
+//#ifdef DEBUG
+//  PC.print("\t Running motor at pwm = ");
+//  PC.println(pwm);
+//  PC.print("\t Current position ");
+//  PC.println(pos);
+//#endif
 
   digitalWrite(pin1, dir / 2);
   digitalWrite(pin2, dir % 2);
@@ -106,12 +118,30 @@ void motor::calc_pos() {
   if ( temp > SAMPLE_LENGTH/2 )
     pos ++;
 
-#ifdef DEBUG
-  /*Serial.print("Current position ");
-   Serial.print(cur_pos);
-   Serial.print(" Current turns ");
-   Serial.print(cur_turns);*/
-#endif
+//#ifdef DEBUG
+//   PC.print("Current position ");
+//   PC.print(cur_pos);
+//   PC.print(" Current turns ");
+//   PC.print(cur_turns);
+//#endif
+}
+
+// ------------------------------------------------
+void motor::piston(int v) {  
+  /*
+    Actuates the piston depending on the value given
+   */
+  digitalWrite(piston_pin, v == CLOSE);
+    
+  
+//#ifdef DEBUG
+//  if ( v == OPEN )
+//    PC.print("Piston opened ");
+//  else if ( v == CLOSE )
+//    PC.print("Piston closed ");
+//  else
+//    PC.print("Unknown input, Piston closed ");
+//#endif
 }
 
 // ------------------------------------------------
@@ -148,14 +178,14 @@ int motor::goto_pos() {
 */
   motor_pid.Compute();
   
-#ifdef DEBUG
-  Serial.print("\t Input ");
-  Serial.print(Input);
-  Serial.print("\t Setpoint ");
-  Serial.print(Setpoint);
-  Serial.print("\t Output ");
-  Serial.println(Output);
-#endif
+//#ifdef DEBUG
+//  PC.print("\t Input ");
+//  PC.print(Input);
+//  PC.print("\t Setpoint ");
+//  PC.print(Setpoint);
+//  PC.print("\t Output ");
+//  PC.println(Output);
+//#endif
 
   if (Output > 0) {
     if( run(RIGHT, Output) == 0 )

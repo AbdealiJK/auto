@@ -8,14 +8,24 @@ void ui() {
     char c2 = PC.read();
     if ( c2 == 'l' ) {
       PC.print("Left motor moving to left trip switch ... ");
-      while( ml.run(LEFT, 50) == 1 );
+      while( ml.run(LEFT, 50) == 1 ){
+        if ( PC.available() && PC.read() == 'q' ) {
+          mr.run(STOP, 255);
+          break;
+        }
+      }
       PC.println("DONE");
       ml.reset();
       PC.println("Left motor pos set back to 0 ");
     } 
     else if ( c2 == 'r' ) {
       PC.print("Right motor moving to right trip switch ... ");
-      while( mr.run(RIGHT, 50) == 1 );
+      while( mr.run(RIGHT, 50) == 1 ){
+        if ( PC.available() && PC.read() == 'q' ) {
+          mr.run(STOP, 255);
+          break;
+        }
+      }
       PC.println("DONE");
       mr.reset();
       PC.println("Right motor pos set at 0 ");
@@ -41,13 +51,11 @@ void ui() {
     while(!PC.available());
     char c2 = PC.read();
     if ( c2 == 'l' ) {
-      ml.calc_pos();
       PC.print("Motor LEFT ");
       PC.print("\t Position = ");
       PC.println(ml.pos);
     } 
     else if ( c2 == 'r' ) {
-      mr.calc_pos();
       PC.print("Motor RIGHT ");
       PC.print("\t Position = ");
       PC.println(mr.pos);
@@ -119,12 +127,68 @@ void ui() {
     }
   } 
 
+  // ACTUATIONS
+  if ( c == 'p' ) { 
+    while(!PC.available());
+    char c2 = PC.read();
+    if ( c2 == 'l' ) {
+      while(!PC.available());
+      char c3 = PC.read();
+      if ( c3 == 'c' ) {
+        PC.println("Closing piston LEFT ");
+        ml.piston(CLOSE);
+      } 
+      else {
+        PC.println("Opening piston LEFT ");
+        ml.piston(OPEN);
+      }
+    } 
+    else if ( c2 == 'r' ) {
+      while(!PC.available());
+      char c3 = PC.read();
+      if ( c3 == 'c' ) {
+        PC.println("Closing piston RIGHT ");
+        mr.piston(CLOSE);
+      } 
+      else {
+        PC.println("Opening piston RIGHT ");
+        mr.piston(OPEN);
+      }
+    }   
+    else if ( c2 == 'x' ) {
+      while(!PC.available());
+      char c3 = PC.read();
+      if ( c3 == 'c' ) {
+        PC.println("Closing piston BOTH ");
+        mr.piston(CLOSE);
+        ml.piston(CLOSE);
+      } 
+      else {
+        PC.println("Opening piston BOTH ");
+        mr.piston(OPEN);
+        ml.piston(OPEN);
+      }
+    }   
+  }
+
   // POSITION MODE
   else if ( c == 'q' ) { 
     PC.println("Both motors STOPPED !");
     ml.run(STOP, 255);
     mr.run(STOP, 255);
   } 
-  while(Serial.available());
-  Serial.read();
+  
+  // POSITION MODE
+  else if ( c == 'z' ) { 
+    PC.println("Both motors STOPPED !");
+    ml.run(STOP, 255);
+    mr.run(STOP, 255);
+    ml.piston(OPEN);
+    mr.piston(OPEN);
+  } 
+  
+  while(PC.available());
+  PC.read();
 }
+
+

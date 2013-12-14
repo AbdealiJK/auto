@@ -12,23 +12,26 @@ double K_FACTOR = 2.0 * PI * PULLEY_RADIUS * 10.0 / 1024.0; // cm / analogVal
 #define RIGHT 2
 #define LEFT 1
 #define STOP 0
+#define OPEN 1
+#define CLOSE 0
 
 
 class motor {
 
 public:
-  int pin1, pin2, pwm_pin, autonic_pin;
+  int pin1, pin2, pwm_pin, autonic_pin, piston_pin;
   int pwm_lim, trip_left, trip_right;
   double Input, Output, Setpoint, Kp, Ki, Kd;
 
   float pos;
   PID motor_pid; // &Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 
-  motor(int, int, int, int, int, int); // pin1, pin2, pwm, autonic, trip_left, trip_right
+  motor(int, int, int, int, int, int, int); // pin1, pin2, pwm, autonic, trip_left, trip_right
   void reset();
   int run(int, int);
   int stop();
   void calc_pos();
+  void piston(int);
   int goto_pos(int);
   int goto_pos();
   void set_params(double, double, double);
@@ -37,8 +40,8 @@ public:
 
 
 
-// Motor class - pin1, pin2, pwm, pot, tripL, tripR
-motor ml(28, 29, 12, A2, A0, A1), mr(28, 29, 12, A2, A0, A1);
+// Motor class - pin1, pin2, pwm, autonic, piston, tripL, tripR
+motor ml(28, 29, 55, A2, 41, A0, A1), mr(28, 29, 12, 3, 43, A0, A1);
 void setup()
 {
   PC.begin(115200);
@@ -49,6 +52,14 @@ void setup()
   mr.set_params(50, 0, 0, 100);
   mr.run(STOP, 255); 
 }
+
+void posr() {
+  mr.calc_pos();
+}
+void posl() {
+  ml.calc_pos();
+}
+
 void loop() {
 
   if ( PC.available() ) {
