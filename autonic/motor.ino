@@ -1,5 +1,5 @@
 // ------------------------------------------------
-motor::motor(int p1,int p2, int p, int pot) {
+motor::motor(int p1,int p2, int p, int aut) {
   /* 
    Sets the pins 
    Initiates dummy values
@@ -8,11 +8,11 @@ motor::motor(int p1,int p2, int p, int pot) {
   pin1 = p1;
   pin2 = p2;
   pwm_pin = p;
-  pot_pin = pot;
+  autonic_pin = aut;
   pinMode(pin1, OUTPUT);
   pinMode(pin2, OUTPUT);
   pinMode(pwm_pin, OUTPUT);
-  pinMode(pot_pin, INPUT);
+  pinMode(autonic_pin, INPUT);
   run(STOP, 255);
 
   trip_left = -1;
@@ -25,20 +25,21 @@ motor::motor(int p1,int p2, int p, int pot) {
   motor_pid.SetMode(AUTOMATIC);
   motor_pid.SetTunings(Kp, Ki, Kd);
   motor_pid.SetOutputLimits(-pwm_lim, pwm_lim);
-}
-
+  
+#ifdef DEBUG
+  Serial.println("\t Motor class initiated ");
+#endif
+}          
+           
 // ------------------------------------------------
 void motor::reset() {
   /* 
    Resets initial position.
    */
   init_pos = 0;
-  calc_pos();
-  //calc_vel();
-  init_pos = cur_pos;
+  
 #ifdef DEBUG
-  Serial.print("\t Motor initialized @ ");
-  Serial.println(init_pos);
+  Serial.println("\t Motor position reset ");
 #endif
 }
 
@@ -46,34 +47,36 @@ void motor::reset() {
 int motor::run(int dir, int pwm) {
   /*
     Runs the motor. Gives 1
-   Checks if trips tripped. If tripped, gives 0
+    Checks if trips tripped. If tripped, gives 0
    */
-  calc_pos();
+//  calc_pos();
 
   if ( trip_left != -1 && digitalRead(trip_left) == HIGH && dir==LEFT) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
-//#ifdef DEBUG
-   // Serial.println("\t Trip switch LEFT pressed for some motor ! ");
-//#endif
+    //#ifdef DEBUG
+    // Serial.println("\t Trip switch LEFT pressed for some motor ! ");
+    //#endif
     return 0;
   } 
   if ( trip_right != -1 && digitalRead(trip_right) == HIGH && dir==RIGHT ) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
-//#ifdef DEBUG
- //   Serial.println("\t Trip switch RIGHT pressed for some motor ! ");
-//#endif
+    //#ifdef DEBUG
+    //   Serial.println("\t Trip switch RIGHT pressed for some motor ! ");
+    //#endif
     return 0;
   }
 #ifdef DEBUG
-//  Serial.print("\t Running motor at pwm = ");
-//  Serial.print(pwm);
+  //  Serial.print("\t Running motor at pwm = ");
+  //  Serial.print(pwm);
   //Serial.print("\t it is now at : ");
-  Serial.print("Current position ");
-  Serial.println(cur_pos);
+//  Serial.print("Current position ");
+  Serial.print(cur_pos);
+//  Serial.print("    --- v: ");
+//  Serial.println(vel_turns);
 #endif
 
   digitalWrite(pin1, dir / 2);
@@ -92,15 +95,18 @@ void motor::calc_pos() {
     cur_turns += analogRead(pot_pin);
   }
   cur_turns /= SAMPLE_ANALOG;
-
   cur_pos = cur_turns * K_FACTOR;
+  cur_turns /= 102.4;
   cur_pos -= init_pos;  
-  #ifdef DEBUG
-    /*Serial.print("Current position ");
-    Serial.print(cur_pos);
-    Serial.print(" Current turns ");
-    Serial.print(cur_turns);*/
-  #endif
+
+  calc_vel();
+  
+#ifdef DEBUG
+  /*Serial.print("Current position ");
+   Serial.print(cur_pos);
+   Serial.print(" Current turns ");
+   Serial.print(cur_turns);*/
+#endif
 }
 
 // ------------------------------------------------
@@ -108,9 +114,15 @@ void motor::calc_vel() {
   /*
     Sets velocities
    */
-  vel_turns = (cur_turns - prev_turns) / (micros()-time_prev);
-  vel = (cur_pos - prev_pos) / (micros()-time_prev);
-  time_prev = micros();
+  long long time_cur = micros();
+  vel_turns = (cur_turns - prev_turns) * 1000000.0 * 60.0 / (time_cur-time_prev);
+  vel = (cur_pos - prev_pos) * 1000000.0 * 60.0 / (time_cur-time_prev);
+  
+//  Serial.println(cur_turns);// - prev_turns);
+//  Serial.println(int(time_cur - time_prev));
+//  Serial.println(vel_turns);
+  
+  time_prev = time_cur;
   prev_pos = cur_pos;
   prev_turns = cur_turns;
 } 
@@ -151,7 +163,7 @@ int motor::goto_pos(float req_pos) {
   calc_pos();
   //calc_vel();
   Input = cur_pos;
-  if(abs(req_pos-cur_pos)<0.5) {
+  if( abs( req_pos - cur_pos ) < 0.2) {
     run(STOP, 255);
     return 1;
   }
@@ -189,4 +201,3 @@ int motor::goto_pos(float req_pos) {
 int motor::goto_pos() {  
   return goto_pos(target_pos);
 }
-

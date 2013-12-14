@@ -1,26 +1,28 @@
 #include<PID_v1.h>
 
+//#define DEBUG
+
 #define PC Serial
 
 #define SAMPLE_ANALOG 100.0
-#define PULLEY_RADIUS 1
+#define PULLEY_RADIUS 1.25
 #define NUMBER_OF_TURNS 10
 double K_FACTOR = 2.0 * PI * PULLEY_RADIUS * 10.0 / 1024.0; // cm / analogVal
 
 #define RIGHT 2
 #define LEFT 1
 #define STOP 0
-//#define DEBUG
+
 
 class motor {
-private:
+
+public:
   long long int time_prev;
   float prev_pos, prev_turns;
   int pin1, pin2, pwm_pin, pot_pin;
   int pwm_lim, trip_left, trip_right;
   double Input, Output, Setpoint, Kp, Ki, Kd;
 
-public:
   float init_pos, init_turns;
   float cur_pos, cur_turns;
   float vel, vel_turns;
@@ -40,19 +42,28 @@ public:
   motor(int, int, int, int); // pin1, pin2, pwm, pot
 };
 
+
+
 // Motor class - pin1, pin2, pwm, pot, tripL, tripR
 motor ml(28, 29, 12, A0), mr(28, 29, 12, A2);
 void setup()
 {
   PC.begin(115200);
   PC.println("Begun");
-  ml.set_params(20, 5, 2, 100);
+  ml.set_params(30, 5, 2, 100);
   ml.run(STOP, 255); 
-  mr.set_params(20, 5, 2, 100);
-  mr.set_trips(A0,A1);
+  mr.set_params(30, 5, 2, 100);
+  mr.set_trips(A0, A1);
   mr.run(STOP, 255); 
+  attachInterrupt(1, func, RISING);
 }
-
+float a, m, t, lt, check = 1;
+void func() {
+  a++;
+  check = 0;
+  m = millis();
+  t = mr.cur_pos;
+}
 void loop() {
   
   if ( PC.available() ) {
