@@ -68,7 +68,11 @@ void loop() {
      sL - Sets the motor's initial position to current position
      vL__ - Moves motor with given pwm
      mL__ - Moves motor Mto given position (in cm)
+     wl - printing stuffs
+     plc - close left piston
+     pxc - close both pistons
      q - Stops both motors on the spot
+     z - Stops motors on spot andopens the pistons     
      */
     ui();
 
