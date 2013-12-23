@@ -20,7 +20,7 @@ void ui() {
 
     } 
     else if ( c2 == 'r' ) {
-#ifdef SLAVE    
+#ifdef SLAVE 
       query("rr");
       listen();
 #endif        
@@ -219,8 +219,6 @@ void simple_ui() {
       PC.println("Left motor pos set back to 0 ;");
     } 
     else {
-      NEXT.write(c);
-      listen();
     }
   } 
   else if ( c == '\'' ) {
@@ -237,8 +235,6 @@ void simple_ui() {
       PC.println("Right motor pos set back to 0 ;");
     } 
     else {
-      NEXT.write(c);
-      listen();
     }
   } 
 
@@ -248,8 +244,6 @@ void simple_ui() {
       PC.print("\t Position = ");
       PC.println(m.pos);
       
-      NEXT.write(c);
-      listen();
   }
   
   // PWM MODE
@@ -268,18 +262,17 @@ void simple_ui() {
       PC.println("DONE");
     } else {
       int vel = PC.parseInt();
-      NEXT.print(vel);
-      listen();
     }
   } else if ( c == ';' ) {
-    while(!PC.available())
+    while(!PC.available());
     if ( MY_CLAMP == 'r' ) {
       int vel = PC.parseInt();
       PC.print("Right motor moving at pwm = ");
       PC.print(vel);
       PC.print(" ... ");
       while( m.run( ( vel < 0 ) ? LEFT : RIGHT, abs(vel)) ) {
-        if ( PC.available() && PC.read() == 'q' ) {
+        if ( PC.available() && PC.peek() == 'q' ) {
+          while(PC.available()) PC.println(PC.read());
           m.run(STOP, 255);
           break;
         }
@@ -287,8 +280,6 @@ void simple_ui() {
       PC.println("DONE"); 
     } else {
       int vel = PC.parseInt();
-      NEXT.print(vel);
-      listen();
     }
   }
   
@@ -309,8 +300,6 @@ void simple_ui() {
       PC.println(m.pos);
     } 
     else {
-      NEXT.print(c);
-      listen();
     }
   } else if ( c == '.' ) {
     if ( MY_CLAMP == 'r' ) {
@@ -328,8 +317,6 @@ void simple_ui() {
       PC.println(m.pos);
     } 
     else {
-      NEXT.print(c);
-      listen();
     }
   }
   
@@ -339,32 +326,24 @@ void simple_ui() {
       PC.println("Closing piston left ");
       m.piston(CLOSE);
     } else {
-      NEXT.write(c);
-      listen();
     }
   } else if ( c == '2' ) {
     if ( MY_CLAMP == 'l' ) {
       PC.println("Opening piston left ");
       m.piston(OPEN);
     } else {
-      NEXT.write(c);
-      listen();
     }
   } else if ( c == 'p' ) {
     if ( MY_CLAMP == 'r' ) {
       PC.println("Closing piston right ");
       m.piston(CLOSE);
     } else {
-      NEXT.write(c);
-      listen();
     }
   } else if ( c == '0' ) {
     if ( MY_CLAMP == 'r' ) {
       PC.println("Opening piston right ");
       m.piston(OPEN);
     } else {
-      NEXT.write(c);
-      listen();
     }
   }
   
@@ -372,9 +351,10 @@ void simple_ui() {
   else if ( c == ' ' ) { 
     PC.println("Both motors STOPPED !");
     m.run(STOP, 255);
-    NEXT.write(c);
-    listen();
   }
 
+
+  while( PC.available() )
+    PC.read();
 }
 

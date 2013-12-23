@@ -4,7 +4,7 @@
 
 #define PC Serial
 //#define SLAVE Serial1 //define SLAVE only if you want to control the NEXT clamp
-#define NEXT Serial1    // USe this for simple communication with the NEXT clamp
+#define NEXT Serial1    // Use this for simple communication with the NEXT clamp
 #define SAMPLE_LENGTH 100
 
 #define MY_CLAMP 'r'
@@ -46,7 +46,7 @@ public:
 
 
 // Motor class - pin1, pin2, pwm, autonic, piston, tripL, tripR
-motor m(4, 5, 6, 7, 12, 10, 11);
+motor m(4, 5, 6, 7, 13, -1, 10);
 void setup() {
   PC.begin(9600);
     while (!PC) {
@@ -77,7 +77,8 @@ void loop() {
 
   if ( PC.available() ) {
     /*
-      rL - Motor moves to reset position
+    >>>>> UI
+     rL - Motor moves to reset position
      sL - Sets the motor's initial position to current position
      vL__ - Moves motor with given pwm
      mL__ - Moves motor Mto given position (in cm)
@@ -87,9 +88,10 @@ void loop() {
      q - Stops both motors on the spot
      z - Stops motors on spot andopens the pistons     
      */
-    ui();
-
+    simple_ui();
   }
+    PC.println("loop : ");
+    delay(100);
   
 }
 

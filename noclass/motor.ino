@@ -1,5 +1,5 @@
 // ------------------------------------------------
-motor::motor(int p1,int p2, int p, int aut, int pist, int tl, int tr) {
+void motor_init(int p1,int p2, int p, int aut, int pist, int tl, int tr) {
   /*  // pin1, pin2, pwm, autonic, trip_left, trip_right
    Sets the pins 
    Initiates dummy values
@@ -38,7 +38,7 @@ motor::motor(int p1,int p2, int p, int aut, int pist, int tl, int tr) {
 }          
 
 // ------------------------------------------------
-void motor::reset() {
+void reset() {
   /* 
    Resets initial position.
    */
@@ -50,7 +50,7 @@ void motor::reset() {
 }
 
 // ------------------------------------------------
-int motor::run(int dir, int pwm) {
+int run(int dir, int pwm) {
   /*
     Runs the motor. Gives 1
    Checks if trips tripped. If tripped, gives 0
@@ -62,7 +62,7 @@ int motor::run(int dir, int pwm) {
     PC.print("\t Trip right value : ");
     PC.println(digitalRead(trip_right));
     delay(100);
-  if ( trip_left != -1 && digitalRead(trip_left) == HIGH && dir==LEFT) {
+  if ( trip_left != -1 && digitalRead(trip_left) == TRIPPED && dir==LEFT) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
@@ -71,7 +71,7 @@ int motor::run(int dir, int pwm) {
 //#endif
     return 0;
   } 
-  if ( trip_right != -1 && digitalRead(trip_right) == HIGH && dir==RIGHT ) {
+  if ( trip_right != -1 && digitalRead(trip_right) == TRIPPED && dir==RIGHT ) {
     digitalWrite(pin1, 0);
     digitalWrite(pin2, 0);
     analogWrite(pwm_pin, 255);
@@ -99,12 +99,12 @@ int motor::run(int dir, int pwm) {
 }
 
 // ------------------------------------------------
-int motor::stop() {
+int stop() {
   return run(STOP, 255);
 }
 
 // ------------------------------------------------
-void motor::calc_pos() {  
+void calc_pos() {  
   /*
     Sets cur_pos and cur_turns
    */
@@ -125,7 +125,7 @@ void motor::calc_pos() {
 }
 
 // ------------------------------------------------
-void motor::piston(int v) {  
+void piston(int v) {  
   /*
     Actuates the piston depending on the value given
    */
@@ -143,7 +143,7 @@ void motor::piston(int v) {
 }
 
 // ------------------------------------------------
-void motor::set_params(double Kp, double Ki, double Kd) {  
+void set_params(double Kp, double Ki, double Kd) {  
   /*
     Sets pid params
    */
@@ -151,7 +151,7 @@ void motor::set_params(double Kp, double Ki, double Kd) {
 }
 
 // ------------------------------------------------
-void motor::set_params(double Kp, double Ki, double Kd, int lim) {  
+void set_params(double Kp, double Ki, double Kd, int lim) {  
   /*
     Sets pid params
    */
@@ -160,7 +160,7 @@ void motor::set_params(double Kp, double Ki, double Kd, int lim) {
 }
 
 // ------------------------------------------------
-int motor::goto_pos() {
+int goto_pos() {
   /*
     Goes to the position defined. returns 0 while moving
    If tripped, return -1
@@ -196,7 +196,7 @@ int motor::goto_pos() {
 }
 
 // ------------------------------------------
-int motor::goto_pos(int req_pos) {  
+int goto_pos(int req_pos) {  
   Setpoint = req_pos;
   return goto_pos();
 }
