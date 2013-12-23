@@ -3,7 +3,7 @@
 //#define DEBUG
 
 #define PC Serial
-#define SLAVE Serial1 //define SLAVE only if you want to control the NEXT clamp
+//#define SLAVE Serial1 //define SLAVE only if you want to control the NEXT clamp
 #define NEXT Serial1    // USe this for simple communication with the NEXT clamp
 #define SAMPLE_LENGTH 100
 
@@ -49,7 +49,11 @@ public:
 motor m(4, 5, 6, 7, 12, 10, 11);
 void setup()
 {
-  PC.begin(115200);
+  PC.begin(9600);
+    while (!PC) {
+    ; // wait for serial port to connect. 
+  }
+
   PC.println("Begun");
   m.set_params(50, 0, 0, 100);
   m.run(STOP, 255); 
