@@ -2,7 +2,7 @@ void ui() {
 
   char c = PC.read();
 
-  // RESET MODE
+  // RESET THE BOT
   if ( c == 'r' ) {
     while(!PC.available());
     char c2 = PC.read();
@@ -17,14 +17,13 @@ void ui() {
       PC.println("DONE");
       m.reset();
       PC.println("Left motor pos set back to 0 ");
-      
+
     } 
     else if ( c2 == 'r' ) {
-        
-  #ifdef SLAVE    
-        query("rr");
-        listen();
-  #endif        
+#ifdef SLAVE    
+      query("rr");
+      listen();
+#endif        
     }
   }
 
@@ -37,11 +36,11 @@ void ui() {
       PC.println("Left motor pos set at 0 ");
     } 
     else if ( c2 == 'r' ) {
-  #ifdef SLAVE          
+#ifdef SLAVE
       query("sr");
       listen();
       PC.print("Right motor pos set at 0 ");
-  #endif
+#endif
     }
   }
 
@@ -55,10 +54,10 @@ void ui() {
       PC.println(m.pos);
     } 
     else if ( c2 == 'r' ) {
-  #ifdef SLAVE          
+#ifdef SLAVE          
       query("wr");
       listen();
-  #endif      
+#endif      
     }   
   }
 
@@ -80,12 +79,12 @@ void ui() {
       PC.println("DONE");
     }  
     else if ( c2 == 'r' ) {
-  #ifdef SLAVE          
-         query("vr");
-          int vel = PC.parseInt();         
-          query(vel);
-         listen();
-  #endif         
+#ifdef SLAVE          
+      query("vr");
+      int vel = PC.parseInt();         
+      query(vel);
+      listen();
+#endif         
     }
   }
 
@@ -107,12 +106,12 @@ void ui() {
       PC.println(m.pos);
     } 
     else if ( c2 == 'r' ) {
-  #ifdef SLAVE          
+#ifdef SLAVE          
       query("mr");
       float pos = PC.parseFloat();
       query(pos);
       listen();
-  #endif      
+#endif      
     }
   } 
 
@@ -133,20 +132,20 @@ void ui() {
       }
     } 
     else if ( c2 == 'r' ) {
-  #ifdef SLAVE          
+#ifdef SLAVE          
       while(!PC.available());
       char c3 = PC.read();
       if ( c3 == 'c' ) {
-        
+
         query("prc");
         listen();
       } 
       else {
-        
+
         query("pro");
         listen();
       }
-  #endif      
+#endif      
     }   
     else if ( c2 == 'x' ) {
       while(!PC.available());
@@ -154,18 +153,18 @@ void ui() {
       if ( c3 == 'c' ) {
         PC.println("Closing piston BOTH ");
         m.piston(CLOSE);
-  #ifdef SLAVE                  
+#ifdef SLAVE                  
         query("pxc");
         listen();
-  #endif        
+#endif        
       } 
       else {
         PC.println("Opening piston BOTH ");
         m.piston(OPEN);
-  #ifdef SLAVE                  
+#ifdef SLAVE                  
         query("pxo");
         listen();
-  #endif        
+#endif        
       }
     }   
   }
@@ -174,25 +173,208 @@ void ui() {
   else if ( c == 'q' ) { 
     PC.println("Both motors STOPPED !");
     m.run(STOP, 255);
-    #ifdef SLAVE
-        query("q");
-        listen();
-    #endif        
+#ifdef SLAVE
+    query("q");
+    listen();
+#endif        
   } 
-  
+
   // POSITION MODE
   else if ( c == 'z' ) { 
     PC.println("Both motors STOPPED !");
     m.run(STOP, 255);
     m.piston(OPEN);
-  #ifdef SLAVE              
+#ifdef SLAVE              
     query("z");
     listen();
-  #endif    
+#endif    
   } 
-  
+
   while(PC.available());
   PC.read();
 }
 
+
+
+
+
+
+
+
+void simple_ui() {
+  char c = PC.read();
+
+  // RESET THE BOT
+  if ( c == 'a' ) {
+    if ( MY_CLAMP == 'l' ) {
+      PC.print("Left motor moving to left trip switch ... ");
+      while( m.run(LEFT, 50) == 1 ){
+        if ( PC.available() && PC.read() == 'q' ) {
+          m.run(STOP, 255);
+          break;
+        }
+      }
+      PC.println("DONE");
+      m.reset();
+      PC.println("Left motor pos set back to 0 ;");
+    } 
+    else {
+      NEXT.write(c);
+      listen();
+    }
+  } 
+  else if ( c == '\'' ) {
+    if ( MY_CLAMP == 'r' ) {
+      PC.print("Right motor moving to left trip switch ... ");
+      while( m.run(RIGHT, 50) == 1 ){
+        if ( PC.available() && PC.read() == 'q' ) {
+          m.run(STOP, 255);
+          break;
+        }
+      }
+      PC.println("DONE");
+      m.reset();
+      PC.println("Right motor pos set back to 0 ;");
+    } 
+    else {
+      NEXT.write(c);
+      listen();
+    }
+  } 
+
+  // PRINT STUFF  
+  else if ( c == '4' || c == '5' || c == '6' || c == '7' ) { 
+      PC.print("Motor LEFT ");
+      PC.print("\t Position = ");
+      PC.println(m.pos);
+      
+      NEXT.write(c);
+      listen();
+  }
+  
+  // PWM MODE
+  else if ( c == 's' ) { 
+    if ( MY_CLAMP == 'l' ) {
+      int vel = PC.parseInt();
+      PC.print("Left motor moving at pwm = ");
+      PC.print(vel);
+      PC.print(" ... ");
+      while( m.run( ( vel < 0 ) ? LEFT : RIGHT, abs(vel)) ) {
+        if ( PC.available() && PC.read() == 'q' ) {
+          m.run(STOP, 255);
+          break;
+        }
+      }
+      PC.println("DONE");
+    } else {
+      int vel = PC.parseInt();
+      NEXT.print(vel);
+      listen();
+    }
+  } else if ( c == ';' ) {
+    while(!PC.available())
+    if ( MY_CLAMP == 'r' ) {
+      int vel = PC.parseInt();
+      PC.print("Right motor moving at pwm = ");
+      PC.print(vel);
+      PC.print(" ... ");
+      while( m.run( ( vel < 0 ) ? LEFT : RIGHT, abs(vel)) ) {
+        if ( PC.available() && PC.read() == 'q' ) {
+          m.run(STOP, 255);
+          break;
+        }
+      }
+      PC.println("DONE"); 
+    } else {
+      int vel = PC.parseInt();
+      NEXT.print(vel);
+      listen();
+    }
+  }
+  
+  // POSITION MODE
+  else if ( c == 'x' ) {
+    if ( MY_CLAMP == 'l' ) {
+      while ( ! PC.available() );
+      int pos = PC.parseInt();
+      PC.println("Left motor moving ... pos = ");
+      PC.print(pos);
+      PC.print(" -> ");
+      while ( m.goto_pos(pos) == 0 ) {
+        if ( PC.available() && PC.read() == 'q' ) {
+          m.stop();
+          break;
+        }
+      }
+      PC.println(m.pos);
+    } 
+    else {
+      NEXT.print(c);
+      listen();
+    }
+  } else if ( c == '.' ) {
+    if ( MY_CLAMP == 'r' ) {
+      while ( ! PC.available() );
+      int pos = PC.parseInt();
+      PC.println("Right motor moving ... pos = ");
+      PC.print(pos);
+      PC.print(" -> ");
+      while ( m.goto_pos(pos) == 0 ) {
+        if ( PC.available() && PC.read() == 'q' ) {
+          m.stop();
+          break;
+        }
+      }
+      PC.println(m.pos);
+    } 
+    else {
+      NEXT.print(c);
+      listen();
+    }
+  }
+  
+  // ACTUATIONS
+  else if ( c == 'w' ) {
+    if ( MY_CLAMP == 'l' ) {
+      PC.println("Closing piston left ");
+      m.piston(CLOSE);
+    } else {
+      NEXT.write(c);
+      listen();
+    }
+  } else if ( c == '2' ) {
+    if ( MY_CLAMP == 'l' ) {
+      PC.println("Opening piston left ");
+      m.piston(OPEN);
+    } else {
+      NEXT.write(c);
+      listen();
+    }
+  } else if ( c == 'p' ) {
+    if ( MY_CLAMP == 'r' ) {
+      PC.println("Closing piston right ");
+      m.piston(CLOSE);
+    } else {
+      NEXT.write(c);
+      listen();
+    }
+  } else if ( c == '0' ) {
+    if ( MY_CLAMP == 'r' ) {
+      PC.println("Opening piston right ");
+      m.piston(OPEN);
+    } else {
+      NEXT.write(c);
+      listen();
+    }
+  }
+  
+  // STOPS !
+  else if ( c == ' ' ) { 
+    PC.println("Both motors STOPPED !");
+    m.run(STOP, 255);
+    NEXT.write(c);
+    listen();
+  }
+
+}
 

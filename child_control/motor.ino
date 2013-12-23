@@ -21,11 +21,7 @@ motor::motor(int p1,int p2, int p, int aut, int pist, int tl, int tr) {
   pinMode(trip_left, INPUT);
   pinMode(trip_right, INPUT);
   run(STOP, 255);
- /* if ( autonic_pin == 2 ) 
-    attachInterrupt(1, pos, RISING); // For some reason, attachInterrupt is not working for me. error: cannot convert ‘float’ to ‘void (*)()’ for argument ‘2’ to ‘void attachInterrupt(uint8_t, void (*)(), int)’
-  else if ( autonic_pin == 3 )
-    attachInterrupt(0, pos, RISING);
-  else */if ( autonic_pin == 7 )
+  if ( autonic_pin == 7 )
     setInterrupt(RISING_I);// function is ISR(INT6_vect) interrupt for INT.6 which isnt available in attachInterrupt. 
   pwm_lim = 5;
   Kp = 0.01;

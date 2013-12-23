@@ -7,7 +7,7 @@
 #define NEXT Serial1    // USe this for simple communication with the NEXT clamp
 #define SAMPLE_LENGTH 100
 
-
+#define MY_CLAMP 'r'
 
 #define RIGHT 2
 #define LEFT 1
@@ -47,8 +47,7 @@ public:
 
 // Motor class - pin1, pin2, pwm, autonic, piston, tripL, tripR
 motor m(4, 5, 6, 7, 12, 10, 11);
-void setup()
-{
+void setup() {
   PC.begin(9600);
     while (!PC) {
     ; // wait for serial port to connect. 
@@ -63,16 +62,14 @@ void pos() {
   m.calc_pos();
 }
 
-ISR(INT6_vect)
-{
+ISR(INT6_vect) {
    m.calc_pos();
 }
 
 void setInterrupt(int i) // interrupt for INT.6 which isnt available in attachInterrupt
 {
-  EICRB |= ((i%2)<<ISC60)|((i/2)<<ISC61); // Setting the mode
+  EICRB |= ( (i%2) << ISC60) | ((i/2) << ISC61); // Setting the mode
   EIMSK |= (1<<INT6);// Enabling the interrupt
-
 }
 
 
