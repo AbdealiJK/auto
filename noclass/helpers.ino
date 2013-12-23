@@ -9,8 +9,8 @@ void listen()
       }
       PC.print( NEXT.read() );
     }
-    if ( PC.available() && PC.read() == 'q' ) {
-      NEXT.print("q");//charachter to be sent to slave for emergency stop
+    if ( PC.available() && PC.read() == ' ' ) {
+      NEXT.write(' ');//charachter to be sent to slave for emergency stop
     }
   }
 }

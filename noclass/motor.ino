@@ -21,10 +21,10 @@ void motor_init(int p1,int p2, int p, int aut, int pist, int tl, int tr) {
   pinMode(trip_left, INPUT);
   pinMode(trip_right, INPUT);
   run(STOP, 255);
-  if ( autonic_pin == 7 )
-    setInterrupt(RISING_I);// function is ISR(INT6_vect) interrupt for INT.6 which isnt available in attachInterrupt. 
-  pwm_lim = 5;
-  Kp = 0.01;
+//  if ( autonic_pin == 7 )
+//    setInterrupt(RISING_I);// function is ISR(INT6_vect) interrupt for INT.6 which isnt available in attachInterrupt. 
+  pwm_lim = 50;
+  Kp = 5;
   Ki = Kd = 0;  
 
   motor_pid.init(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
@@ -55,12 +55,27 @@ int run(int dir, int pwm) {
     Runs the motor. Gives 1
    Checks if trips tripped. If tripped, gives 0
    */
-  //  calc_pos();
+   if(flag)
+   {
+    calc_pos();
+    flag=0;
+   }
+   else 
+   {
+     int temp=0;
+       for( int i = 0; i < SAMPLE_LENGTH; i++) {
+    temp += digitalRead(autonic_pin);
+          }
 
-    PC.print("\t Trip pin : ");
+        if ( temp < SAMPLE_LENGTH/2 )
+          flag=1;
+   
+   }
+   
+/*    PC.print("\t Trp pin : ");
     PC.println(trip_right);
     PC.print("\t Trip right value : ");
-    PC.println(digitalRead(trip_right));
+    PC.println(digitalRead(trip_right));*/
     delay(100);
   if ( trip_left != -1 && digitalRead(trip_left) == TRIPPED && dir==LEFT) {
     digitalWrite(pin1, 0);
@@ -77,18 +92,18 @@ int run(int dir, int pwm) {
     analogWrite(pwm_pin, 255);
 //#ifdef DEBUG
     PC.println("\t Trip switch RIGHT pressed for some motor ! ");
-    PC.print("\t Trip pin : ");
-    PC.println(trip_right);
-    PC.print("\t Trip right value : ");
-    PC.println(digitalRead(trip_right));
+//    PC.print("\t Trip pin : ");
+//    PC.println(trip_right);
+//    PC.print("\t Trip right value : ");
+//    PC.println(digitalRead(trip_right));
 //#endif
     return 0;
   }
 //#ifdef DEBUG
-//  PC.print("\t Running motor at pwm = ");
-//  PC.println(pwm);
-//  PC.print("\t Current position ");
-//  PC.println(pos);
+  PC.print("\t Running motor at pwm = ");
+  PC.println(pwm);
+  PC.print("\t Current position ");
+  PC.println(pos);
 //#endif
 
   digitalWrite(pin1, dir / 2);

@@ -7,7 +7,7 @@
 #define NEXT Serial1    // Use this for simple communication with the NEXT clamp
 #define SAMPLE_LENGTH 100
 
-#define MY_CLAMP 'r'
+#define MY_CLAMP 'l'
 
 #define TRIPPED LOW
 
@@ -22,7 +22,7 @@
 #define CHANGE_I 1
 #define LOW_I 0
 
-int pin1, pin2, pwm_pin, autonic_pin, piston_pin;
+int pin1, pin2, pwm_pin, autonic_pin, piston_pin,flag;
 int pwm_lim, trip_left, trip_right;
 double Input, Output, Setpoint, Kp, Ki, Kd;
 
@@ -44,7 +44,7 @@ PID motor_pid; // &Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 // Motor class - pin1, pin2, pwm, autonic, piston, tripL, tripR
 //motor m(4, 5, 6, 7, 13, -1, 10);
 
-ISR(INT6_vect) {
+/*ISR(INT6_vect) {
   calc_pos();
 }
 
@@ -52,7 +52,7 @@ void setInterrupt(int i) // interrupt for INT.6 which isnt available in attachIn
 {
   EICRB |= ( (i%2) << ISC60) | ((i/2) << ISC61); // Setting the mode
   EIMSK |= (1<<INT6);// Enabling the interrupt
-}
+}*/
 
 void setup() {
   // put your setup code here, to run once:
@@ -61,7 +61,7 @@ void setup() {
     ; // wait for serial port to connect. 
   }
 
-  motor_init(4, 5, 6, 7, 13, -1, 10);
+  motor_init(4, 5, 6, 7, 13, -1, -1);
   PC.println("Begun");
 }
 
