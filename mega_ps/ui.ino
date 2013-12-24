@@ -10,7 +10,7 @@ void ui() {
       PC.print("Left motor moving to left trip switch ... ");
       while( ml.run(LEFT, 50) == 1 ){
         if ( PC.available() && PC.read() == 'q' ) {
-          mr.run(STOP, 255);
+          ml.run(STOP, 255);
           break;
         }
       }
@@ -139,7 +139,8 @@ void ui() {
         ml.piston(CLOSE);
       } 
       else {
-        PC.println("Opening piston LEFT ");
+
+PC.println("Opening piston LEFT ");
         ml.piston(OPEN);
       }
     } 
@@ -178,7 +179,8 @@ void ui() {
     mr.run(STOP, 255);
   } 
   
-  // POSITION MODE
+  // POSITION MODesaw();
+
   else if ( c == 'z' ) { 
     PC.println("Both motors STOPPED !");
     ml.run(STOP, 255);
@@ -186,7 +188,26 @@ void ui() {
     ml.piston(OPEN);
     mr.piston(OPEN);
   } 
-  
+else if(c=='1')
+{
+  seesaw();
+}
+
+else if(c=='2')
+{
+  swing();
+}
+
+else if(c=='3')
+{
+  polewalk();
+}
+
+else if(c=='4')
+{
+  ladder();
+}
+
   while(PC.available());
   PC.read();
 }

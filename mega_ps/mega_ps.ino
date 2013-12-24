@@ -25,7 +25,7 @@ public:
   int pwm_lim, trip_left, trip_right;
   long last_pos_time;
   double Input, Output, Setpoint, Kp, Ki, Kd;
-  
+  int current_dir;
   float pos;
   PID motor_pid; // &Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
   
@@ -52,7 +52,7 @@ void setup()
   ml.run(STOP, 255); 
   attachInterrupt(1, posl, RISING); // 1 means pin 3
   
-  mr.set_params(100, 0, 0, 200);
+  mr.set_params(150, 0, 0, 200);
   mr.run(STOP, 255); 
   attachInterrupt(0, posr, RISING); // 0 means pin 2
 }
@@ -69,7 +69,7 @@ void loop() {
 
   if ( PC.available() ) {
     /*
-      rL - Motor moves to reset position
+      rL - Motor moves to reset positionrr
      sL - Sets the motor's initial position to current position
      vL__ - Moves motor with given pwm
      mL__ - Moves motor Mto given position (in cm)
