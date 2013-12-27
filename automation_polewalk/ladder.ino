@@ -13,7 +13,7 @@
 #define LAD_PISTON_DELAY 500
 
 int flag_lad=0;
-
+/*
 void ladder()
 {
     PC.println("Ladder begun");
@@ -31,7 +31,7 @@ void ladder()
     
     
 }
-
+*/
 void ladder_init()
 {
   mr.set_params(LADDER_RIGHT_KP, LADDER_RIGHT_KI, LADDER_RIGHT_KD, LADDER_RIGHT_SPEED);

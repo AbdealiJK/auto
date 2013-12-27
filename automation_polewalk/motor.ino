@@ -1,5 +1,5 @@
 // ------------------------------------------------
-motor::motor(int p1, int p2, int p, int aut, int pist, int tl, int tr,int at) {
+motor::motor(int p1, int p2, int p, int aut, int pist, int tl, int tr, int at) {
   /*  // pin1, pin2, pwm, autonic, trip_left, trip_right
    Sets the pins
    Initiates dummy values
@@ -63,6 +63,7 @@ void motor::reset() {
 
 // ------------------------------------------------
 int motor::run(int dir, int pwm) {
+  heartbeat();
   /*
     Runs the motor. Gives 1
    Checks if trips tripped. If tripped, gives 0
@@ -116,7 +117,7 @@ void motor::calc_pos() {
   /*
     Sets cur_pos and cur_turns
    */
-   
+
   if ( millis() < last_pos_time + atime )
     return;
   float temp = 0;
@@ -220,6 +221,7 @@ int motor::goto_pos() {
     run(STOP, 255);
     return 1;
   }
+  //  Serial.println(Kp);
   return 0;
 }
 
@@ -229,4 +231,119 @@ int motor::goto_pos(int req_pos) {
   return goto_pos();
 }
 
+//------------------------------------------------------------
+
+int motor::move_right(int req_speed, int req_pos)
+{
+  motor_pid.SetOutputLimits(-req_speed, req_speed);
+  while ( goto_pos(req_pos) == 0 ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      stop();
+      return 1;
+    }
+  }
+  return 0;
+
+}
+int motor::move_right(int req_speed)
+{
+  while ( run(RIGHT, req_speed) == 1 ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      run(STOP, 255);
+      break;
+      return 1;
+    }
+  }
+
+  return 0;
+}
+int motor::move_left(int req_speed, int req_pos)
+{
+  motor_pid.SetOutputLimits(-req_speed, req_speed);
+  while ( goto_pos(-req_pos) == 0 ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      stop();
+      return 1;
+    }
+  }
+  return 0;
+}
+int motor::move_left(int req_speed)
+{
+  while ( run(LEFT, req_speed) == 1 ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      run(STOP, 255);
+      break;
+      return 1;
+    }
+
+  }
+
+  return 0;
+}
+
+
+int move_together(int pos1, int pos2, int speed1, int speed2)
+{
+  ml.motor_pid.SetOutputLimits(-speed1, speed1);
+  mr.motor_pid.SetOutputLimits(-speed2, speed2);
+  while ( (ml.goto_pos(pos1) == 0) && (mr.goto_pos(pos2) == 0) ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      ml.stop();
+      mr.stop();
+      PC.println("Both motors STOPPED !");
+      break;
+      return 1;
+    }
+  }
+  while ( (ml.goto_pos(pos1) == 0)  ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      ml.stop();
+
+      PC.println("Both motors STOPPED !");
+      break;
+      return 1;
+    }
+  }
+  while ( (mr.goto_pos(pos2) == 0) ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+
+      mr.stop();
+      PC.println("Both motors STOPPED !");
+      break;
+      return 1;
+    }
+  }
+  return 0;
+}
+int go_home()
+{
+
+  while ( ml.run(LEFT, RESET_SPEED_LEFT) == 1 && mr.run(RIGHT, RESET_SPEED_RIGHT) == 1 ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      ml.run(STOP, 255);
+      mr.run(STOP, 255);
+      break;
+      return 1;
+    }
+  }
+  while ( ml.run(LEFT, RESET_SPEED_LEFT) == 1  ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      ml.run(STOP, 255);
+      break;
+      return 1;
+    }
+  }
+    while ( mr.run(RIGHT, RESET_SPEED_RIGHT) == 1 ) {
+      if ( PC.available() && PC.read() == 'q' ) {
+        mr.run(STOP, 255);
+        break;
+        return 1;
+      }
+
+    }
+    ml.reset();
+    mr.reset();
+    return 0;
+  }
 
