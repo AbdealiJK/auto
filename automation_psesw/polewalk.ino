@@ -105,6 +105,8 @@ void polewalk_init()
 {
   mr.set_params(POLE_RIGHT_KP, POLE_RIGHT_KI, POLE_RIGHT_KD );
   ml.set_params(POLE_LEFT_KP, POLE_LEFT_KI, POLE_LEFT_KD);
+  ml.piston(OPEN);
+  mr.piston(OPEN);
   flag_pw = 0;
 
 }
