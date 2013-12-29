@@ -1,5 +1,5 @@
-#define LEFT_SW 5
-#define SW_WIDTH 9
+#define LEFT_SW 6
+#define SW_WIDTH 8
 #define LM_LENGTH 23
 #define SWING_RIGHT_SPEED 255
 #define SWING_LEFT_SPEED 255

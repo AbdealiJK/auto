@@ -4,6 +4,10 @@ void ui() {
   char c = PC.read();
   heartbeat();
   // RESET MODE
+  if(c == 'h')
+  {
+    go_home();
+  }
   if ( c == 'r' ) {
     while (!PC.available());
     char c2 = PC.read();
