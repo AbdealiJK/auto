@@ -21,8 +21,8 @@ void init_motor(int p1, int p2, int p, int aut, int pist, int tl, int tr) {
   pinMode(trip_left, INPUT);
   pinMode(trip_right, INPUT);
   run(STOP, 255);
-  if ( autonic_pin == 7 )
-    setInterrupt(RISING_I);// function is ISR(INT6_vect) interrupt for INT.6 which isnt available in attachInterrupt.
+//  if ( autonic_pin == 7 )
+//    setInterrupt(RISING_I);// function is ISR(INT6_vect) interrupt for INT.6 which isnt available in attachInterrupt.
   pwm_lim = 5;
   Kp = 0.01;
   Ki = Kd = 0;

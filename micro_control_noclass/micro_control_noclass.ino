@@ -53,17 +53,20 @@ bool get_trip( int trip, int dir);
 void update_trip();
 
 void init_motor(int p1, int p2, int p, int aut, int pist, int tl, int tr);
-  
+
 
 
 // Motor class - pin1, pin2, pwm, autonic, piston, tripL, tripR
 void setup() {
+  pinMode(13, OUTPUT);
+  digitalWrite(13, HIGH);
+  
   PC.begin(9600);
   while (!PC) {
     ; // wait for serial port to connect.
   }
 
-init_motor(4, 5, 6, 7, 13, -1, 10);
+  init_motor(4, 5, 6, 7, 13, -1, 10);
 
   PC.println("Begun");
   set_params(50, 0, 0, 100);
@@ -81,7 +84,7 @@ init_motor(4, 5, 6, 7, 13, -1, 10);
 }
 
 
-ISR(INT6_vect) {
+/*ISR(INT6_vect) {
   calc_pos();
 }
 
@@ -89,7 +92,7 @@ void setInterrupt(int i) // interrupt for INT.6 which isnt available in attachIn
 {
   EICRB |= ( (i % 2) << ISC60) | ((i / 2) << ISC61); // Setting the mode
   EIMSK |= (1 << INT6); // Enabling the interrupt
-}
+}*/
 
 
 void loop() {
@@ -110,9 +113,11 @@ void loop() {
     master_ui();
   }
   update_trip();
-  PC.println("loop : ");
+  //  PC.println("loop : ");
   delay(100);
-
+  digitalWrite(13, HIGH);
+  delay(100);
+  digitalWrite(13, LOW);
 }
 
 

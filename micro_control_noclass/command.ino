@@ -202,7 +202,7 @@ void master_ui() {
 
 
 
-
+/*
 void simple_ui() {
   char c = PC.read();
 
@@ -359,4 +359,4 @@ void simple_ui() {
   while ( PC.available() )
     PC.read();
 }
-
+*/
