@@ -54,6 +54,8 @@ public:
   void set_params(double, double, double);
   void set_params(double, double, double, int);
   void go_home();
+  bool get_trip( int trip, int dir);
+  void update_trip();
 };
 
 
@@ -113,7 +115,7 @@ void loop() {
      */
     master_ui();
   }
-    update_trip();
+    m.update_trip();
     PC.println("loop : ");
     delay(100);
   

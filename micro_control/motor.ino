@@ -223,7 +223,7 @@ void motor::go_home()
     }
   }
 }
-void get_trip( int trip, int dir)
+bool motor::get_trip( int trip, int dir)
 {
   char clamp = MY_CLAMP;
   if (clamp == 'r')
@@ -295,7 +295,7 @@ void get_trip( int trip, int dir)
     }
   }
 }
-void update_trip()
+void motor::update_trip()
 {
   if (HAS_CENTRE)
   {
