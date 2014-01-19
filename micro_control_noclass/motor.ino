@@ -8,7 +8,7 @@ int run(int dir, int pwm) {
   calc_pos();
   update_trip();
 
-  if ( home_trip ) {
+  if ( home_trip && dir == HOME ) {
     digitalWrite(MOTOR_1, 0);
     digitalWrite(MOTOR_2, 0);
     analogWrite(MOTOR_PWM, 255);
@@ -18,7 +18,7 @@ int run(int dir, int pwm) {
     return 0;
   }
 
-  if ( middle_trip ) {
+  if ( middle_trip  && dir == MID ) {
     digitalWrite(MOTOR_1, 0);
     digitalWrite(MOTOR_2, 0);
     analogWrite(MOTOR_PWM, 255);
@@ -101,11 +101,11 @@ int goto_pos() {
   //#endif
 
   if (output_pwm > 0) {
-    if ( run(RIGHT, output_pwm) == 0 )
+    if ( run(MID, output_pwm) == 0 )
       return -1;
   }
   else if (output_pwm < 0) {
-    if ( run(LEFT, -output_pwm) == 0 )
+    if ( run(HOME, -output_pwm) == 0 )
       return -1;
   }
   else {
@@ -123,29 +123,18 @@ int goto_pos(int target) {
 
 void go_home()
 {
-  if (MY_CLAMP == 'l')
-  {
-    while ( run(LEFT, HOME_SPEED) == 1 ) {
-      if ( PC.available() && PC.read() == 'q' ) {
-        run(STOP, 255);
-        break;
-      }
+  while ( run(HOME, HOME_SPEED) == 1 ) {
+    if ( PC.available() && PC.read() == 'q' ) {
+      run(STOP, 255);
+      break;
     }
   }
-  else
-  {
-    while ( run(RIGHT, HOME_SPEED) == 1 ) {
-      if ( PC.available() && PC.read() == 'q' ) {
-        run(STOP, 255);
-        break;
-      }
-    }
-  }
+
 }
 void update_trip() {
   if (MIDDLE_TRIP != 0)  { // I have middle_trip
-    if (MIDDLE_TRIP != -1 && digitalRead(MIDDLE_TRIP) != middle_trip) {
-      middle_trip = digitalRead(MIDDLE_TRIP);
+    if (MIDDLE_TRIP != -1 && digitalRead(MIDDLE_TRIP) == middle_trip) {
+      middle_trip = digitalRead(MIDDLE_TRIP) == TRIPPED;
       NEXT.print(TRIP_CHAR);
       NEXT.print(MIDDLE_TRIP);
     }
@@ -156,8 +145,8 @@ void update_trip() {
       middle_trip = PC.read()-'0';
     }
   }
-
-  home_trip = digitalRead(HOME_TRIP);
+  home_trip = digitalRead(HOME_TRIP) == TRIPPED;
 }
+
 
 

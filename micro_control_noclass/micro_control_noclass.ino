@@ -8,9 +8,9 @@ char NEXT_CLAMP = 'r';
 #define MOTOR_2     5
 #define MOTOR_PWM   6
 #define AUTONIC_PIN 7
-#define PISTON_PIN  13
-#define HOME_TRIP   -1 // -1 means no trip available
-#define MIDDLE_TRIP 10 // -1 means no trip is present. 0 means trip is on other clamp
+#define PISTON_PIN  13 // Aand 5
+#define HOME_TRIP   10 // -1 means no trip available
+#define MIDDLE_TRIP 11 // -1 means no trip is present. 0 means trip is on other clamp
 
 // Comm ports
 #define PC Serial
@@ -18,17 +18,17 @@ char NEXT_CLAMP = 'r';
 // Analog flicker correction length
 #define SAMPLE_LENGTH 100
 // Basic variables
-#define RIGHT 2
-#define LEFT  1
+#define HOME 2
+#define MID  1
 #define STOP  0
+
 #define OPEN  1
 #define CLOSE 0
 
-#define HAS_CENTRE 1
-#define TRIPPED 'y'
+#define TRIPPED 0
 #define TRIP_CHAR '$'
 
-#define TERMINATING_CHAR '~'
+#define PC_END '~'
 #define HOME_SPEED 50
 
 int home_trip = 0, middle_trip = 0, 
