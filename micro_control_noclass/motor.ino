@@ -145,7 +145,7 @@ void update_trip() {
       middle_trip = PC.read()-'0';
     }
   }
-  home_trip = digitalRead(HOME_TRIP) == TRIPPED;
+  home_trip = ( digitalRead(HOME_TRIP) == TRIPPED);
 }
 
 
