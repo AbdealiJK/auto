@@ -1,4 +1,4 @@
-#define LADDER_LEFT_KP 40
+#define LADDER_LEFT_KP 150
 #define LADDER_LEFT_KI 0
 #define LADDER_LEFT_KD 0
 #define LADDER_LEFT_SPEED 255
@@ -6,9 +6,9 @@
 #define LADDER_RIGHT_KI 0
 #define LADDER_RIGHT_KD 0
 #define LADDER_RIGHT_SPEED 255
-#define LAD_1  16
-#define LAD_2  0
-#define LAD_3  0
+#define LAD_1  15
+#define LAD_2  7
+#define LAD_3  10
 #define LAD_4  0
 #define LAD_PISTON_DELAY 500
 // 21 is the pos of l when it hits right clamp
@@ -35,13 +35,26 @@ void ladder()
 
   ml.piston(CLOSE);               //  clamp first rung
   delay(LAD_PISTON_DELAY);
-  flag_lad = ml.move_left(LADDER_LEFT_SPEED, LAD_2); // LM guide moves up & fixed clamp crosses rung
+  while (!PC.available());
+  if (PC.read() == 'q' ) {
+    PC.println("Polewalk mission Failure!");
+    return;
+  }
+  PC.println(LAD_2);
+
+  flag_lad = ml.move_right(LADDER_LEFT_SPEED, LAD_2); // LM guide moves up & fixed clamp crosses rung
   if (flag_lad)
   {
     PC.println("Polewalk mission Failure!");
     return;
   }
   delay(100);
+  while (!PC.available());
+  if (PC.read() == 'q' ) {
+    PC.println("Polewalk mission Failure!");
+    return;
+  }
+  
   flag_lad = ml.move_right(LADDER_LEFT_SPEED, LAD_3); // fixed clamp comes down to the rung
   if (flag_lad)
   {
@@ -71,16 +84,15 @@ void ladder()
     }
 
     ml.piston(CLOSE);                //It now clamps the rung
-    ml.reset();                      // Its position is set to zero
     delay(LAD_PISTON_DELAY);
-    flag_lad = ml.move_left(LADDER_LEFT_SPEED, LAD_3); // LM guide moves up & fixed clamp crosses rung
+    flag_lad = ml.move_left(LADDER_LEFT_SPEED, LAD_2); // LM guide moves up & fixed clamp crosses rung
     if (flag_lad)
     {
       PC.println("Polewalk mission Failure!");
       return;
     }
     delay(100);
-    flag_lad = ml.move_right(LADDER_LEFT_SPEED, LAD_4); // fixed clamp comes down to the rung
+    flag_lad = ml.move_right(LADDER_LEFT_SPEED, LAD_3); // fixed clamp comes down to the rung
     if (flag_lad)
     {
       PC.println("Polewalk mission Failure!");
@@ -110,3 +122,4 @@ void ladder_init()
   mr.piston(OPEN);
 
 }
+

@@ -1,26 +1,16 @@
-void query(char str[])
-{
-  int i = 0;
-  while (str[i] != '\0')
-  {
-    NEXT.print(str[i]);
-    i++;
+int get_int() {
+  int temp = 0, next_val;
+  char temp_c;
+  while(!PC.available());
+  next_val = PC.peek();
+  while ( PC.available() && next_val <= '9' && next_val >= '0' ) {
+    PC.read();
+    temp *= 10;
+    temp += next_val - '0';
+    next_val = PC.peek();
   }
-
+  return temp;
 }
-void query(char ch)
-{
-  NEXT.print(ch);
-}
-void query(float f)
-{
-  NEXT.print(f);
-}
-void query(int f)
-{
-  NEXT.print(f);
-}
-
 void listen()
 {
   while (1) // ~ is the terminating charachter for SLAVE to MASTER communication

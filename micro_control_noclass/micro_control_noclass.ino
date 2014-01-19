@@ -1,99 +1,87 @@
-#include<PID_v1.h>
-
 //#define DEBUG
 
-#define PC Serial
-//#define SLAVE Serial1 //define SLAVE only if you want to control the NEXT clamp
-#define NEXT Serial1    // Use this for simple communication with the NEXT clamp
-#define SAMPLE_LENGTH 100
-
+// Clamp names
 #define MY_CLAMP 'l'
 char NEXT_CLAMP = 'r';
+// Pins
+#define MOTOR_1     4
+#define MOTOR_2     5
+#define MOTOR_PWM   6
+#define AUTONIC_PIN 7
+#define PISTON_PIN  13
+#define HOME_TRIP   -1 // -1 means no trip available
+#define MIDDLE_TRIP 10 // -1 means no trip is present. 0 means trip is on other clamp
 
-
+// Comm ports
+#define PC Serial
+#define NEXT Serial1    // Use this for simple communication with the NEXT clamp
+// Analog flicker correction length
+#define SAMPLE_LENGTH 100
+// Basic variables
 #define RIGHT 2
-#define LEFT 1
-#define STOP 0
-#define OPEN 1
+#define LEFT  1
+#define STOP  0
+#define OPEN  1
 #define CLOSE 0
-#define HOME_TRIP 1
-#define CENTRE_TRIP 2
 
 #define HAS_CENTRE 1
 #define TRIPPED 'y'
 #define TRIP_CHAR '$'
 
-#define RISING_I 3
-#define FALLING_I 2
-#define CHANGE_I 1
-#define LOW_I 0
 #define TERMINATING_CHAR '~'
 #define HOME_SPEED 50
-int trip_flag = 0;
 
+int home_trip = 0, middle_trip = 0, 
+  max_pwm = 150, acc_pwm = 50,
+  pos = 0, target_pos = 0;
 
-
-int pin1, pin2, pwm_pin, autonic_pin, piston_pin;
-int pwm_lim, trip_left, trip_right;
-double Input, Output, Setpoint, Kp, Ki, Kd;
-
-float pos;
-PID motor_pid; // &Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
 void reset();
 int run(int, int);
-int stop();
 void calc_pos();
 void piston(int);
 int goto_pos(int);
 int goto_pos();
-void set_params(double, double, double);
-void set_params(double, double, double, int);
 void go_home();
-bool get_trip( int trip, int dir);
 void update_trip();
 
-void init_motor(int p1, int p2, int p, int aut, int pist, int tl, int tr);
-
-
-
-// Motor class - pin1, pin2, pwm, autonic, piston, tripL, tripR
 void setup() {
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
-  
+
+  // Init serial
   PC.begin(9600);
-  while (!PC) {
-    ; // wait for serial port to connect.
-  }
-
-  init_motor(4, 5, 6, 7, 13, -1, 10);
-
-  PC.println("Begun");
-  set_params(50, 0, 0, 100);
+  while (!PC); // wait for serial port to connect.
+  
+  pinMode(13, OUTPUT);
+  digitalWrite(13, LOW);
+  PC.println("Serial started");
+  
+  // Pinmodes
+  pinMode(MOTOR_1, OUTPUT);
+  pinMode(MOTOR_2, OUTPUT);
+  pinMode(MOTOR_PWM, OUTPUT);
+  pinMode(AUTONIC_PIN, INPUT);
+  pinMode(PISTON_PIN, OUTPUT);
+  pinMode(HOME_TRIP, INPUT);
+  pinMode(MIDDLE_TRIP, INPUT);
   run(STOP, 255);
-  if (MY_CLAMP == 'l')
-  {
-    NEXT_CLAMP = 'r';
-  }
-  else if (MY_CLAMP == 'r')
-  {
-    NEXT_CLAMP = 'l';
-  }
 
-
+  // Init basic variables
+  PC.println("Setting up basics ...");
+  acc_pwm = 50;
+  max_pwm = 100;
+  
+  run(STOP, 255);
+  NEXT_CLAMP = (MY_CLAMP == 'l')? 'r' : 'l';
+  
+  // Display initial values :
+  PC.print("My clamp : \t");
+  PC.println(MY_CLAMP);
+  PC.print("Next clamp : \t");
+  PC.println(NEXT_CLAMP);
+  PC.print("My clamp : \t");
+  PC.println(MY_CLAMP);
 }
-
-
-/*ISR(INT6_vect) {
-  calc_pos();
-}
-
-void setInterrupt(int i) // interrupt for INT.6 which isnt available in attachInterrupt
-{
-  EICRB |= ( (i % 2) << ISC60) | ((i / 2) << ISC61); // Setting the mode
-  EIMSK |= (1 << INT6); // Enabling the interrupt
-}*/
-
 
 void loop() {
 
@@ -113,12 +101,16 @@ void loop() {
     master_ui();
   }
   update_trip();
-  //  PC.println("loop : ");
-  delay(100);
+  
+  /*delay(100);
   digitalWrite(13, HIGH);
   delay(100);
-  digitalWrite(13, LOW);
+  digitalWrite(13, LOW);*/
+  
+  delay(10);
 }
+
+
 
 
 
