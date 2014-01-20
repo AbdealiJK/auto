@@ -1,8 +1,24 @@
-//#define DEBUG
+#define SLAVE 0
 
+#if SLAVE
+// Clamp names
+#define MY_CLAMP 'r'
+// Comm ports
+#define PC Serial1
+#define NEXT 0 && Serial
+#else
 // Clamp names
 #define MY_CLAMP 'l'
+// Comm ports
+#define PC Serial
+#define NEXT Serial1
+#endif
+
+// Clamp names
 char NEXT_CLAMP = 'r';
+
+
+
 // Pins
 #define MOTOR_1     4
 #define MOTOR_2     5
@@ -12,9 +28,6 @@ char NEXT_CLAMP = 'r';
 #define HOME_TRIP   10 // -1 means no trip available
 #define MIDDLE_TRIP 11 // -1 means no trip is present. 0 means trip is on other clamp
 
-// Comm ports
-#define PC Serial
-#define NEXT Serial1    // Use this for simple communication with the NEXT clamp
 // Analog flicker correction length
 #define SAMPLE_LENGTH 100
 // Basic variables
@@ -29,11 +42,11 @@ char NEXT_CLAMP = 'r';
 #define TRIP_CHAR '$'
 
 #define PC_END '~'
-#define HOME_SPEED 50
+#define HOME_SPEED 255
 
-int home_trip = 0, middle_trip = 0, 
-  max_pwm = 150, acc_pwm = 50,
-  pos = 0, target_pos = 0;
+int home_trip = 0, middle_trip = 0,
+    max_pwm = 150, acc_pwm = 50,
+    pos = 0, target_pos = 0;
 
 void reset();
 int run(int, int);
@@ -45,17 +58,15 @@ void go_home();
 void update_trip();
 
 void setup() {
+  // Init serial
+  Serial.begin(9600);
+  Serial1.begin(9600);
+  while (!SLAVE && !PC); // wait for serial port to connect.
+  
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
-
-  // Init serial
-  PC.begin(9600);
-  while (!PC); // wait for serial port to connect.
-  
-  pinMode(13, OUTPUT);
-  digitalWrite(13, LOW);
   PC.println("Serial started");
-  
+
   // Pinmodes
   pinMode(MOTOR_1, OUTPUT);
   pinMode(MOTOR_2, OUTPUT);
@@ -70,10 +81,10 @@ void setup() {
   PC.println("Setting up basics ...");
   acc_pwm = 50;
   max_pwm = 100;
-  
+
   run(STOP, 255);
-  NEXT_CLAMP = (MY_CLAMP == 'l')? 'r' : 'l';
-  
+  NEXT_CLAMP = (MY_CLAMP == 'l') ? 'r' : 'l';
+
   // Display initial values :
   PC.print("My clamp : \t");
   PC.println(MY_CLAMP);
@@ -81,6 +92,20 @@ void setup() {
   PC.println(NEXT_CLAMP);
   PC.print("My clamp : \t");
   PC.println(MY_CLAMP);
+  PC.print(PC_END);
+  // Wait for the slave hihihihih
+/*  while (!Serial1); // wait for serial port to connect.  
+  Serial1.print(PC_END);
+  while(!Serial1.available());
+  Serial.println("SLAVE serial found something");
+  Serial1.print(PC_END);
+  delay(2);
+  while( Serial1.available() && Serial1.read() != PC_END );
+  Serial.println("SLAVE data got");
+*/  
+  //listen();
+  
+  digitalWrite(13, LOW);
 }
 
 void loop() {
@@ -101,13 +126,14 @@ void loop() {
     master_ui();
   }
   update_trip();
-  
+
   /*delay(100);
   digitalWrite(13, HIGH);
   delay(100);
   digitalWrite(13, LOW);*/
-  
-  delay(10);
+  Serial.print(MY_CLAMP);
+  Serial.println("-loop");
+  delay(100);
 }
 
 

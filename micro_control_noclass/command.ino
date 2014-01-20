@@ -28,7 +28,7 @@ void master_ui() {
       PC.print("-motor moving at pwm = ");
       PC.print(vel);
       PC.print(" ... ");
-      while ( run( ( vel < 0 ) ? LEFT : RIGHT, abs(vel)) ) {
+      while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
         if ( PC.available() && PC.read() == 'q' ) {
           run(STOP, 255);
           PC.print(" manual broken - ");
@@ -100,6 +100,9 @@ void master_ui() {
 
   while (PC.available())
     PC.read();
+  
+  while (NEXT.available())
+    PC.print(NEXT.read());
 }
 
 

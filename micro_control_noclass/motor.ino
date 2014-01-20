@@ -35,7 +35,11 @@ int run(int dir, int pwm) {
   //#endif
 
   digitalWrite(MOTOR_1, dir / 2);
+  //Serial.print("m1 : ");
+  //Serial.println(dir/2);  
   digitalWrite(MOTOR_2, dir % 2);
+  //Serial.print("m2 : ");
+  //Serial.println(dir%2);  
   analogWrite(MOTOR_PWM, pwm);
   return 1;
 
@@ -135,8 +139,8 @@ void update_trip() {
   if (MIDDLE_TRIP != 0)  { // I have middle_trip
     if (MIDDLE_TRIP != -1 && digitalRead(MIDDLE_TRIP) == middle_trip) {
       middle_trip = digitalRead(MIDDLE_TRIP) == TRIPPED;
-      NEXT.print(TRIP_CHAR);
-      NEXT.print(MIDDLE_TRIP);
+      Serial1.print(TRIP_CHAR);
+      Serial1.print(MIDDLE_TRIP);
     }
   }
   else { // I need to get middle_trip data from others
