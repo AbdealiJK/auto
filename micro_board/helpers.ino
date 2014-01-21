@@ -18,8 +18,7 @@ int pc_get_int() {
   }
   return temp * neg;
 }
-
-
+    
 void listen()
 {
   char temp = !PC_END;
@@ -34,6 +33,5 @@ void listen()
     }
   }
 }
-
 
 

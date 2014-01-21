@@ -1,9 +1,13 @@
-void master_ui() {
+void ui() {
 
-  char c = PC.read();
+  if ( ! PC.available() )
+    return;  
+    
+  char c = PC.peek();
 
   if ( c == MY_CLAMP ) {
-    // >>>>>>>>>>>>>>>>>>>>> CODE FOR MY CLAMP !!!!!!!!!!!!!!!!!
+    // >>>>>>>>>>>>>> CODE FOR MY CLAMP !!!!!!!!!!!!!!!!!
+    PC.read();
     while (!PC.available());
     char c2 = PC.read();
     if ( c2 == 'r' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RESET
@@ -11,24 +15,27 @@ void master_ui() {
       PC.print("-motor moving to home trip switch ... ");
       go_home();
       PC.println("DONE");
-      pos = 0;
-      PC.print(MY_CLAMP);
-      PC.println("-motor pos set back to 0 ");
       PC.print(PC_END);
-    } 
+    }
     else if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
-      PC.print(MY_CLAMP);
-      PC.print("-Motor ");
-      PC.print("\t Position = ");
-      PC.println(pos);
-      PC.print("-Motor ");
-      PC.print("\t Home trip = ");
+      // Display initial values :
+      PC.print(">>>>>>>>>> data for : ");
+      PC.println(MY_CLAMP);
+      PC.print("Trips - home : \t");
       PC.println(home_trip);
-      PC.print("-Motor ");
-      PC.print("\t Mid trip = ");
+      PC.print("Trips - mid : \t");
       PC.println(middle_trip);
-      PC.print(PC_END);      
-    } 
+      PC.print("Trips - fixedclamp : \t");
+      PC.println(fixedclamp_trip);
+      PC.print("Trips - comm : \t");
+      PC.println(comm_trip);
+      PC.print("AVS Value : \t");
+      PC.println(avs_value);
+      PC.println(" >> begun");
+      PC.print(PC_END);
+
+      PC.print(PC_END);
+    }
     else if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
       int vel = pc_get_int();
       PC.print("-motor moving at pwm = ");
@@ -43,25 +50,8 @@ void master_ui() {
       }
       PC.println("DONE");
       PC.print(PC_END);
-    } 
-    else if(c2 == 'm' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> POSITION
-      int pos = PC.parseInt();
-      PC.print(MY_CLAMP);
-      PC.print(" motor moving ... pos = ");
-      PC.print(pos);
-      PC.print(" -> ");
-      while ( goto_pos(pos) == 0 ) {
-        if ( PC.available() && PC.read() == 'q' ) {
-          run(STOP, 255);
-          PC.print(" manual broken - ");          
-          break;
-        }
-      }
-      PC.print(pos);
-      PC.println(" ... DONE");
-      PC.print(PC_END);
-    } 
-    else if( c2 == 'p' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON
+    }
+    else if ( c2 == 'p' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON
       while (!PC.available());
       if ( PC.read() == 'c' ) {
         PC.print("Closing piston  ");
@@ -75,17 +65,14 @@ void master_ui() {
       }
       PC.print(PC_END);
     }
-
-
-  } 
-  else if ( c == NEXT_CLAMP ) {
+  }
+  else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
-    NEXT.write(c);
     delay(2);
-    while(PC.available())
+    while (PC.available())
       NEXT.write(PC.read());
     listen();
-  } 
+  }
   else if ( c == 'q' ) {
     // >>>>>>>>>>>>>>>>>>>>> STOP MOVING !!!!!!!!!!!!!!!!!
     run(STOP, 255);
@@ -93,7 +80,7 @@ void master_ui() {
     PC.println("-motor STOPPED !~");
     NEXT.print(c);
     listen();
-  } 
+  }
   else if ( c == 'z' ) {
     // >>>>>>>>>>>>>>>>>>>>> STOP IT ALL !!!!!!!!!!!!!!!!!
     run(STOP, 255);
@@ -104,10 +91,5 @@ void master_ui() {
     listen();
   }
 
-  while (PC.available())
-    PC.read();
-  
-  while (NEXT.available())
-    PC.print(NEXT.read());
 }
 
