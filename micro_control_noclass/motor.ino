@@ -137,17 +137,11 @@ void go_home()
 }
 void update_trip() {
   if (MIDDLE_TRIP != 0)  { // I have middle_trip
-//    int temp_mid_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
-//    Serial.println(temp_mid_trip);
-    
+
     if (MIDDLE_TRIP != -1 ) { //&& temp_mid_trip != middle_trip) {
       middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
       Serial1.print(TRIP_CHAR);
       Serial1.print(middle_trip);
-      Serial.print("middle_trips sent : ");
-      Serial.print(TRIP_CHAR);
-      Serial.print(" ... ");
-      Serial.println(middle_trip);
     }
   }
   else { // I need to get middle_trip data from others
@@ -163,11 +157,6 @@ void update_trip() {
         char trip = Serial1.read();
         if ( trip == '0' || trip == '1' ) { // remove garbage data
           middle_trip = trip - '0';
-          Serial.print("middle_trip got : ");
-          Serial.println(middle_trip);
-        } else {
-          Serial.print("garbage middle_trip got : ");
-          Serial.println((int)trip);
         }
       }
     }

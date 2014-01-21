@@ -26,5 +26,46 @@ Trips :      10(mid), 11(home),
 Autonic :    7
 
 
+
+Sensors :
+CLAMP L
+1. Home trip switch
+2. Middle trip switch
+3. AVS
+CLAMP R
+1. Home trip switch
+2. Ladder trip switch
+3. AVS 
+GEN
+1. Comm trip switch
+
+
+Actuations :
+CLAMP L
+1. Piston
+2. Motor
+3. 
+CLAMP R
+1. Piston
+2. Motor
+3. Servo
+GEN
+1. Peepee
+
+
+UI :
+CLAMP L
+1. Autonic
+2. 1 trip
+3. HALL x2
+4. Servo
+CLAMP R
+1. Autonic
+2. 1 trip
+3. HALL x2
+
+
+
+(7)
 */
 

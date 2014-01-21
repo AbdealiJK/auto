@@ -12,7 +12,9 @@
 #define MOTOR_2     4
 #define PISTON_PIN  13 // 13 and A5
 #define HOME_TRIP   10 // -1 means no trip available
-#define MIDDLE_TRIP 11 // Pin D10 : -1 means no trip is present. 0 means trip is on other clamp
+#define MIDDLE_TRIP 0 // -1 means no trip is present. 0 means trip is on other clamp
+#define FIXEDCLAMP_TRIP 11 // -1 means no trip is present. 0 means trip is on other clamp
+#define FIXEDCLAMP_TRIPPED 0
 #define MIDDLE_TRIPPED 0
 #define HOME_TRIPPED 1
 
@@ -28,9 +30,11 @@
 #define MOTOR_2     5
 #define PISTON_PIN  A5 // 13 and A5
 #define HOME_TRIP   10 // -1 means no trip available
-#define MIDDLE_TRIP 0 // Pin D10 : -1 means no trip is present. 0 means trip is on other clamp
-#define MIDDLE_TRIPPED 1
-#define HOME_TRIPPED 1
+#define MIDDLE_TRIP 11 // -1 means no trip is present. 0 means trip is on other clamp
+#define FIXEDCLAMP_TRIP 0 // -1 means no trip is present. 0 means trip is on other clamp
+#define FIXEDCLAMP_TRIPPED 0
+#define MIDDLE_TRIPPED 0
+#define HOME_TRIPPED 0
 
 #endif
 
