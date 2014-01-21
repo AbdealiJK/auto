@@ -1,33 +1,46 @@
 #define SLAVE 0
 
 #if SLAVE
+
 // Clamp names
 #define MY_CLAMP 'r'
 // Comm ports
 #define PC Serial1
 #define NEXT 0 && Serial
+// Pins
+#define MOTOR_1     5
+#define MOTOR_2     4
+#define PISTON_PIN  13 // 13 and A5
+#define HOME_TRIP   10 // -1 means no trip available
+#define MIDDLE_TRIP 11 // Pin D10 : -1 means no trip is present. 0 means trip is on other clamp
+#define MIDDLE_TRIPPED 0
+#define HOME_TRIPPED 1
+
 #else
+
 // Clamp names
 #define MY_CLAMP 'l'
 // Comm ports
 #define PC Serial
 #define NEXT Serial1
-#endif
-
-// Clamp names
-char NEXT_CLAMP = 'r';
-
-
-
 // Pins
 #define MOTOR_1     4
 #define MOTOR_2     5
+#define PISTON_PIN  A5 // 13 and A5
+#define HOME_TRIP   10 // -1 means no trip available
+#define MIDDLE_TRIP 0 // Pin D10 : -1 means no trip is present. 0 means trip is on other clamp
+#define MIDDLE_TRIPPED 1
+#define HOME_TRIPPED 1
+
+#endif
+
+
 #define MOTOR_PWM   6
 #define AUTONIC_PIN 7
-#define PISTON_PIN  13 // Aand 5
-#define HOME_TRIP   11 // -1 means no trip available
-#define MIDDLE_TRIP 10 // -1 means no trip is present. 0 means trip is on other clamp
 #define RUNG_TRIP   12
+
+// Clamp names
+char NEXT_CLAMP = 'r';
 
 // Analog flicker correction length
 #define SAMPLE_LENGTH 100
@@ -39,7 +52,6 @@ char NEXT_CLAMP = 'r';
 #define OPEN  1
 #define CLOSE 0
 
-#define TRIPPED 0
 #define TRIP_CHAR '$'
 #define TRIP_CHAR_RUNG '#'
 
@@ -65,8 +77,6 @@ void setup() {
   Serial1.begin(9600);
   while (!SLAVE && !PC); // wait for serial port to connect.
   
-  pinMode(13, OUTPUT);
-  digitalWrite(13, HIGH);
   PC.println("Serial started");
 
   // Pinmodes
@@ -95,19 +105,6 @@ void setup() {
   PC.print("My clamp : \t");
   PC.println(MY_CLAMP);
   PC.print(PC_END);
-  // Wait for the slave hihihihih
-/*  while (!Serial1); // wait for serial port to connect.  
-  Serial1.print(PC_END);
-  while(!Serial1.available());
-  Serial.println("SLAVE serial found something");
-  Serial1.print(PC_END);
-  delay(2);
-  while( Serial1.available() && Serial1.read() != PC_END );
-  Serial.println("SLAVE data got");
-*/  
-  //listen();
-  
-  digitalWrite(13, LOW);
 }
 
 void loop() {
@@ -128,13 +125,9 @@ void loop() {
     master_ui();
   }
   update_trip();
-
-  /*delay(100);
-  digitalWrite(13, HIGH);
-  delay(100);
-  digitalWrite(13, LOW);*/
+//  if ( MIDDLE_TRIP ) Serial.print(digitalRead(MIDDLE_TRIP));
   Serial.print(MY_CLAMP);
-  Serial.println("-loop");
+  Serial.println("-loop ");
   delay(100);
 }
 

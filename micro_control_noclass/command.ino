@@ -21,6 +21,12 @@ void master_ui() {
       PC.print("-Motor ");
       PC.print("\t Position = ");
       PC.println(pos);
+      PC.print("-Motor ");
+      PC.print("\t Home trip = ");
+      PC.println(home_trip);
+      PC.print("-Motor ");
+      PC.print("\t Mid trip = ");
+      PC.println(middle_trip);
       PC.print(PC_END);      
     } 
     else if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
