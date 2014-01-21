@@ -36,10 +36,10 @@ int run(int dir, int pwm) {
 
   digitalWrite(MOTOR_1, dir / 2);
   //Serial.print("m1 : ");
-  //Serial.println(dir/2);  
+  //Serial.println(dir/2);
   digitalWrite(MOTOR_2, dir % 2);
   //Serial.print("m2 : ");
-  //Serial.println(dir%2);  
+  //Serial.println(dir%2);
   analogWrite(MOTOR_PWM, pwm);
   return 1;
 
@@ -140,13 +140,33 @@ void update_trip() {
     if (MIDDLE_TRIP != -1 && digitalRead(MIDDLE_TRIP) == middle_trip) {
       middle_trip = digitalRead(MIDDLE_TRIP) == TRIPPED;
       Serial1.print(TRIP_CHAR);
-      Serial1.print(MIDDLE_TRIP);
+      Serial1.print(middle_trip);
+      Serial.print("middle_trips sent : ");
+      Serial.print(TRIP_CHAR);
+      Serial.print(" ... ");
+      Serial.println(middle_trip);
     }
   }
   else { // I need to get middle_trip data from others
-    if (PC.peek() == TRIP_CHAR) {
-      PC.read(); // to bypass TRIP_CHAR
-      middle_trip = PC.read()-'0';
+    if (Serial1.available() && Serial1.peek() == TRIP_CHAR) {
+      Serial1.read(); // to bypass TRIP_CHAR
+      int start_time = millis();
+      while (!Serial1.available()) {
+        if ( millis() - start_time > 5 ) {
+          start_time = -1;
+        }
+      }
+      if ( start_time != -1 ) {
+        char trip = Serial1.read();
+        if ( trip == '0' || trip == '1' ) { // remove garbage data
+          middle_trip = trip - '0';
+          Serial.print("middle_trip got : ");
+          Serial.println(middle_trip);
+        } else {
+          Serial.print("garbage middle_trip got : ");
+          Serial.println((int)trip);
+        }
+      }
     }
   }
   home_trip = ( digitalRead(HOME_TRIP) == TRIPPED);
