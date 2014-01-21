@@ -38,6 +38,7 @@
 #define MOTOR_PWM   6
 #define AUTONIC_PIN 7
 #define RUNG_TRIP   12
+#define TRIPPED 0
 
 // Clamp names
 char NEXT_CLAMP = 'r';
