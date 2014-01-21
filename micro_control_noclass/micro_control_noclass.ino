@@ -27,6 +27,7 @@ char NEXT_CLAMP = 'r';
 #define PISTON_PIN  13 // Aand 5
 #define HOME_TRIP   11 // -1 means no trip available
 #define MIDDLE_TRIP 10 // -1 means no trip is present. 0 means trip is on other clamp
+#define RUNG_TRIP   12
 
 // Analog flicker correction length
 #define SAMPLE_LENGTH 100
@@ -40,11 +41,12 @@ char NEXT_CLAMP = 'r';
 
 #define TRIPPED 0
 #define TRIP_CHAR '$'
+#define TRIP_CHAR_RUNG '#'
 
 #define PC_END '~'
 #define HOME_SPEED 255
 
-int home_trip = 0, middle_trip = 0,
+int home_trip = 0, middle_trip = 0, rung_trip = 0,rflag = 0, // rflag to check if rung trip must be checked
     max_pwm = 150, acc_pwm = 50,
     pos = 0, target_pos = 0;
 

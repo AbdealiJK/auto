@@ -36,10 +36,10 @@ int run(int dir, int pwm) {
 
   digitalWrite(MOTOR_1, dir / 2);
   //Serial.print("m1 : ");
-  //Serial.println(dir/2);  
+  //Serial.println(dir/2);
   digitalWrite(MOTOR_2, dir % 2);
   //Serial.print("m2 : ");
-  //Serial.println(dir%2);  
+  //Serial.println(dir%2);
   analogWrite(MOTOR_PWM, pwm);
   return 1;
 
@@ -140,13 +140,26 @@ void update_trip() {
     if (MIDDLE_TRIP != -1 && digitalRead(MIDDLE_TRIP) == middle_trip) {
       middle_trip = digitalRead(MIDDLE_TRIP) == TRIPPED;
       Serial1.print(TRIP_CHAR);
-      Serial1.print(MIDDLE_TRIP);
+      Serial1.print(middle_trip);
     }
   }
   else { // I need to get middle_trip data from others
     if (PC.peek() == TRIP_CHAR) {
       PC.read(); // to bypass TRIP_CHAR
-      middle_trip = PC.read()-'0';
+      middle_trip = PC.read() - '0';
+    }
+  }
+  if (RUNG_TRIP != 0 && rflag == 1)  { // check if I have rung_trip and check if rung trip must be checked
+    if (RUNG_TRIP != -1 && digitalRead(RUNG_TRIP) == rung_trip) {
+      rung_trip = digitalRead(RUNG_TRIP) == TRIPPED;
+      Serial1.print(TRIP_CHAR_RUNG);
+      Serial1.print(rung_trip);
+    }
+  }
+  else { // I need to get rung_trip data from others
+    if (PC.peek() == TRIP_CHAR_RUNG) {
+      PC.read(); // to bypass TRIP_CHAR
+      rung_trip = PC.read() - '0';
     }
   }
   home_trip = ( digitalRead(HOME_TRIP) == TRIPPED);

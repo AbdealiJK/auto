@@ -1,4 +1,4 @@
-Fvoid master_ui() {
+void master_ui() {
 
   char c = PC.read();
 
