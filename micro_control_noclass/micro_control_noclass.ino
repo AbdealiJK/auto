@@ -41,6 +41,8 @@
 
 #define MOTOR_PWM   6
 #define AUTONIC_PIN 7
+#define RUNG_TRIP   12
+#define TRIPPED 0
 
 // Clamp names
 char NEXT_CLAMP = 'r';
@@ -56,11 +58,12 @@ char NEXT_CLAMP = 'r';
 #define CLOSE 0
 
 #define TRIP_CHAR '$'
+#define TRIP_CHAR_RUNG '#'
 
 #define PC_END '~'
 #define HOME_SPEED 255
 
-int home_trip = 0, middle_trip = 0,
+int home_trip = 0, middle_trip = 0, rung_trip = 0,rflag = 0, // rflag to check if rung trip must be checked
     max_pwm = 150, acc_pwm = 50,
     pos = 0, target_pos = 0;
 

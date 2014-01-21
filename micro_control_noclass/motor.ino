@@ -137,11 +137,18 @@ void go_home()
 }
 void update_trip() {
   if (MIDDLE_TRIP != 0)  { // I have middle_trip
+    //    int temp_mid_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
+    //    Serial.println(temp_mid_trip);
 
     if (MIDDLE_TRIP != -1 ) { //&& temp_mid_trip != middle_trip) {
       middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
       Serial1.print(TRIP_CHAR);
       Serial1.print(middle_trip);
+
+      Serial.print("middle_trips sent : ");
+      Serial.print(TRIP_CHAR);
+      Serial.print(" ... ");
+      Serial.println(middle_trip);
     }
   }
   else { // I need to get middle_trip data from others
@@ -159,6 +166,13 @@ void update_trip() {
           middle_trip = trip - '0';
         }
       }
+    }
+  }
+  if (RUNG_TRIP != 0 && rflag == 1)  { // check if I have rung_trip and check if rung trip must be checked
+    if (RUNG_TRIP != -1 && digitalRead(RUNG_TRIP) == rung_trip) {
+      rung_trip = digitalRead(RUNG_TRIP) == TRIPPED;
+      Serial1.print(TRIP_CHAR_RUNG);
+      Serial1.print(rung_trip);
     }
   }
   home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
