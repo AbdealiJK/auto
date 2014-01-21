@@ -137,8 +137,11 @@ void go_home()
 }
 void update_trip() {
   if (MIDDLE_TRIP != 0)  { // I have middle_trip
-    if (MIDDLE_TRIP != -1 && digitalRead(MIDDLE_TRIP) == middle_trip) {
-      middle_trip = digitalRead(MIDDLE_TRIP) == TRIPPED;
+//    int temp_mid_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
+//    Serial.println(temp_mid_trip);
+    
+    if (MIDDLE_TRIP != -1 ) { //&& temp_mid_trip != middle_trip) {
+      middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
       Serial1.print(TRIP_CHAR);
       Serial1.print(middle_trip);
       Serial.print("middle_trips sent : ");
@@ -169,7 +172,7 @@ void update_trip() {
       }
     }
   }
-  home_trip = ( digitalRead(HOME_TRIP) == TRIPPED);
+  home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
 }
 
 

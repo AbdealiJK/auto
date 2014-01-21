@@ -10,9 +10,11 @@
 // Pins
 #define MOTOR_1     5
 #define MOTOR_2     4
-#define PISTON_PIN  A5 // and A5
-#define HOME_TRIP   11 // -1 means no trip available
-#define MIDDLE_TRIP 10 // Pin D10 : -1 means no trip is present. 0 means trip is on other clamp
+#define PISTON_PIN  13 // 13 and A5
+#define HOME_TRIP   10 // -1 means no trip available
+#define MIDDLE_TRIP 11 // Pin D10 : -1 means no trip is present. 0 means trip is on other clamp
+#define MIDDLE_TRIPPED 0
+#define HOME_TRIPPED 1
 
 #else
 
@@ -22,11 +24,13 @@
 #define PC Serial
 #define NEXT Serial1
 // Pins
-#define MOTOR_1     5
-#define MOTOR_2     4
-#define PISTON_PIN  A5 // and A5
-#define HOME_TRIP   11 // -1 means no trip available
+#define MOTOR_1     4
+#define MOTOR_2     5
+#define PISTON_PIN  A5 // 13 and A5
+#define HOME_TRIP   10 // -1 means no trip available
 #define MIDDLE_TRIP 0 // Pin D10 : -1 means no trip is present. 0 means trip is on other clamp
+#define MIDDLE_TRIPPED 1
+#define HOME_TRIPPED 1
 
 #endif
 
@@ -47,7 +51,6 @@ char NEXT_CLAMP = 'r';
 #define OPEN  1
 #define CLOSE 0
 
-#define TRIPPED 0
 #define TRIP_CHAR '$'
 
 #define PC_END '~'
@@ -120,7 +123,7 @@ void loop() {
     master_ui();
   }
   update_trip();
-
+//  if ( MIDDLE_TRIP ) Serial.print(digitalRead(MIDDLE_TRIP));
   Serial.print(MY_CLAMP);
   Serial.println("-loop ");
   delay(100);
