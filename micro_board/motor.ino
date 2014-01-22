@@ -29,8 +29,8 @@ void piston(int v) {
   digitalWrite(PISTON_PIN, v == CLOSE);
 }
 
-void go_home() {
-  while ( run(HOME, HOME_SPEED) == 1 ) {
+void go_home(int sp) {
+  while ( run(HOME, sp) == 1 ) {
     if ( PC.available() && PC.read() == 'q' ) {
       run(STOP, 255);
       break;

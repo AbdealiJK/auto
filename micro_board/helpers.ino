@@ -1,8 +1,8 @@
 int pc_get_int() {
   int temp = 0, next_val, neg = 1;
   char temp_c;
-  
-  while(!PC.available());
+
+  while (!PC.available());
   delay(2);
   next_val = PC.peek();
   if ( next_val == '-' ) {
@@ -18,7 +18,7 @@ int pc_get_int() {
   }
   return temp * neg;
 }
-    
+
 void listen()
 {
   char temp = !PC_END;
@@ -34,4 +34,22 @@ void listen()
   }
 }
 
-
+int q_stop () {
+  if ( PC.available() && PC.peek() == 'q' ) {
+    PC.read();
+    run(STOP, 255);
+    PC.print(" ...manual stop... ");
+    NEXT.print('q');
+    listen();
+    return 1;
+  } else if ( PC.available() && PC.peek() == 'z' ) {
+    PC.read();
+    run(STOP, 255);
+    piston(OPEN);
+    PC.print(" ...manual complete halt... ");
+    NEXT.print('z');
+    listen();
+    return 1;
+  }
+  return 0;
+}

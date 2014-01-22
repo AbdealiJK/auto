@@ -13,7 +13,7 @@ void ui() {
     if ( c2 == 'r' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RESET
       PC.print(MY_CLAMP);
       PC.print("-motor moving to home trip switch ... ");
-      go_home();
+      go_home(HOME_SPEED);
       PC.println("DONE");
       PC.print(PC_END);
     }
@@ -42,11 +42,7 @@ void ui() {
       PC.print(vel);
       PC.print(" ... ");
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
-        if ( PC.available() && PC.read() == 'q' ) {
-          run(STOP, 255);
-          PC.print(" manual broken - ");
-          break;
-        }
+        q_stop();
       }
       PC.println("DONE");
       PC.print(PC_END);
@@ -73,23 +69,8 @@ void ui() {
       NEXT.write(PC.read());
     listen();
   }
-  else if ( c == 'q' ) {
-    // >>>>>>>>>>>>>>>>>>>>> STOP MOVING !!!!!!!!!!!!!!!!!
-    run(STOP, 255);
-    PC.print(MY_CLAMP);
-    PC.println("-motor STOPPED !~");
-    NEXT.print(c);
-    listen();
-  }
-  else if ( c == 'z' ) {
-    // >>>>>>>>>>>>>>>>>>>>> STOP IT ALL !!!!!!!!!!!!!!!!!
-    run(STOP, 255);
-    piston(OPEN);
-    PC.print(MY_CLAMP);
-    PC.println("-everything STOPPED !~");
-    NEXT.print(c);
-    listen();
-  }
+  
+  q_stop();
 
 }
 

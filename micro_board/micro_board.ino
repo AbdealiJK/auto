@@ -56,10 +56,6 @@ char NEXT_CLAMP = 'r';
 #define PC_END '~'
 #define HOME_SPEED 255
 
-#define SEESAW      1
-#define SWING       2
-#define POLEWALK    3
-#define LADDER      4
 
 int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0,
     avs_value = 0,
@@ -71,7 +67,7 @@ void calc_pos();
 void piston(int);
 int goto_pos(int);
 int goto_pos();
-void go_home();
+void go_home(int);
 void update_trip();
 
 void setup() {
