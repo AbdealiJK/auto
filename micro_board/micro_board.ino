@@ -1,4 +1,4 @@
-#define SLAVE 0
+#define SLAVE     1
 
 #if SLAVE
 
@@ -10,9 +10,6 @@
 #define MOTOR_2             4
 
 #define HOME_TRIP           11 // -1 means no trip available
-#define MIDDLE_TRIP         0 // -1 means no trip is present. 0 means trip is on other clamp
-#define FIXEDCLAMP_TRIP     10  // -1 means no trip is present. 0 means trip is on other clamp
-#define COMM_TRIP           0 // -1 means no trip is present. 0 means trip is on other clamp
 #define HOME_TRIPPED        LOW
 
 #else
@@ -25,15 +22,15 @@
 #define MOTOR_2             4
 
 #define HOME_TRIP           -1 // -1 means no trip available
-#define MIDDLE_TRIP         11 // -1 means no trip is present. 0 means trip is on other clamp
-#define FIXEDCLAMP_TRIP     0 // -1 means no trip is present. 0 means trip is on other clamp
-#define COMM_TRIP           0 // -1 means no trip is present. 0 means trip is on other clamp
 #define HOME_TRIPPED        HIGH
 
 #endif
 
+#define MIDDLE_TRIP         11
+#define FIXEDCLAMP_TRIP     A3
+#define COMM_TRIP           0
 #define MIDDLE_TRIPPED      LOW
-#define FIXEDCLAMP_TRIPPED  LOW
+#define FIXEDCLAMP_TRIPPED  HIGH
 #define COMM_TRIPPED        LOW
 
 #define MOTOR_PWM   6
@@ -51,9 +48,9 @@ char NEXT_CLAMP = 'r';
 #define OPEN  1
 #define CLOSE 0
 
-#define COMM_CHAR '$'
-
+#define PC_BEGIN '$'
 #define PC_END '~'
+
 #define HOME_SPEED 255
 
 
@@ -64,10 +61,7 @@ int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0,
 
 void reset();
 int run(int, int);
-void calc_pos();
 void piston(int);
-int goto_pos(int);
-int goto_pos();
 void go_home(int);
 void update_trip();
 
@@ -88,20 +82,31 @@ void setup() {
   pinMode(PISTON_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
   pinMode(MIDDLE_TRIP, INPUT);
+  if ( !SLAVE ) {
+    pinMode(FIXEDCLAMP_TRIP, INPUT);
+    pinMode(COMM_TRIP, INPUT);
+  }
   run(STOP, 255);
 
   // Init basic variables
   PC.println("Setting up basics ...");
   NEXT_CLAMP = (MY_CLAMP == 'l') ? 'r' : 'l';
 
+  middle_trip = !MIDDLE_TRIPPED;
+  fixedclamp_trip = !FIXEDCLAMP_TRIPPED;
+  comm_trip = !COMM_TRIPPED;
+  last_middle_trip = middle_trip;
+  last_fixedclamp_trip = fixedclamp_trip;
+  last_comm_trip = comm_trip;
+
   //setup_vcnl();
   run(STOP, 255);
-  update_trips();
+  //update_trips();
   //update_avs();
 
-  #ifdef TEST
-    test();
-   #endif
+#ifdef TEST
+  test();
+#endif
 
   // Display initial values :
   PC.print("My clamp : \t");
@@ -126,20 +131,18 @@ void setup() {
 void loop() {
 
   ui();
-  
-    update_trips();
-//    update_avs();
-//    Serial.print(MY_CLAMP);
-//    Serial.print("-loop -- ");
-//    Serial.println(loop_count);
-  
+
+  //    update_trips();
+  //    update_avs();
+  //  Serial.print(MY_CLAMP);
+  // Serial.println("-loop -- ");
+
+
   while (PC.available())
     PC.read();
 
   while (NEXT.available())
     NEXT.read();
-    
-  loop_count++;
-  delay(10);
+  delay(100);
 }
 

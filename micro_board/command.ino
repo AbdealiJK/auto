@@ -1,8 +1,8 @@
 void ui() {
 
   if ( ! PC.available() )
-    return;  
-    
+    return;
+
   char c = PC.peek();
 
   if ( c == MY_CLAMP ) {
@@ -49,6 +49,24 @@ void ui() {
       PC.println("DONE");
       PC.print(PC_END);
     }
+    else if ( c2 == 'f' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>> MOTION with fixed clamp also
+      if ( SLAVE ) Serial.print("Got V");
+      int vel = pc_get_int();
+      PC.print(MY_CLAMP);
+      PC.print("-motor moving (with fixed clamp) at pwm = ");
+      PC.print(vel);
+      PC.print(" ... ");
+      while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
+        if ( q_stop() ) break;
+        if ( fixedclamp_trip ) {
+          run ( STOP, 255 );
+          PC.println("fixed clamp pressed");
+          break;
+        }
+      }
+      PC.println("DONE");
+      PC.print(PC_END);
+    }
     else if ( c2 == 'p' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON
       while (!PC.available());
       if ( PC.read() == 'c' ) {
@@ -73,8 +91,13 @@ void ui() {
       NEXT.write(PC.read());
     listen();
   }
-  
-  q_stop();
 
+  if ( c == '4' ) {
+    PC.read();
+    NEXT.print(c);
+    ladder () ;
+  }
+
+  q_stop();
 }
 
