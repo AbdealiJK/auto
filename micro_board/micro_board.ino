@@ -1,4 +1,4 @@
-#define SLAVE     1
+#define SLAVE     0
 
 #if SLAVE
 
@@ -6,8 +6,8 @@
 #define PC                  Serial1
 #define NEXT                0 && Serial
 // Pins
-#define MOTOR_1             5
-#define MOTOR_2             4
+#define MOTOR_1             4
+#define MOTOR_2             5
 
 #define HOME_TRIP           11 // -1 means no trip available
 #define HOME_TRIPPED        LOW
@@ -28,7 +28,7 @@
 
 #define MIDDLE_TRIP         11
 #define FIXEDCLAMP_TRIP     A3
-#define COMM_TRIP           0
+#define COMM_TRIP           -1
 #define MIDDLE_TRIPPED      LOW
 #define FIXEDCLAMP_TRIPPED  HIGH
 #define COMM_TRIPPED        LOW
@@ -81,8 +81,8 @@ void setup() {
   pinMode(AUTONIC_PIN, INPUT);
   pinMode(PISTON_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
-  pinMode(MIDDLE_TRIP, INPUT);
   if ( !SLAVE ) {
+    pinMode(MIDDLE_TRIP, INPUT);
     pinMode(FIXEDCLAMP_TRIP, INPUT);
     pinMode(COMM_TRIP, INPUT);
   }

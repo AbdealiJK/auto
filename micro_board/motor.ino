@@ -14,7 +14,7 @@ int run(int dir, int pwm) {
     digitalWrite(MOTOR_1, 0);
     digitalWrite(MOTOR_2, 0);
     analogWrite(MOTOR_PWM, 255);
-    PC.println("\t Trip switch CENTRE pressed for some motor ! ~");
+    PC.println("\t Trip switch MIDDLE pressed for some motor ! ~");
     return 0;
   }
 
@@ -42,7 +42,7 @@ void update_trips() {
   if (HOME_TRIP != -1 ) {
     home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
   }
-  if ( !SLAVE ) {
+  if ( ! SLAVE ) {
     if (MIDDLE_TRIP != -1 ) {
       middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
     }

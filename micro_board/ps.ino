@@ -12,14 +12,14 @@ void ladder() {
       int n = 4;
       while (n--) {
         
-        PC.print("Closing piston");
+        Serial.println("Closing piston");
         piston(CLOSE); // clamp
-        PC.print("Piston closed");
+        Serial.println("Piston closed");
         
         Serial.println("Waiting for 'c' ... ");
         while( !Serial.available() || ( Serial.available() && Serial.read() != 'c' ) );
                 
-        PC.print("Going towards middle");
+        Serial.println("Going towards middle");
         while( run ( MID, 200 ) ) { // Bot goes up till fixedclamp_trip
           if ( q_stop() ) break;
           if ( fixedclamp_trip ) {
@@ -37,7 +37,7 @@ void ladder() {
         long start_time = millis();
         while( run ( HOME, 200 ) ) { // Bot goes down a little 
           if ( q_stop() ) break;
-          if ( millis() - start_time > 200 ) {
+          if ( millis() - start_time > 20 ) {
             break; 
           }
         }
