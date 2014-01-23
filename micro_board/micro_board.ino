@@ -27,14 +27,13 @@
 #endif
 
 #define MIDDLE_TRIP         11
-#define FIXEDCLAMP_TRIP     A3
+#define FIXEDCLAMP_TRIP     7
 #define COMM_TRIP           -1
 #define MIDDLE_TRIPPED      LOW
 #define FIXEDCLAMP_TRIPPED  HIGH
 #define COMM_TRIPPED        LOW
 
 #define MOTOR_PWM   6
-#define AUTONIC_PIN 7
 #define PISTON_PIN  A5
 
 // Clamp names
@@ -78,7 +77,6 @@ void setup() {
   pinMode(MOTOR_1, OUTPUT);
   pinMode(MOTOR_2, OUTPUT);
   pinMode(MOTOR_PWM, OUTPUT);
-  pinMode(AUTONIC_PIN, INPUT);
   pinMode(PISTON_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
   if ( !SLAVE ) {

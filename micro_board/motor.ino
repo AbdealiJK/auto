@@ -55,7 +55,6 @@ void update_trips() {
         fixedclamp_trip = 1;
       else
         fixedclamp_trip = 0;
-
     }
     if (COMM_TRIP != -1 ) {
       comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;

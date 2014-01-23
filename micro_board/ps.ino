@@ -1,4 +1,5 @@
 void ladder() {
+  long start_time;
   while (1) {
     if ( MY_CLAMP == 'r' ) {
       // First rung -- right : go home
@@ -19,8 +20,8 @@ void ladder() {
         Serial.println("Waiting for 'c' ... ");
         while( !Serial.available() || ( Serial.available() && Serial.read() != 'c' ) );
                 
-        Serial.println("Going towards middle");
-        while( run ( MID, 200 ) ) { // Bot goes up till fixedclamp_trip
+        Serial.println("Going towards home");
+        while( run ( HOME, 200 ) ) { // Bot goes up till fixedclamp_trip
           if ( q_stop() ) break;
           if ( fixedclamp_trip ) {
             Serial.println("Fixed clamp was pressed !");
@@ -28,16 +29,39 @@ void ladder() {
             break;
           }
         }
-        Serial.println("Stopped");
+        while( run ( HOME, 200 ) ) { // Bot goes up till fixedclamp_trip
+          if ( q_stop() ) break;
+          if ( !fixedclamp_trip ) {
+            Serial.println("Fixed clamp was removed !");
+            run ( STOP, 255 );
+            break;
+          }
+        }
+        Serial.println("Stopped ... but not done");
         
         Serial.println("Waiting for 'c' ... ");        
         while( !Serial.available() || ( Serial.available() && Serial.read() != 'c' ) );
         
-        Serial.println("Moving home for a while");
-        long start_time = millis();
-        while( run ( HOME, 200 ) ) { // Bot goes down a little 
+        start_time = millis();
+        while( run ( HOME, 200 ) ) { // Bot goes up till fixedclamp_trip
           if ( q_stop() ) break;
-          if ( millis() - start_time > 20 ) {
+          if ( millis() - start_time > 100 ) {
+            run(STOP, 255);
+            break; 
+          }
+        }
+        Serial.println("Stopped");
+
+        Serial.println("Waiting for 'c' ... ");        
+        while( !Serial.available() || ( Serial.available() && Serial.read() != 'c' ) );
+        
+
+        Serial.println("Moving middle for a while");
+        start_time = millis();
+        while( run ( MID, 200 ) ) { // Bot goes down a little 
+          if ( q_stop() ) break;
+          if ( millis() - start_time > 150 ) {
+            run(STOP, 255);
             break; 
           }
         }
@@ -64,7 +88,20 @@ void ladder() {
       }
 
       // Last rung
-
+      /*  Serial.println("Going towards home");
+        while( run ( HOME, 200 ) ) { // Bot goes up till fixedclamp_trip
+          if ( q_stop() ) break;
+          if ( fixedclamp_trip ) {
+            Serial.println("Fixed clamp was pressed !");
+            run ( STOP, 255 );
+            break;
+          }
+        }
+        Serial.println("Stopped");
+        
+        Serial.println("Waiting for 'c' ... ");        
+        while( !Serial.available() || ( Serial.available() && Serial.read() != 'c' ) );
+      */
       // Flag
     }
   }
