@@ -2,7 +2,7 @@ void ladder() {
   while (1) {
     if ( MY_CLAMP == 'r' ) {
       // First rung -- right : go home
-      go_home(200);
+ //     go_home(200);
       break;
     } else {
       // First rung -- left : go to 2nd rung
@@ -40,7 +40,7 @@ void ladder() {
 }
 
 void seesaw() {
-
+  
 }
 void swing() {
 

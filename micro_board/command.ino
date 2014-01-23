@@ -11,6 +11,7 @@ void ui() {
     while (!PC.available());
     char c2 = PC.read();
     if ( c2 == 'r' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RESET
+      if ( SLAVE ) Serial.print("Got R");
       PC.print(MY_CLAMP);
       PC.print("-motor moving to home trip switch ... ");
       go_home(HOME_SPEED);
@@ -19,6 +20,7 @@ void ui() {
     }
     else if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
       // Display initial values :
+      if ( SLAVE ) Serial.print("Got W");
       PC.print(">>>>>>>>>> data for : ");
       PC.println(MY_CLAMP);
       PC.print("Trips - home : \t");
@@ -33,16 +35,16 @@ void ui() {
       PC.println(avs_value);
       PC.println(" >> begun");
       PC.print(PC_END);
-
-      PC.print(PC_END);
     }
     else if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
+      if ( SLAVE ) Serial.print("Got V");
       int vel = pc_get_int();
+      PC.print(MY_CLAMP);
       PC.print("-motor moving at pwm = ");
       PC.print(vel);
       PC.print(" ... ");
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
-        q_stop();
+        if ( q_stop() ) break;
       }
       PC.println("DONE");
       PC.print(PC_END);
@@ -50,11 +52,13 @@ void ui() {
     else if ( c2 == 'p' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON
       while (!PC.available());
       if ( PC.read() == 'c' ) {
+        if ( SLAVE ) Serial.print("Got PC");
         PC.print("Closing piston  ");
         PC.println(MY_CLAMP);
         piston(CLOSE);
       }
       else {
+        if ( SLAVE ) Serial.print("Got PO");
         PC.print("Opening piston ");
         PC.println(MY_CLAMP);
         piston(OPEN);

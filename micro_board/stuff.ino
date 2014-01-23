@@ -21,8 +21,12 @@ L298 Pin config: (from left)
 PINS on the Board
 Motors :     4, 5
 Motor pwm :  6
-Actuation :  A5, 13 --------------- 13 doesnt work for some reason
-Trips :      10(mid), 11(home), 
+Actuation :  
+  Towards l298 - A5
+  Away from l29813 --------------- 13 doesnt work for some reason
+Trips :      
+  Trip1 - 10 (mid), 
+  Trip2 - 11 (home), 
 Autonic :    7
 
 

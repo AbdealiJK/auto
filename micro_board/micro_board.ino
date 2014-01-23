@@ -9,22 +9,22 @@
 #define MOTOR_1             5
 #define MOTOR_2             4
 
-#define HOME_TRIP           10 // -1 means no trip available
+#define HOME_TRIP           11 // -1 means no trip available
 #define MIDDLE_TRIP         0 // -1 means no trip is present. 0 means trip is on other clamp
-#define FIXEDCLAMP_TRIP     11 // -1 means no trip is present. 0 means trip is on other clamp
+#define FIXEDCLAMP_TRIP     10  // -1 means no trip is present. 0 means trip is on other clamp
 #define COMM_TRIP           0 // -1 means no trip is present. 0 means trip is on other clamp
-#define HOME_TRIPPED        HIGH
+#define HOME_TRIPPED        LOW
 
 #else
 
 #define MY_CLAMP            'l'
 #define PC                  Serial
 #define NEXT                Serial1
+// Pins
+#define MOTOR_1             5
+#define MOTOR_2             4
 
-#define MOTOR_1             4
-#define MOTOR_2             5
-
-#define HOME_TRIP           10 // -1 means no trip available
+#define HOME_TRIP           -1 // -1 means no trip available
 #define MIDDLE_TRIP         11 // -1 means no trip is present. 0 means trip is on other clamp
 #define FIXEDCLAMP_TRIP     0 // -1 means no trip is present. 0 means trip is on other clamp
 #define COMM_TRIP           0 // -1 means no trip is present. 0 means trip is on other clamp
@@ -33,7 +33,7 @@
 #endif
 
 #define MIDDLE_TRIPPED      LOW
-#define FIXEDCLAMP_TRIPPED  HIGH
+#define FIXEDCLAMP_TRIPPED  LOW
 #define COMM_TRIPPED        LOW
 
 #define MOTOR_PWM   6
@@ -58,6 +58,7 @@ char NEXT_CLAMP = 'r';
 
 
 int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0,
+    last_home_trip = 0, last_middle_trip = 0, last_fixedclamp_trip = 0, last_comm_trip = 0,
     avs_value = 0,
     loop_count = 0, bot_status = 0;
 
@@ -72,8 +73,9 @@ void update_trip();
 
 void setup() {
   // Init serial
-  Serial.begin(9600);
-  Serial1.begin(9600);
+  Serial.begin(57600);
+  Serial1.begin(57600);
+
   while (!SLAVE && !PC); // wait for serial port to connect.
 
   PC.println("Serial started");
@@ -92,10 +94,14 @@ void setup() {
   PC.println("Setting up basics ...");
   NEXT_CLAMP = (MY_CLAMP == 'l') ? 'r' : 'l';
 
-  setup_vcnl();
+  //setup_vcnl();
   run(STOP, 255);
   update_trips();
-  update_avs();
+  //update_avs();
+
+  #ifdef TEST
+    test();
+   #endif
 
   // Display initial values :
   PC.print("My clamp : \t");
@@ -121,13 +127,11 @@ void loop() {
 
   ui();
   
-  if ( loop_count % 10 == 0 ) {
     update_trips();
-    update_avs();
-    Serial.print(MY_CLAMP);
-    Serial.print("-loop -- ");
-    Serial.println(loop_count);
-  }
+//    update_avs();
+//    Serial.print(MY_CLAMP);
+//    Serial.print("-loop -- ");
+//    Serial.println(loop_count);
   
   while (PC.available())
     PC.read();

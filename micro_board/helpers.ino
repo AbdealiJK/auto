@@ -26,9 +26,16 @@ void listen()
   {
     if (NEXT.available()) {
       temp  = NEXT.read();
+/*      if ( temp == COMM_CHAR ) {
+        NEXT.read();
+        NEXT.read();
+        NEXT.read();
+      }
+*/
       PC.print( temp );
     }
-    if ( PC.available() && PC.read() == 'q' ) {
+    if ( PC.available() && PC.peek() == 'q' ) {
+      PC.read();
       NEXT.print('q'); // charachter to be sent to slave for emergency stop
     }
   }
@@ -36,20 +43,64 @@ void listen()
 
 int q_stop () {
   if ( PC.available() && PC.peek() == 'q' ) {
-    PC.read();
-    run(STOP, 255);
-    PC.print(" ...manual stop... ");
+    if ( SLAVE ) Serial.print("Got Q");
     NEXT.print('q');
+    run(STOP, 255);
+    PC.print(MY_CLAMP);
+    PC.println("-motor ...manual stop... ");
+    Serial.println("STOPPED");
+    PC.print(PC_END);
     listen();
     return 1;
   } else if ( PC.available() && PC.peek() == 'z' ) {
-    PC.read();
+    if ( SLAVE ) Serial.print("Got Z");
+    NEXT.print('z');
     run(STOP, 255);
     piston(OPEN);
-    PC.print(" ...manual complete halt... ");
-    NEXT.print('z');
+    PC.print(MY_CLAMP);
+    PC.println("-motor ...manual complete halt... ");
+    PC.print(PC_END);
     listen();
     return 1;
   }
   return 0;
+}
+
+
+
+void test () {
+  // Display initial values :
+  while ( !Serial );
+  Serial.println("5sec delay");
+  Serial.println("This is the test mode. If you wish to go to normal mode, uncomment 'test()' in setup");
+  delay(5000);
+  while (1) {
+    update_trips();
+//    update_avs();
+    Serial.print("My clamp : \t");
+    Serial.println(MY_CLAMP);
+    Serial.print("Next clamp : \t");
+    Serial.println(NEXT_CLAMP);
+    Serial.print("Trips - home : \t");
+    Serial.println(digitalRead(HOME_TRIP));
+    Serial.print("Trips - mid : \t");
+    if ( MIDDLE_TRIP )   Serial.println(digitalRead(MIDDLE_TRIP));
+    else                 Serial.println("Middle trip is not with me");
+    Serial.print("Trips - fixedclamp : \t");
+    if ( FIXEDCLAMP_TRIP )    Serial.println(digitalRead(FIXEDCLAMP_TRIP));
+    else                      Serial.println("Fixedclamp is not with me");
+    Serial.print("Trips - comm : \t");
+    if ( COMM_TRIP )          Serial.println(digitalRead(COMM_TRIP));
+    else                      Serial.println("Communication trip is not with me");
+    Serial.print("AVS Value : \t");
+    Serial.println(avs_value);
+    Serial.println(" TESTS done");
+    while(!Serial.available() ) {
+      Serial.println("byebye");
+      delay(1000);
+    }
+    while(Serial.available())
+        Serial.read();
+      
+  }
 }
