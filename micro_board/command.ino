@@ -115,11 +115,7 @@ void ui() {
   if ( !SLAVE ) {
     if ( c == '4' ) {
       PC.read();
-      //    NEXT.print(c);
-      NEXT.print('r');
-      NEXT.print('v');
-      NEXT.print(-200);
-      ladder () ;
+      ladder () ;  
     }
   }
   q_stop();

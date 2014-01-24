@@ -52,6 +52,11 @@ char NEXT_CLAMP = 'r';
 
 #define HOME_SPEED 255
 
+#define QUIT_OR_CONTINUE \
+  PC.println("Waiting for 'c' ... ");\
+  while ( !PC.available() || (PC.available() && PC.peek() == 'c') || \
+          (PC.available() && PC.peek() == 'q') || (PC.read() && 0) ); \
+  if ( PC.read() == 'q' ) return; else PC.read()
 
 int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0,
     last_home_trip = 0, last_middle_trip = 0, last_fixedclamp_trip = 0, last_comm_trip = 0,
