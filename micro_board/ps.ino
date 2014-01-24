@@ -6,7 +6,7 @@ void ladder() {
 
   // First rung -- left : go to 2nd rung
   QUIT_OR_CONTINUE;
-  PS.println("Moving right clamp to extreme");
+  PC.println("Moving right clamp to extreme");
   NEXT.print(NEXT_CLAMP);
   NEXT.print('v');
   NEXT.print(-200);
@@ -116,9 +116,9 @@ void ladder() {
 
 void seesaw() {
   PC.println(">>>>>>>>>> See saw START");
-  
+
   // Move till AVS
-  int val = 100;
+  int vel = 100;
   QUIT_OR_CONTINUE;
   PC.print("Telling slave to move to avs ... ");
   NEXT.print(NEXT_CLAMP);
