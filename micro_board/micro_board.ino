@@ -1,4 +1,4 @@
-#define SLAVE     1
+#define SLAVE     0
 
 #if SLAVE
 
@@ -95,9 +95,9 @@ void setup() {
   PC.println("Setting up basics ...");
   NEXT_CLAMP = (MY_CLAMP == 'l') ? 'r' : 'l';
 
-  middle_trip = !MIDDLE_TRIPPED;
-  fixedclamp_trip = !FIXEDCLAMP_TRIPPED;
-  comm_trip = !COMM_TRIPPED;
+  middle_trip = 0;
+  fixedclamp_trip = 0;
+  comm_trip = 0;
   last_middle_trip = middle_trip;
   last_fixedclamp_trip = fixedclamp_trip;
   last_comm_trip = comm_trip;
