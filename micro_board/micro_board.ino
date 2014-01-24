@@ -16,7 +16,7 @@
 
 #define MY_CLAMP            'l'
 #define PC                  Serial
-#define NEXT                Serial1
+#define NEXT                0 && Serial1
 // Pins
 #define MOTOR_1             5
 #define MOTOR_2             4
@@ -97,7 +97,7 @@ void setup() {
   last_fixedclamp_trip = fixedclamp_trip;
   last_comm_trip = comm_trip;
 
-  //setup_vcnl();
+  setup_vcnl();
   run(STOP, 255);
   //update_trips();
   //update_avs();

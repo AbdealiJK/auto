@@ -60,7 +60,27 @@ void ui() {
         if ( q_stop() ) break;
         if ( fixedclamp_trip ) {
           run ( STOP, 255 );
-          PC.println("fixed clamp pressed");
+          PC.println("fixed clamp pressed ... ");
+          break;
+        }
+      }
+      PC.println("DONE");
+      PC.print(PC_END);
+    }
+    else if ( c2 == 'a' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>> MOTION with avs also
+      if ( SLAVE ) Serial.print("Got V");
+      int vel = pc_get_int();
+      PC.print(MY_CLAMP);
+      PC.print("-motor moving (with avs) at pwm = ");
+      PC.print(vel);
+      PC.print(" ... ");
+      update_avs();
+      while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
+        if ( q_stop() ) break;
+        update_avs();
+        if ( avs_value > 3400 ) {
+          run ( STOP, 255 );
+          PC.println("avs saw something ... ");
           break;
         }
       }
@@ -92,12 +112,16 @@ void ui() {
     listen();
   }
 
-  if ( c == '4' ) {
-    PC.read();
-    NEXT.print(c);
-    ladder () ;
+  if ( !SLAVE ) {
+    if ( c == '4' ) {
+      PC.read();
+      //    NEXT.print(c);
+      NEXT.print('r');
+      NEXT.print('v');
+      NEXT.print(-200);
+      ladder () ;
+    }
   }
-
   q_stop();
 }
 

@@ -46,11 +46,11 @@ void update_trips() {
     if (MIDDLE_TRIP != -1 ) {
       middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
     }
-    if (FIXEDCLAMP_TRIP != -1 ) {
+    if (FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
       int temp = 0, lim = 0;
       for ( lim = 0; lim < 10000; lim++ )
         temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
-      Serial.println(temp);
+//      Serial.println(temp);
       if ( temp > 0.7 * lim )
         fixedclamp_trip = 1;
       else

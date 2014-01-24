@@ -22,16 +22,10 @@ int pc_get_int() {
 void listen()
 {
   char temp = !PC_END;
-  while (!SLAVE && temp != PC_END)
+  while (NEXT && temp != PC_END)
   {
     if (NEXT.available()) {
       temp  = NEXT.read();
-      /*      if ( temp == COMM_CHAR ) {
-              NEXT.read();
-              NEXT.read();
-              NEXT.read();
-            }
-      */
       PC.print( temp );
     }
     if ( PC.available() && PC.peek() == 'q' ) {

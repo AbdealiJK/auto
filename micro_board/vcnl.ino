@@ -4,6 +4,13 @@
         SCL  ------------------------  A5
         SDA  ------------------------  A4
         IR+  ------------------------  5V (3.3V is fine too)
+  
+  Values for distance :
+  >> nothing - 3214
+  >> top - 3157
+  >> middle - 3370
+  >> bottom - 
+
  */
 #include <Wire.h>
 
@@ -47,12 +54,14 @@ void setup_vcnl()
 void update_avs() {
   int lim = 10;
   int n = lim;
-  long int proximityValue = 0;
+  unsigned int proximityValue = 0;
   while(n--) {
-    proximityValue += readProximity();
+    unsigned int temp = readProximity();
+    proximityValue += temp;
   }
   proximityValue /= lim;
   avs_value = proximityValue;
+  Serial.println(avs_value);
 }
 
 // readProximity() returns a 16-bit value from the VCNL4000's proximity data registers
@@ -65,7 +74,7 @@ unsigned int readProximity() {
   
   //while(!(readByte(COMMAND_0)&0x20)) 
   //  ;  // Wait for the proximity data ready bit to be set
-  delay(10);
+  delayMicroseconds(700);
   data = readByte(PROXIMITY_RESULT_MSB) << 8;
   data |= readByte(PROXIMITY_RESULT_LSB);
   
@@ -88,8 +97,9 @@ byte readByte(byte address) {
   Wire.write(address);
   Wire.endTransmission();
   Wire.requestFrom(VCNL4000_ADDRESS, 1);
-  while(!Wire.available())
-    ;
+//  while(!Wire.available())
+//    ;
+  delayMicroseconds(700);
   data = Wire.read();
 
   return data;
