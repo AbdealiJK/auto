@@ -1,4 +1,4 @@
-#define SLAVE     0
+#define SLAVE     1
 
 #if SLAVE
 
@@ -6,8 +6,8 @@
 #define PC                  Serial1
 #define NEXT                0 && Serial
 // Pins
-#define MOTOR_1             4
-#define MOTOR_2             5
+#define MOTOR_1             5
+#define MOTOR_2             4
 
 #define HOME_TRIP           11 // -1 means no trip available
 #define HOME_TRIPPED        LOW
@@ -16,7 +16,7 @@
 
 #define MY_CLAMP            'l'
 #define PC                  Serial
-#define NEXT                0 && Serial1
+#define NEXT                Serial1
 // Pins
 #define MOTOR_1             5
 #define MOTOR_2             4
@@ -146,6 +146,9 @@ void loop() {
 
   while (NEXT.available())
     NEXT.read();
+  
+  Serial.print(MY_CLAMP);
+  Serial.println("-loop");
   delay(100);
 }
 

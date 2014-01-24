@@ -4,7 +4,8 @@ void ui() {
     return;
 
   char c = PC.peek();
-
+  Serial.print("GOt :");
+  Serial.println(c);
   if ( c == MY_CLAMP ) {
     // >>>>>>>>>>>>>> CODE FOR MY CLAMP !!!!!!!!!!!!!!!!!
     PC.read();

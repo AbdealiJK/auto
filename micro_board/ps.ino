@@ -51,11 +51,13 @@ void ladder() {
 
     QUIT_OR_CONTINUE;
 
+    PC.print("Going upso that fixed clamp opens up fully ....");
     start_time = millis();
     while ( run ( HOME, 200 ) ) { // Bot goes up till fixedclamp_trip
       if ( q_stop() ) break;
       if ( millis() - start_time > 100 ) {
         run(STOP, 255);
+        PC.print(" time delay done ");
         break;
       }
     }
@@ -63,12 +65,13 @@ void ladder() {
 
     QUIT_OR_CONTINUE;
 
-    PC.println("Moving middle for a while");
+    PC.print("Moving middle for a small time ");
     start_time = millis();
     while ( run ( MID, 200 ) ) { // Bot goes down a little
       if ( q_stop() ) break;
       if ( millis() - start_time > 150 ) {
         run(STOP, 255);
+        PC.print(" time delay done ");
         break;
       }
     }
@@ -113,6 +116,8 @@ void ladder() {
   // Flag
 }
 
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void seesaw() {
   PC.println(">>>>>>>>>> See saw START");
@@ -155,6 +160,10 @@ void seesaw() {
   
   PC.println(">>>>>>>>>> See saw fully done");
 }
+
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
+
 void swing() {
   PC.println(">>>>>>>>>> Swing starting !!");
   // Move to correct positions
@@ -176,6 +185,9 @@ void swing() {
   
   PC.println(">>>>>>>>>> Swing fully done");
 }
+
+// --------------------------------------------------------------------------
+// --------------------------------------------------------------------------
 
 void polewalk() {
   
