@@ -37,7 +37,7 @@ void ui() {
       PC.print(PC_END);
     }
     else if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
-      if ( SLAVE ) Serial.print("Got V");
+      if ( SLAVE ) PC.print("Got V");
       int vel = pc_get_int();
       PC.print(MY_CLAMP);
       PC.print("-motor moving at pwm = ");
@@ -107,6 +107,7 @@ void ui() {
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
     delay(2);
+    Serial.println("Sending it to the other clamp");
     while (PC.available())
       NEXT.write(PC.read());
     listen();

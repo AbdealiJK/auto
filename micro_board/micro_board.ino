@@ -1,4 +1,4 @@
-#define SLAVE     0
+#define SLAVE     1
 
 #if SLAVE
 
