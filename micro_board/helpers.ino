@@ -22,6 +22,7 @@ int pc_get_int() {
 void listen()
 {
   char temp = !PC_END;
+  Serial.print("Waiting for next");
   while (NEXT && temp != PC_END)
   {
     if (NEXT.available()) {
@@ -33,6 +34,7 @@ void listen()
       NEXT.print('q'); // charachter to be sent to slave for emergency stop
     }
   }
+  Serial.print("DONENEEE");
 }
 
 int q_stop () {
@@ -69,7 +71,9 @@ void test () {
   Serial.println("This is the test mode. If you wish to go to normal mode, uncomment 'test()' in setup");
   delay(5000);
   while (1) {
-    update_trips();
+    update_middle_trip();
+    update_home_trip();
+    update_fixedclamp_trip();
     //    update_avs();
     Serial.print("My clamp : \t");
     Serial.println(MY_CLAMP);

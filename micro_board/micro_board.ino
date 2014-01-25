@@ -53,13 +53,13 @@ char NEXT_CLAMP = 'r';
 #define HOME_SPEED 255
 
 #define QUIT_OR_CONTINUE \
-  PC.println("Waiting for 'c' ... ");\
-  while ( !PC.available() || (PC.available() && PC.peek() == 'c') || \
-          (PC.available() && PC.peek() == 'q') || (PC.read() && 0) ); \
-  if ( PC.read() == 'q' ) return; else PC.read()
+  PC.println("Waiting for 'c' ... "); \
+  while ( 1 ) { \
+    if ( PC.available() && PC.peek() == 'q' ) return; \
+    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
+  }
 
 int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0,
-    last_home_trip = 0, last_middle_trip = 0, last_fixedclamp_trip = 0, last_comm_trip = 0,
     avs_value = 0,
     loop_count = 0, bot_status = 0;
 
@@ -98,9 +98,6 @@ void setup() {
   middle_trip = 0;
   fixedclamp_trip = 0;
   comm_trip = 0;
-  last_middle_trip = middle_trip;
-  last_fixedclamp_trip = fixedclamp_trip;
-  last_comm_trip = comm_trip;
 
   setup_vcnl();
   run(STOP, 255);

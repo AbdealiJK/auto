@@ -59,6 +59,8 @@ void ui() {
       PC.print(" ... ");
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
         if ( q_stop() ) break;
+
+        update_fixedclamp_trip();
         if ( fixedclamp_trip ) {
           run ( STOP, 255 );
           PC.println("fixed clamp pressed ... ");
@@ -117,7 +119,7 @@ void ui() {
   if ( !SLAVE ) {
     if ( c == '4' ) {
       PC.read();
-      ladder () ;  
+      ladder () ;
     }
   }
   q_stop();

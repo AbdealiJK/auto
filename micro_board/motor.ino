@@ -1,6 +1,7 @@
 // ------------------------------------------------
 int run(int dir, int pwm) {
-  update_trips();
+  update_home_trip();
+  update_middle_trip();
 
   if ( home_trip && dir == HOME ) {
     digitalWrite(MOTOR_1, 0);
@@ -38,28 +39,33 @@ void go_home(int sp) {
   }
 }
 
-void update_trips() {
-  if (HOME_TRIP != -1 ) {
-    home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
-  }
+void update_middle_trip() {
   if ( ! SLAVE ) {
     if (MIDDLE_TRIP != -1 ) {
       middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
     }
+  }
+}
+
+void update_home_trip() {
+  if (HOME_TRIP != -1 ) {
+    home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
+  }
+
+}
+
+void update_fixedclamp_trip() {
+  if ( !SLAVE) {
     if (FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
-      int temp = 0, lim = 0;
-      for ( lim = 0; lim < 10000; lim++ )
+      long int temp = 0, lim = 0;
+      for ( lim = 0; lim < 10000; lim++ ) {
         temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
-//      Serial.println(temp);
+      }
+      //      Serial.println(temp);
       if ( temp > 0.7 * lim )
         fixedclamp_trip = 1;
       else
         fixedclamp_trip = 0;
     }
-    if (COMM_TRIP != -1 ) {
-      comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;
-
-    }
   }
 }
-
