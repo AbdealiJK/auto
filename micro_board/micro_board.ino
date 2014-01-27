@@ -1,4 +1,4 @@
-#define SLAVE     1
+#define SLAVE     0
 //#define TEST
 
 #if SLAVE
@@ -17,7 +17,7 @@
 
 #define MY_CLAMP            'l'
 #define PC                  Serial
-#define NEXT                Serial1
+#define NEXT                0 && Serial1
 // Pins
 #define MOTOR_1             4
 #define MOTOR_2             5
