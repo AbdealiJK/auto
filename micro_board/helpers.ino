@@ -133,8 +133,8 @@ Actuation :
   Towards l298 - A5
   Away from l29813 --------------- 13 doesnt work for some reason
 Trips :
-  Trip1 - 10 (mid),
-  Trip2 - 11 (home),
+  Trip1 - 11 (mid),
+  Trip2 - 10 (home),
   Trip3 - a3
   Trip4 - a4
 Autonic :    7

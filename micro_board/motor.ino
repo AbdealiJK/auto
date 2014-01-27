@@ -40,10 +40,8 @@ void go_home(int sp) {
 }
 
 void update_middle_trip() {
-  if ( ! SLAVE ) {
-    if (MIDDLE_TRIP != -1 ) {
-      middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
-    }
+  if ( ! SLAVE && MIDDLE_TRIP != -1 ) {
+    middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
   }
 }
 
@@ -55,17 +53,15 @@ void update_home_trip() {
 }
 
 void update_fixedclamp_trip() {
-  if ( !SLAVE) {
-    if (FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
-      long int temp = 0, lim = 0;
-      for ( lim = 0; lim < 10000; lim++ ) {
-        temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
-      }
-      //      Serial.println(temp);
-      if ( temp > 0.7 * lim )
-        fixedclamp_trip = 1;
-      else
-        fixedclamp_trip = 0;
+  if ( !SLAVE && FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
+    long int temp = 0, lim = 0;
+    for ( lim = 0; lim < 10000; lim++ ) {
+      temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
     }
+    //      Serial.println(temp);
+    if ( temp > 0.7 * lim )
+      fixedclamp_trip = 1;
+    else
+      fixedclamp_trip = 0;
   }
 }

@@ -1,4 +1,5 @@
-#define SLAVE     0
+#define SLAVE     1
+//#define TEST
 
 #if SLAVE
 
@@ -6,10 +7,10 @@
 #define PC                  Serial1
 #define NEXT                0 && Serial
 // Pins
-#define MOTOR_1             5
-#define MOTOR_2             4
+#define MOTOR_1             4
+#define MOTOR_2             5
 
-#define HOME_TRIP           11 // -1 means no trip available
+#define HOME_TRIP           10 // -1 means no trip available
 #define HOME_TRIPPED        LOW
 
 #else
@@ -18,16 +19,16 @@
 #define PC                  Serial
 #define NEXT                Serial1
 // Pins
-#define MOTOR_1             5
-#define MOTOR_2             4
+#define MOTOR_1             4
+#define MOTOR_2             5
 
-#define HOME_TRIP           -1 // -1 means no trip available
-#define HOME_TRIPPED        HIGH
+#define HOME_TRIP           10 // -1 means no trip available
+#define HOME_TRIPPED        LOW
 
 #endif
 
-#define MIDDLE_TRIP         11
-#define FIXEDCLAMP_TRIP     7
+#define MIDDLE_TRIP         A4
+#define FIXEDCLAMP_TRIP     A3
 #define COMM_TRIP           -1
 #define MIDDLE_TRIPPED      LOW
 #define FIXEDCLAMP_TRIPPED  HIGH

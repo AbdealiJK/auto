@@ -10,13 +10,13 @@ void ladder() {
 
   QUIT_OR_CONTINUE;
   PC.println("Moving right clamp to extreme");
-  /*NEXT.print(NEXT_CLAMP);
+  NEXT.print(NEXT_CLAMP);
   NEXT.print('v');
-  NEXT.print(-200);*/
+  NEXT.print(-200);
 
 
   // Repetitive rungs -- left : clamp, go left till fixedclamp_trip, come back sli, open clamp, go right till middle trip
-  int n = 1; // 4rpo
+  int n = 4; // 4rpo
   while (n--) {
 
     PC.println("Closing piston");
