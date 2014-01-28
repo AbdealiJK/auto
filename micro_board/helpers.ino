@@ -36,6 +36,23 @@ void listen()
   }
   Serial.print("DONENEEE");
 }
+void listen_noloop()
+{
+  char temp = !PC_END;
+  //Serial.print("Waiting for next");
+  if (NEXT && temp != PC_END)
+  {
+    if (NEXT.available()) {
+      temp  = NEXT.read();
+      PC.print( temp );
+    }
+    if ( PC.available() && PC.peek() == 'q' ) {
+      PC.read();
+      NEXT.print('q'); // charachter to be sent to slave for emergency stop
+    }
+  }
+  //Serial.print("DONENEEE");
+}
 
 int q_stop () {
   if ( PC.available() && PC.peek() == 'q' ) {
@@ -182,4 +199,5 @@ CLAMP R
 
 (7)
 */
+
 

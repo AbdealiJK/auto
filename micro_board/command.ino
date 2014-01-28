@@ -110,10 +110,17 @@ void ui() {
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
     delay(2);
-    Serial.println("Sending it to the other clamp");
-    while (PC.available())
-      NEXT.write(PC.read());
-    listen();
+    if (!(NEXT))
+    {
+      Serial.println("Other clamp not present :P ");
+    }
+    else
+    {
+      Serial.println("Sending it to the other clamp");
+      while (PC.available())
+        NEXT.write(PC.read());
+      listen();
+    }
   }
 
   if ( !SLAVE ) {
@@ -121,7 +128,12 @@ void ui() {
       PC.read();
       ladder () ;
     }
+     else if ( c == '3' ) {
+      PC.read();
+      polewalk() ;
+    }
   }
   q_stop();
 }
+
 

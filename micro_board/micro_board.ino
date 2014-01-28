@@ -17,7 +17,7 @@
 
 #define MY_CLAMP            'l'
 #define PC                  Serial
-#define NEXT                0 && Serial1
+#define NEXT                Serial1
 // Pins
 #define MOTOR_1             4
 #define MOTOR_2             5
@@ -149,4 +149,5 @@ void loop() {
   Serial.println("-loop");
   delay(100);
 }
+
 

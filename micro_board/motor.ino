@@ -43,6 +43,7 @@ void update_middle_trip() {
   if ( ! SLAVE && MIDDLE_TRIP != -1 ) {
     middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
   }
+  
 }
 
 void update_home_trip() {
@@ -65,3 +66,4 @@ void update_fixedclamp_trip() {
       fixedclamp_trip = 0;
   }
 }
+

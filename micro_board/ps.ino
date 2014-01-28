@@ -7,14 +7,14 @@ void ladder() {
   long start_time;
 
   // First rung -- left : go to 2nd rung
-/*
-  QUIT_OR_CONTINUE;
-  PC.println("Moving right clamp to extreme");
-  NEXT.print(NEXT_CLAMP);
-  NEXT.print('v');
-  NEXT.print(-200);
+  /*
+    QUIT_OR_CONTINUE;
+    PC.println("Moving right clamp to extreme");
+    NEXT.print(NEXT_CLAMP);
+    NEXT.print('v');
+    NEXT.print(-200);
 
-*/
+  */
   // Repetitive rungs -- left : clamp, go left till fixedclamp_trip, come back sli, open clamp, go right till middle trip
   int n = 4; // 4rpo
   while (n--) {
@@ -76,7 +76,7 @@ void ladder() {
     start_time = millis();
     while ( run ( MID, 255 ) ) { // Bot goes down a little
       if ( q_stop() ) break;
-      if ( millis() - start_time > 200 ) { // % calib 
+      if ( millis() - start_time > 200 ) { // % calib
         run(STOP, 255);
         PC.print(" time delay done ");
         break;
@@ -112,15 +112,16 @@ void ladder() {
   while ( run ( HOME, 200 ) ) { // Bot goes up till home trips
     if ( q_stop() ) break;
     if (start_time != -1 && millis() - start_time > 500) { // % calib
-      PC.println("Opening tail piston through slave");
-      NEXT.write('r');
-      NEXT.write('p');
-      NEXT.write('o');
       start_time = -1;
     }
-   }
+  }
   PC.println("Stopped");
+
   QUIT_OR_CONTINUE;
+  PC.println("Opening tail piston through slave");
+  NEXT.write('r');
+  NEXT.write('p');
+  NEXT.write('o');
 
   PC.println("Opening piston");
   piston(OPEN); // clamp open
@@ -223,78 +224,111 @@ void swing() {
 // --------------------------------------------------------------------------
 
 void polewalk() {
- /*     move both motors towards the left
-         clamp right motor
-         move right motor towards right for some time T1 
-         clamp left motor
-         unclamp right motor
-         move right motor to left for some time T2
-         move left motor to right till it trips
-    */
-    
-    // move both motors towards left
-     
-    // move master
-    /*
-    PC.print(MY_CLAMP);
-    PC.print("-motor moving to home trip switch ... ");
-    go_home(200);
-      
-    // move slave
-   
-    NEXT.print(NEXT_CLAMP);
-    NEXT.print('v');
-    NEXT.print(200);
-    listen();
-    
-    
-    //clamp right motor
-   
-    NEXT.print(NEXT_CLAMP);
-    NEXT.print('p');
-    NEXT.print('c');
-    listen();
-    // move right motor towards right till left motor detects disc. move for some more time T1 and stop
-    update_avs();
-   
-    NEXT.print(NEXT_CLAMP);
-    NEXT.print('v');
-    NEXT.print(-200);
-    update_avs();
-    while ( avs_value < 3400 ) { // set threshold @ to be calibrated
-      update_avs();
-      PC.print("AVS value : ");
-      PC.println(avs_value);
-      }
-    PC.println("avs saw something ... but moving for some more time");      
-    delay(100);// move for some time after AVS is detected. @ T1 to be calibrated
-    NEXT.print('q'); // stop motor
-    PC.print("Right motor Stopped");
-    QUIT_OR_CONTINUE;
-    
-    // Clamp using left motor
-     piston(CLOSE);
-     PC.print("Left motor clamped");
-     delay(500);
-    // Unclamp right motor
-   
-     NEXT.print(NEXT_CLAMP);
-     NEXT.print('p');
-     NEXT.print('o');
-     listen();
-     PC.print("Right motor unclamped");     
-    //move right clamp towards left for some time T2 and stop 
-    QUIT_OR_CONTINUE;    
-   
-    NEXT.print(NEXT_CLAMP);
-    NEXT.print('v');
-    NEXT.print(200);    
-    listen();
-    delay(1000); // @ T2 to be calibrated
-    NEXT.print('q');
-    //move left clamp towards right till middle tripswitch trips
-     while ( run( MID, 200) )  {
+  /*     move both motors towards the left
+          clamp right motor
+          move right motor towards right for some time T1
+          clamp left motor
+          unclamp right motor
+          move right motor to left for some time T2
+          move left motor to right till it trips
+     */
+
+  // move both motors towards left
+
+  // move master to initial position
+  QUIT_OR_CONTINUE;
+  PC.print(MY_CLAMP);
+  PC.print("-motor moving to home trip switch ... ");
+  go_home(200);
+  NEXT.print(NEXT_CLAMP);
+  NEXT.print('v');
+  NEXT.print(-255);
+  listen();
+  int time = millis();
+  while ( run( MID, 200) ) {
         if ( q_stop() ) break;
+        Serial.println("Master moving");
+        if(  millis() - time > 900) break;
       }
-   PC.println("Polewalk completed .... ");      
-*/}
+      run(STOP,255);
+  
+  QUIT_OR_CONTINUE;
+  // move slave
+
+  NEXT.print(NEXT_CLAMP);
+  NEXT.print('v');
+  NEXT.print(200);
+  while(1)
+  {
+    update_middle_trip();
+    
+    if(middle_trip)
+    {
+      NEXT.print('q');
+      Serial.println("Middle trip pressed while slave is moving");
+      break;
+    }
+    listen_noloop();
+  }
+  listen();
+
+
+  //clamp right motor
+
+  NEXT.print(NEXT_CLAMP);
+  NEXT.print('p');
+  NEXT.print('c');
+  listen();
+  // move right motor towards right till left motor detects disc. move for some more time T1 and stop
+
+  QUIT_OR_CONTINUE;
+  NEXT.print(NEXT_CLAMP);
+  NEXT.print('v');
+  NEXT.print(-200);
+  delay(1000);
+  update_avs();
+  while ( avs_value < 3250 ) { // set threshold @ to be calibrated
+    update_avs();
+    PC.print("AVS value : ");
+    PC.println(avs_value);
+    }
+    Serial.println("Below the disc now ");
+    while ( avs_value > 3250 ) { // set threshold @ to be calibrated
+    update_avs();
+    PC.print("AVS value : ");
+    PC.println(avs_value);
+    }
+        Serial.println("Came out of the disc now ");
+  PC.println("avs saw something ... stopping motor..");
+//  delay(850);// move for some time after AVS is detected. @ T1 to be calibrated
+  NEXT.print('q'); // stop motor
+  PC.print("Right motor Stopped");
+  QUIT_OR_CONTINUE;
+
+  // Clamp using left motor
+   piston(CLOSE);
+   PC.print("Left motor clamped");
+   delay(500);
+  // Unclamp right motor
+
+   NEXT.print(NEXT_CLAMP);
+   NEXT.print('p');
+   NEXT.print('o');
+   listen();
+   PC.print("Right motor unclamped");
+  //move right clamp towards left for some time T2 and stop
+  QUIT_OR_CONTINUE;
+
+  NEXT.print(NEXT_CLAMP);
+  NEXT.print('v');
+  NEXT.print(200);
+  listen();
+  delay(1000); // @ T2 to be calibrated 
+  NEXT.print('q');
+  //move left clamp towards right till middle tripswitch trips
+   while ( run( MID, 200) )  {
+      if ( q_stop() ) break;
+    }
+  PC.println("Polewalk completed .... ");
+ 
+}
