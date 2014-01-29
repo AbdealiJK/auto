@@ -1,5 +1,4 @@
-  #define SLAVE     0
-//#define TEST
+#define SLAVE     0
 
 #if SLAVE
 
@@ -28,7 +27,7 @@
 #endif
 
 #define MIDDLE_TRIP         A4
-#define FIXEDCLAMP_TRIP     A3
+#define FIXEDCLAMP_TRIP     11
 #define COMM_TRIP           -1
 #define MIDDLE_TRIPPED      LOW
 #define FIXEDCLAMP_TRIPPED  HIGH
@@ -61,7 +60,6 @@ char NEXT_CLAMP = 'r';
   }
 
 int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0,
-    avs_value = 0,
     loop_count = 0, bot_status = 0;
 
 void reset();
@@ -100,10 +98,8 @@ void setup() {
   fixedclamp_trip = 0;
   comm_trip = 0;
 
-  setup_vcnl();
   run(STOP, 255);
   //update_trips();
-  //update_avs();
 
 #ifdef TEST
   test();
@@ -122,8 +118,6 @@ void setup() {
   PC.println(fixedclamp_trip);
   PC.print("Trips - comm : \t");
   PC.println(comm_trip);
-  PC.print("AVS Value : \t");
-  PC.println(avs_value);
   PC.println(" >> begun");
   PC.print(PC_END);
 
@@ -134,10 +128,6 @@ void loop() {
   ui();
 
   //    update_trips();
-  //    update_avs();
-  //  Serial.print(MY_CLAMP);
-  // Serial.println("-loop -- ");
-
 
   while (PC.available())
     PC.read();
@@ -146,6 +136,7 @@ void loop() {
     NEXT.read();
   
   Serial.print(MY_CLAMP);
+  Serial.print(digitalRead(MIDDLE_TRIP));
   Serial.println("-loop");
   delay(100);
 }

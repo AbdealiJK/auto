@@ -22,6 +22,9 @@ void ui() {
     else if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
       // Display initial values :
       if ( SLAVE ) Serial.print("Got W");
+      update_home_trip();
+      update_middle_trip();
+      update_fixedclamp_trip();
       PC.print(">>>>>>>>>> data for : ");
       PC.println(MY_CLAMP);
       PC.print("Trips - home : \t");
@@ -32,8 +35,6 @@ void ui() {
       PC.println(fixedclamp_trip);
       PC.print("Trips - comm : \t");
       PC.println(comm_trip);
-      PC.print("AVS Value : \t");
-      PC.println(avs_value);
       PC.println(" >> begun");
       PC.print(PC_END);
     }
@@ -64,26 +65,6 @@ void ui() {
         if ( fixedclamp_trip ) {
           run ( STOP, 255 );
           PC.println("fixed clamp pressed ... ");
-          break;
-        }
-      }
-      PC.println("DONE");
-      PC.print(PC_END);
-    }
-    else if ( c2 == 'a' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>> MOTION with avs also
-      if ( SLAVE ) Serial.print("Got V");
-      int vel = pc_get_int();
-      PC.print(MY_CLAMP);
-      PC.print("-motor moving (with avs) at pwm = ");
-      PC.print(vel);
-      PC.print(" ... ");
-      update_avs();
-      while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
-        if ( q_stop() ) break;
-        update_avs();
-        if ( avs_value > 3400 ) {
-          run ( STOP, 255 );
-          PC.println("avs saw something ... ");
           break;
         }
       }

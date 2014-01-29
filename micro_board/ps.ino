@@ -20,13 +20,14 @@ void ladder() {
   while (n--) {
 
     PC.println("Closing piston");
+    QUIT_OR_CONTINUE;
     piston(CLOSE); // clamp
     PC.println("Piston closed");
 
-    QUIT_OR_CONTINUE;
 
-    start_time = millis();
     PC.println("Going towards home");
+    QUIT_OR_CONTINUE;
+    start_time = millis();
     while ( run ( HOME, 255) ) { // Bot goes up till fixedclamp_trip
       if ( q_stop() ) break;
       update_fixedclamp_trip();
@@ -56,9 +57,8 @@ void ladder() {
     }
     PC.println("Stopped ... but not done");
 
-    QUIT_OR_CONTINUE;
-
     PC.print("Going up so that fixed clamp opens up fully ....");
+    QUIT_OR_CONTINUE;
     start_time = millis();
     while ( run ( HOME, 255 ) ) { // Bot goes up till fixedclamp_trip
       if ( q_stop() ) break;
@@ -70,9 +70,8 @@ void ladder() {
     }
     PC.println("Stopped");
 
-    QUIT_OR_CONTINUE;
-
     PC.print("Moving middle for a small time ");
+    QUIT_OR_CONTINUE;
     start_time = millis();
     while ( run ( MID, 255 ) ) { // Bot goes down a little
       if ( q_stop() ) break;
@@ -84,30 +83,28 @@ void ladder() {
     }
     PC.println("Moved for soemtime");
 
-    QUIT_OR_CONTINUE;
-
     PC.println("Opening piston");
+    QUIT_OR_CONTINUE;
     piston(OPEN); // clamp open
     PC.println("Piston openend");
 
-    QUIT_OR_CONTINUE;
-
     PC.println("Goinig up !");
+    QUIT_OR_CONTINUE;
     while ( run( MID, 255) ) { // go up till middle_trip
       if ( q_stop() ) break;
     }
     PC.println("Something tripped");
-    QUIT_OR_CONTINUE;
   }
 
   // Last rung
 
   PC.println("Closing piston");
+  QUIT_OR_CONTINUE;
   piston(CLOSE); // clamp open
   PC.println("Piston closed");
-  QUIT_OR_CONTINUE;
 
   PC.println("Going towards home");
+  QUIT_OR_CONTINUE;
   start_time = millis();
   while ( run ( HOME, 200 ) ) { // Bot goes up till home trips
     if ( q_stop() ) break;
@@ -117,18 +114,19 @@ void ladder() {
   }
   PC.println("Stopped");
 
-  QUIT_OR_CONTINUE;
   PC.println("Opening tail piston through slave");
+  QUIT_OR_CONTINUE;
   NEXT.write('r');
   NEXT.write('p');
   NEXT.write('o');
 
   PC.println("Opening piston");
+  QUIT_OR_CONTINUE;
   piston(OPEN); // clamp open
   PC.println("Piston openend");
-  QUIT_OR_CONTINUE;
 
   PC.print("Moving middle for a small time ");
+  QUIT_OR_CONTINUE;
   start_time = millis();
   while ( run ( MID, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
@@ -142,9 +140,10 @@ void ladder() {
   QUIT_OR_CONTINUE;
 
   PC.println("Closing piston");
+  QUIT_OR_CONTINUE;
   piston(CLOSE); // clamp close
   PC.println("Piston closed");
-  QUIT_OR_CONTINUE;
+
   // Flag
   PC.println("Ladder Done!!!");
 
@@ -154,70 +153,8 @@ void ladder() {
 // --------------------------------------------------------------------------
 
 void seesaw() {
-  PC.println(">>>>>>>>>> See saw START");
-
-  // Move till AVS
-  int vel = 100;
-  QUIT_OR_CONTINUE;
-  PC.print("Telling slave to move to avs ... ");
-  NEXT.print(NEXT_CLAMP);
-  NEXT.print('a');
-  NEXT.print(vel);
-  listen();
-  PC.println("DONE");
-
-  QUIT_OR_CONTINUE;
-  PC.print("Moving to avs myself ... ");
-  update_avs();
-  while ( run( MID, vel) ) {
-    if ( q_stop() ) break;
-    update_avs();
-    if ( avs_value > 3400 ) {
-      run ( STOP, 255 );
-      PC.print("avs saw something ... ");
-      break;
-    }
-  }
-  PC.println("DONE");
-
-  QUIT_OR_CONTINUE;
-  PC.print("Clamping both ! ... ");
-  NEXT.print("rpc");
-  piston(CLOSE);
-  listen();
-
-  QUIT_OR_CONTINUE;
-  PC.print("Leaving both ! ... ");
-  NEXT.print("rpo");
-  piston(OPEN);
-  listen();
-
-  PC.println(">>>>>>>>>> See saw fully done");
-}
-
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-
-void swing() {
-  PC.println(">>>>>>>>>> Swing starting !!");
-  // Move to correct positions
-  // ?
-
-  // Clamp now !
-  QUIT_OR_CONTINUE;
-  PC.print("Clamping both ! ... ");
-  NEXT.print("rpc");
-  piston(CLOSE);
-  listen();
-
-  // Leave the swing now
-  QUIT_OR_CONTINUE;
-  PC.print("Leaving both ! ... ");
-  NEXT.print("rpo");
-  piston(OPEN);
-  listen();
-
-  PC.println(">>>>>>>>>> Swing fully done");
+  PC.println(">>>>>>>>>> Seesaw START");
+  PC.println(">>>>>>>>>> Seesaw fully done");
 }
 
 // --------------------------------------------------------------------------
@@ -233,102 +170,17 @@ void polewalk() {
           move left motor to right till it trips
      */
 
-  // move both motors towards left
+  PC.print("............. Pole Walk satrt ");
+  // move both motors to middle
 
-  // move master to initial position
-  QUIT_OR_CONTINUE;
-  PC.print(MY_CLAMP);
-  PC.print("-motor moving to home trip switch ... ");
-  go_home(200);
-  NEXT.print(NEXT_CLAMP);
-  NEXT.print('v');
-  NEXT.print(-255);
-  listen();
-  int time = millis();
-  while ( run( MID, 200) ) {
-        if ( q_stop() ) break;
-        Serial.println("Master moving");
-        if(  millis() - time > 900) break;
-      }
-      run(STOP,255);
+  // clamp right piston
   
-  QUIT_OR_CONTINUE;
-  // move slave
-
-  NEXT.print(NEXT_CLAMP);
-  NEXT.print('v');
-  NEXT.print(200);
-  while(1)
-  {
-    update_middle_trip();
-    
-    if(middle_trip)
-    {
-      NEXT.print('q');
-      Serial.println("Middle trip pressed while slave is moving");
-      break;
-    }
-    listen_noloop();
-  }
-  listen();
-
-
-  //clamp right motor
-
-  NEXT.print(NEXT_CLAMP);
-  NEXT.print('p');
-  NEXT.print('c');
-  listen();
-  // move right motor towards right till left motor detects disc. move for some more time T1 and stop
-
-  QUIT_OR_CONTINUE;
-  NEXT.print(NEXT_CLAMP);
-  NEXT.print('v');
-  NEXT.print(-200);
-  delay(1000);
-  update_avs();
-  while ( avs_value < 3250 ) { // set threshold @ to be calibrated
-    update_avs();
-    PC.print("AVS value : ");
-    PC.println(avs_value);
-    }
-    Serial.println("Below the disc now ");
-    while ( avs_value > 3250 ) { // set threshold @ to be calibrated
-    update_avs();
-    PC.print("AVS value : ");
-    PC.println(avs_value);
-    }
-        Serial.println("Came out of the disc now ");
-  PC.println("avs saw something ... stopping motor..");
-//  delay(850);// move for some time after AVS is detected. @ T1 to be calibrated
-  NEXT.print('q'); // stop motor
-  PC.print("Right motor Stopped");
-  QUIT_OR_CONTINUE;
-
-  // Clamp using left motor
-   piston(CLOSE);
-   PC.print("Left motor clamped");
-   delay(500);
-  // Unclamp right motor
-
-   NEXT.print(NEXT_CLAMP);
-   NEXT.print('p');
-   NEXT.print('o');
-   listen();
-   PC.print("Right motor unclamped");
-  //move right clamp towards left for some time T2 and stop
-  QUIT_OR_CONTINUE;
-
-  NEXT.print(NEXT_CLAMP);
-  NEXT.print('v');
-  NEXT.print(200);
-  listen();
-  delay(1000); // @ T2 to be calibrated 
-  NEXT.print('q');
-  //move left clamp towards right till middle tripswitch trips
-   while ( run( MID, 200) )  {
-      if ( q_stop() ) break;
-    }
+  // move left to extreme, move right to extreme
+  
+  // clamp left
+  
+  // move right to middle and left to middle
+  
   PC.println("Polewalk completed .... ");
  
 }

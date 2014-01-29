@@ -91,7 +91,7 @@ void test () {
     update_middle_trip();
     update_home_trip();
     update_fixedclamp_trip();
-    //    update_avs();
+    
     Serial.print("My clamp : \t");
     Serial.println(MY_CLAMP);
     Serial.print("Next clamp : \t");
@@ -107,8 +107,6 @@ void test () {
     Serial.print("Trips - comm : \t");
     if ( COMM_TRIP )          Serial.println(digitalRead(COMM_TRIP));
     else                      Serial.println("Communication trip is not with me");
-    Serial.print("AVS Value : \t");
-    Serial.println(avs_value);
     Serial.println(" TESTS done");
     while (!Serial.available() ) {
       Serial.println("byebye");
