@@ -14,8 +14,6 @@ void ladder() {
     NEXT.print('v');
     NEXT.print(-200);
   */
-  
-  
 
   // Repetitive rungs
   int n = 4;
@@ -48,8 +46,8 @@ void ladder() {
         break;
       }
     }
-        QUIT_OR_CONTINUE;
-        if ( n == 0 ) {
+    QUIT_OR_CONTINUE;
+    if ( n == 0 ) {
       // open tail piston
       PC.println("Activating tail piston through slave");
       QUIT_OR_CONTINUE;
@@ -57,7 +55,7 @@ void ladder() {
       NEXT.write('p');
       NEXT.write('c');
     }
-       QUIT_OR_CONTINUE;
+    QUIT_OR_CONTINUE;
     while ( run ( HOME, 200) ) { // Bot goes up till fixedclamp_trip
       if ( q_stop() ) break;
       update_fixedclamp_trip();
@@ -69,7 +67,7 @@ void ladder() {
     }
     PC.println("Stopped ... but not done");
 
-    
+
 
     /*PC.print("Going up so that fixed clamp opens up fully ....");
     QUIT_OR_CONTINUE;
@@ -118,7 +116,7 @@ void ladder() {
   QUIT_OR_CONTINUE;
   piston(CLOSE); // clamp open
   PC.println("Piston closed");
-// something is cuppinghere
+  // something is cuppinghere
   PC.println("Going towards home");
   QUIT_OR_CONTINUE;
   start_time = millis();
