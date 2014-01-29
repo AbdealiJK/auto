@@ -15,6 +15,8 @@ void ladder() {
     NEXT.print(-200);
   */
   
+  
+
   // Repetitive rungs
   int n = 4;
   while (n--) {
@@ -26,19 +28,28 @@ void ladder() {
 
     PC.println("Going towards home");
     QUIT_OR_CONTINUE;
-    start_time = millis();
-    while ( run ( HOME, 255) ) { // Bot goes up till fixedclamp_trip
+    if ( n != 4 ) { // as initially, the clamp is pressed
+      while ( run ( HOME, 200) ) { // Bot goes up till fixedclamp_trip
+        if ( q_stop() ) break;
+        update_fixedclamp_trip();
+        if ( fixedclamp_trip ) {
+          PC.println("IR saw Fixed clamp was pressed !");
+          run ( STOP, 255 );
+          break;
+        }
+      }
+    }
+    while ( run ( HOME, 200) ) { // Bot goes up till fixedclamp_trip
       if ( q_stop() ) break;
       update_fixedclamp_trip();
-      if ( fixedclamp_trip && millis() - start_time > 500 ) {
-        PC.println("Fixed clamp was pressed !");
+      if ( !fixedclamp_trip ) {
+        PC.println("IR didnt see Fixed clamp was un-pressed !");
         run ( STOP, 255 );
         break;
       }
     }
-    PC.println("Stopped ... but not done");
-    
-    if ( n == 0 ) {
+        QUIT_OR_CONTINUE;
+        if ( n == 0 ) {
       // open tail piston
       PC.println("Activating tail piston through slave");
       QUIT_OR_CONTINUE;
@@ -46,7 +57,20 @@ void ladder() {
       NEXT.write('p');
       NEXT.write('c');
     }
+       QUIT_OR_CONTINUE;
+    while ( run ( HOME, 200) ) { // Bot goes up till fixedclamp_trip
+      if ( q_stop() ) break;
+      update_fixedclamp_trip();
+      if ( fixedclamp_trip ) {  // @@@@ bot wont trip since tail piston opens
+        PC.println("IR saw Fixed clamp was pressed !");
+        run ( STOP, 255 );
+        break;
+      }
+    }
+    PC.println("Stopped ... but not done");
+
     
+
     /*PC.print("Going up so that fixed clamp opens up fully ....");
     QUIT_OR_CONTINUE;
     start_time = millis();
@@ -59,7 +83,7 @@ void ladder() {
       }
     }
     PC.println("Stopped");
-*/
+    */
     PC.print("Moving middle for a small time ");
     QUIT_OR_CONTINUE;
     start_time = millis();
@@ -94,7 +118,7 @@ void ladder() {
   QUIT_OR_CONTINUE;
   piston(CLOSE); // clamp open
   PC.println("Piston closed");
-
+// something is cuppinghere
   PC.println("Going towards home");
   QUIT_OR_CONTINUE;
   start_time = millis();
@@ -166,13 +190,13 @@ void polewalk() {
   // move both motors to middle
 
   // clamp right piston
-  
+
   // move left to extreme, move right to extreme
-  
+
   // clamp left
-  
+
   // move right to middle and left to middle
-  
+
   PC.println("Polewalk completed .... ");
- 
+
 }

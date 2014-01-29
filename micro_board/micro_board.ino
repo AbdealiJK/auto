@@ -30,7 +30,7 @@
 #define FIXEDCLAMP_TRIP     11
 #define COMM_TRIP           -1
 #define MIDDLE_TRIPPED      LOW
-#define FIXEDCLAMP_TRIPPED  HIGH
+#define FIXEDCLAMP_TRIPPED  LOW
 #define COMM_TRIPPED        LOW
 
 #define MOTOR_PWM   6
@@ -136,7 +136,8 @@ void loop() {
     NEXT.read();
   
   Serial.print(MY_CLAMP);
-  Serial.print(digitalRead(MIDDLE_TRIP));
+  Serial.print(digitalRead(FIXEDCLAMP_TRIP));
+    Serial.print(digitalRead(MIDDLE_TRIP));
   Serial.println("-loop");
   delay(100);
 }
