@@ -6,17 +6,17 @@ void ladder() {
 
   long start_time;
 
-  // First rung -- left : go to 2nd rung
+  // First rung
   /*
     QUIT_OR_CONTINUE;
     PC.println("Moving right clamp to extreme");
     NEXT.print(NEXT_CLAMP);
     NEXT.print('v');
     NEXT.print(-200);
-
   */
-  // Repetitive rungs -- left : clamp, go left till fixedclamp_trip, come back sli, open clamp, go right till middle trip
-  int n = 4; // 4rpo
+  
+  // Repetitive rungs
+  int n = 4;
   while (n--) {
 
     PC.println("Closing piston");
@@ -24,40 +24,30 @@ void ladder() {
     piston(CLOSE); // clamp
     PC.println("Piston closed");
 
-
     PC.println("Going towards home");
     QUIT_OR_CONTINUE;
     start_time = millis();
     while ( run ( HOME, 255) ) { // Bot goes up till fixedclamp_trip
       if ( q_stop() ) break;
       update_fixedclamp_trip();
-      if (n == 0 && start_time != -1 && millis() - start_time > 400) { // % calib
-        PC.println("Activating tail piston through slave");
-        NEXT.write('r');
-        NEXT.write('p');
-        NEXT.write('c');
-        start_time = -1;
-        //        listen();
-      }
-      if ( fixedclamp_trip ) {
+      if ( fixedclamp_trip && millis() - start_time > 500 ) {
         PC.println("Fixed clamp was pressed !");
         run ( STOP, 255 );
         break;
       }
     }
-    start_time = -1;
-    while ( run ( HOME, 255 ) ) { // Bot goes up till fixedclamp_trip
-      update_fixedclamp_trip();
-      if ( q_stop() ) break;
-      if ( !fixedclamp_trip ) {
-        PC.println("Fixed clamp was removed !");
-        run ( STOP, 255 );
-        break;
-      }
-    }
     PC.println("Stopped ... but not done");
-
-    PC.print("Going up so that fixed clamp opens up fully ....");
+    
+    if ( n == 0 ) {
+      // open tail piston
+      PC.println("Activating tail piston through slave");
+      QUIT_OR_CONTINUE;
+      NEXT.write('r');
+      NEXT.write('p');
+      NEXT.write('c');
+    }
+    
+    /*PC.print("Going up so that fixed clamp opens up fully ....");
     QUIT_OR_CONTINUE;
     start_time = millis();
     while ( run ( HOME, 255 ) ) { // Bot goes up till fixedclamp_trip
@@ -69,7 +59,7 @@ void ladder() {
       }
     }
     PC.println("Stopped");
-
+*/
     PC.print("Moving middle for a small time ");
     QUIT_OR_CONTINUE;
     start_time = millis();
@@ -95,6 +85,8 @@ void ladder() {
     }
     PC.println("Something tripped");
   }
+
+
 
   // Last rung
 
