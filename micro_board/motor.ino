@@ -54,10 +54,14 @@ void update_home_trip() {
 }
 
 void update_fixedclamp_trip() {
+//  long int ti = millis();
   if ( !SLAVE && FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
     long int temp = 0, lim = 0;
-    for ( lim = 0; lim < 10000; lim++ ) {
+    for ( lim = 0; lim < 1000; lim++ ) {
       temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
+      /*
+        
+      */
     }
     //      Serial.println(temp);
     if ( temp > 0.7 * lim )
@@ -65,5 +69,7 @@ void update_fixedclamp_trip() {
     else
       fixedclamp_trip = 0;
   }
+//  Serial.println();
+//  Serial.println((int) millis() - ti);
 }
 

@@ -136,8 +136,7 @@ void loop() {
     NEXT.read();
   
   Serial.print(MY_CLAMP);
-  Serial.print(digitalRead(FIXEDCLAMP_TRIP));
-    Serial.print(digitalRead(MIDDLE_TRIP));
+  update_fixedclamp_trip();
   Serial.println("-loop");
   delay(100);
 }
