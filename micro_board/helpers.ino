@@ -50,9 +50,6 @@ void update_fixedclamp_trip() {
     long int temp = 0, lim = 0;
     for ( lim = 0; lim < 1000; lim++ ) {
       temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
-      /*
-        
-      */
     }
     //      Serial.println(temp);
     if ( temp > 0.7 * lim )

@@ -30,7 +30,7 @@
 #define FIXEDCLAMP_TRIP     11
 #define COMM_TRIP           -1
 #define MIDDLE_TRIPPED      LOW
-#define FIXEDCLAMP_TRIPPED  LOW
+#define FIXEDCLAMP_TRIPPED  HIGH
 #define COMM_TRIPPED        LOW
 
 #define MOTOR_PWM   6

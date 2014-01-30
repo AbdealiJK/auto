@@ -57,7 +57,7 @@ void ladder() {
         break;
       }
     }
-   
+
     if ( n == 0 ) {
       PC.println("For the last rung, need to come down a little so tail gets support");
       QUIT_OR_CONTINUE;
@@ -70,7 +70,7 @@ void ladder() {
           break;
         }
       }
-      
+
       PC.println("Need to activate the tail");
       QUIT_OR_CONTINUE;
       NEXT.write('r');
@@ -94,7 +94,7 @@ void ladder() {
     QUIT_OR_CONTINUE;
     piston(OPEN); // clamp open
     PC.println("Unclamped the left clamp");
-  
+
     if ( n == 0 ) {
       PC.println("Need to deactivate tail piston through slave");
       QUIT_OR_CONTINUE;
@@ -102,7 +102,7 @@ void ladder() {
       NEXT.write('p');
       NEXT.write('o');
     }
- 
+
     PC.println("Need to make the left clamp touch right clamp");
     QUIT_OR_CONTINUE;
     while ( run( MID, 255) ) { // go up till middle_trip
@@ -117,29 +117,48 @@ void ladder() {
 
   PC.println("Need to open tail to push the bot onto the platform and move up simultaneously.");
   QUIT_OR_CONTINUE;
-  start_time = millis() + 50000;
+  start_time = millis();
   while ( run ( HOME, 200 ) ) { // Bot goes up till home trips
     if ( q_stop() ) break;
-    if (start_time != -1 && millis() - start_time > 500) { // % calib
-      start_time = -1;
-    }
     update_fixedclamp_trip();
     if ( fixedclamp_trip ) {
+      PC.println("Fixed clamp was pressed !");
+      run ( STOP, 255 );
+      break;
+    }
+  }
+  PC.println("Need to make bot come down a bit so tail will hit ");
+  QUIT_OR_CONTINUE;
+  start_time = millis();
+  while ( run ( MID, 255 ) ) { // Bot goes down a little
+    if ( q_stop() ) break;
+    if ( millis() - start_time > 200 ) { // % calib
+      PC.println("Time delay done ");
+      run(STOP, 255);
       PC.println("Activating tail piston through slave");
-      QUIT_OR_CONTINUE;
       NEXT.write('r');
       NEXT.write('p');
       NEXT.write('c');
-      start_time = millis();      
-    }
-    if ( millis() - start_time > 500 ) {
-      PC.println("Deactivating tail piston through slave");
-      QUIT_OR_CONTINUE;
-      NEXT.write('r');
-      NEXT.write('p');
-      NEXT.write('o');      
+      break;
     }
   }
+
+  PC.println("Go more up and close tail ");
+  QUIT_OR_CONTINUE;
+  start_time = millis();
+  int close_tail_flag = 0;
+  while ( run ( HOME, 255 ) ) { // Bot goes down a little
+    if ( q_stop() ) break;
+    if ( close_tail_flag == 0 && millis() - start_time > 300 ) { // % calib
+      PC.println("Time delay done ");
+      PC.println("Switching off tail piston through slave");
+      NEXT.write('r');
+      NEXT.write('p');
+      NEXT.write('o');
+      close_tail_flag = 1;
+    }
+  }
+
 
   PC.println("Need to open the left piston now");
   QUIT_OR_CONTINUE;
@@ -150,20 +169,20 @@ void ladder() {
   start_time = millis();
   while ( run ( MID, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
-    if ( millis() - start_time > 800 ) { // % calib
+    if ( millis() - start_time > 1200 ) { // % calib
       run(STOP, 255);
       PC.println("Time delay done ");
       break;
     }
   }
-  
+
   PC.println("Close left clamp to push the bot up");
   QUIT_OR_CONTINUE;
   piston(CLOSE);
 
   // Flag
   PC.println("Awww ... no flag.");
-  
+
   PC.println("Ladder Done!!!");
 
 }
