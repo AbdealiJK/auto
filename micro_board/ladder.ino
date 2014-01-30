@@ -6,29 +6,28 @@ void ladder() {
 
   long start_time;
 
-  // First rung
   /*
     QUIT_OR_CONTINUE;
-    PC.println("Moving right clamp to extreme");
+    PC.println("Setup initial position");
     NEXT.print(NEXT_CLAMP);
     NEXT.print('v');
-    NEXT.print(-200);
+    NEXT.print(-255);
   */
 
-  // Repetitive rungs
   int n = 4;
   while (n--) {
 
-    PC.println("Closing piston");
+    PC.println("Need to close piston");
     QUIT_OR_CONTINUE;
-    piston(CLOSE); // clamp
+    piston(CLOSE);
     PC.println("Piston closed");
 
-    PC.println("Going towards home ... waiting for fixed clamp to go above last rung");
+    PC.println("Need to go towards home till just above last rung (i.e. fixed clamp should become untripped)");
     QUIT_OR_CONTINUE;
     update_fixedclamp_trip();
-    if ( ! fixedclamp_trip ) { // as initially, the clamp is below the rung
-      while ( run ( HOME, 255) ) { // Bot goes up till fixedclamp_trip
+    if ( ! fixedclamp_trip ) {
+      PC.println("Initially, fixed clamp was found to be not tripped ... But it should have been tripped ! (as it should be at the ~prev rung) ... so, maybe it went down too much ... going up till we can find the last rung.");
+      while ( run ( HOME, 255) ) {
         if ( q_stop() ) break;
         update_fixedclamp_trip();
         if ( fixedclamp_trip ) {
@@ -38,7 +37,7 @@ void ladder() {
         }
       }
     }
-    while ( run ( HOME, 255) ) { // Bot goes up till fixedclamp_trip
+    while ( run ( HOME, 255) ) {
       if ( q_stop() ) break;
       update_fixedclamp_trip();
       if ( !fixedclamp_trip ) {
@@ -47,82 +46,76 @@ void ladder() {
         break;
       }
     }
-    PC.println("Going towards home ... trying to find fixedclamp");
+    PC.println("Need to go towards home till the rung is reached");
     QUIT_OR_CONTINUE;
-    while ( run ( HOME, 255) ) { // Bot goes up till fixedclamp_trip
+    while ( run ( HOME, 255) ) {
       if ( q_stop() ) break;
       update_fixedclamp_trip();
-      if ( fixedclamp_trip ) {  // @@@@ bot wont trip since tail piston opens
+      if ( fixedclamp_trip ) {
         PC.println("Fixed clamp was pressed !");
         run ( STOP, 255 );
         break;
       }
     }
-    PC.println("Stopped ... but not done");
-
+   
     if ( n == 0 ) {
-      // come down sli so that tail will hit the rung    PC.print("Moving middle for a small time ");
+      PC.println("For the last rung, need to come down a little so tail gets support");
       QUIT_OR_CONTINUE;
       start_time = millis();
       while ( run ( MID, 255 ) ) { // Bot goes down a little
         if ( q_stop() ) break;
         if ( millis() - start_time > 200 ) { // % calib
           run(STOP, 255);
-          PC.print(" time delay done ");
+          PC.println("Time delay done ");
           break;
         }
       }
-      PC.println("Moved for soemtime");
-      // open tail piston
-      PC.println("Activating tail piston through slave");
+      
+      PC.println("Need to activate the tail");
       QUIT_OR_CONTINUE;
       NEXT.write('r');
       NEXT.write('p');
       NEXT.write('c');
     }
 
-    PC.print("Moving middle for a small time ");
+    PC.println("Need to make bot come down a bit so that fixed clamp doesnt get damaged ");
     QUIT_OR_CONTINUE;
     start_time = millis();
     while ( run ( MID, 255 ) ) { // Bot goes down a little
       if ( q_stop() ) break;
       if ( millis() - start_time > 200 ) { // % calib
         run(STOP, 255);
-        PC.print(" time delay done ");
+        PC.println("Time delay done ");
         break;
       }
     }
-    PC.println("Moved for soemtime");
 
-    PC.println("Opening piston");
+    PC.println("Need to unclamp the ladder");
     QUIT_OR_CONTINUE;
     piston(OPEN); // clamp open
-    PC.println("Piston openend");
+    PC.println("Unclamped the left clamp");
   
     if ( n == 0 ) {
-      // close tail piston
-      PC.println("DEactivating tail piston through slave");
+      PC.println("Need to deactivate tail piston through slave");
       QUIT_OR_CONTINUE;
       NEXT.write('r');
       NEXT.write('p');
       NEXT.write('o');
     }
  
-    PC.println("Goinig up !");
+    PC.println("Need to make the left clamp touch right clamp");
     QUIT_OR_CONTINUE;
     while ( run( MID, 255) ) { // go up till middle_trip
       if ( q_stop() ) break;
     }
-    PC.println("Something tripped");
   }
 
   // Last rung
-  PC.println("Closing piston");
+  PC.println("Need to clamp the last rung");
   QUIT_OR_CONTINUE;
-  piston(CLOSE); // clamp open
-  PC.println("Piston closed");
+  piston(CLOSE);
 
-  PC.println("Going towards home");
+  PC.println("Need to open tail to push the bot onto the platform and move up simultaneously.");
   QUIT_OR_CONTINUE;
   start_time = millis() + 50000;
   while ( run ( HOME, 200 ) ) { // Bot goes up till home trips
@@ -140,46 +133,37 @@ void ladder() {
       start_time = millis();      
     }
     if ( millis() - start_time > 500 ) {
-      PC.println("DEactivating tail piston through slave");
+      PC.println("Deactivating tail piston through slave");
       QUIT_OR_CONTINUE;
       NEXT.write('r');
       NEXT.write('p');
       NEXT.write('o');      
     }
   }
-  PC.println("Stopped");
 
-  PC.println("Opening tail piston through slave");
+  PC.println("Need to open the left piston now");
   QUIT_OR_CONTINUE;
-  NEXT.write('r');
-  NEXT.write('p');
-  NEXT.write('o');
+  piston(OPEN);
 
-  PC.println("Opening piston");
-  QUIT_OR_CONTINUE;
-  piston(OPEN); // clamp open
-  PC.println("Piston openend");
-
-  PC.print("Moving middle for a small time ");
+  PC.println("Push the left clamp towards center to finish ladder ");
   QUIT_OR_CONTINUE;
   start_time = millis();
   while ( run ( MID, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
     if ( millis() - start_time > 800 ) { // % calib
       run(STOP, 255);
-      PC.print(" time delay done ");
+      PC.println("Time delay done ");
       break;
     }
   }
-  PC.println("Moved for sometime");
+  
+  PC.println("Close left clamp to push the bot up");
   QUIT_OR_CONTINUE;
-
-  PC.println("Closing piston");
-  QUIT_OR_CONTINUE;
-  piston(CLOSE); // clamp close
-  PC.println("Piston closed");
+  piston(CLOSE);
 
   // Flag
+  PC.println("Awww ... no flag.");
+  
   PC.println("Ladder Done!!!");
 
 }

@@ -3,16 +3,8 @@
 // --------------------------------------------------------------------------
 
 void polewalk() {
-  /*     move both motors towards the left
-          clamp right motor
-          move right motor towards right for some time T1
-          clamp left motor
-          unclamp right motor
-          move right motor to left for some time T2
-          move left motor to right till it trips
-     */
 
-  PC.print("............. Pole Walk satrt ");
+  PC.print("............. Pole Walk start ");
   // move both motors to middle
 
   // clamp right piston
