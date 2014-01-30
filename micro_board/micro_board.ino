@@ -29,9 +29,11 @@
 #define MIDDLE_TRIP         A4
 #define FIXEDCLAMP_TRIP     11
 #define COMM_TRIP           -1
+#define IR                  -1
 #define MIDDLE_TRIPPED      LOW
-#define FIXEDCLAMP_TRIPPED  HIGH
+#define FIXEDCLAMP_TRIPPED  LOW
 #define COMM_TRIPPED        LOW
+#define IR_TRIPPED          LOW
 
 #define MOTOR_PWM   6
 #define PISTON_PIN  A5

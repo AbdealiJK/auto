@@ -71,6 +71,7 @@ void ui() {
         PC.println(MY_CLAMP);
         piston(CLOSE);
       }
+    else if( c2 == 'i' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. 
       else {
         if ( SLAVE ) Serial.print("Got PO");
         PC.print("Opening piston ");

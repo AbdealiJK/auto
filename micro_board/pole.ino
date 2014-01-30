@@ -6,6 +6,7 @@ void polewalk() {
 
   PC.print("............. Pole Walk start ");
   // move both motors to middle
+  
 
   // clamp right piston
 
