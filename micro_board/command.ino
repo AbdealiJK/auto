@@ -52,7 +52,6 @@ void ui() {
       PC.print(" ... ");
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
         if ( q_stop() ) break;
-
         update_fixedclamp_trip();
         if ( fixedclamp_trip ) {
           run ( STOP, 255 );
@@ -70,10 +69,15 @@ void ui() {
         PC.print("Closing piston  ");
         PC.println(MY_CLAMP);
         piston(CLOSE);
+      } else {
+        if ( SLAVE ) Serial.print("Got PO");
+        PC.print("Opening piston ");
+        PC.println(MY_CLAMP);
+        piston(OPEN);
       }
-
+      PC.print(PC_END);
     }
-    else if ( c2 == 'i' && SLAVE ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. IR ( only for SLAVE)
+    else if ( c2 == 'i' && SLAVE ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. IR ( only for SLAVE )
       if ( SLAVE ) PC.print("Got I");
       int vel = pc_get_int();
       PC.print(MY_CLAMP);
@@ -94,24 +98,13 @@ void ui() {
       PC.println("DONE");
       PC.print(PC_END);
     }
-    else {
-      if ( SLAVE ) Serial.print("Got PO");
-      PC.print("Opening piston ");
-      PC.println(MY_CLAMP);
-      piston(OPEN);
-    }
-    PC.print(PC_END);
   }
-
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
     delay(2);
     if (!(NEXT))
-    {
       Serial.println("Other clamp not present :P ");
-    }
-    else
-    {
+    else {
       Serial.println("Sending it to the other clamp");
       while (PC.available())
         NEXT.write(PC.read());
@@ -131,5 +124,4 @@ void ui() {
   }
   q_stop();
 }
-
 

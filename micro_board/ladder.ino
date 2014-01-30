@@ -184,6 +184,6 @@ void ladder() {
   PC.println("Awww ... no flag.");
 
   PC.println("Ladder Done!!!");
-
+  flush();
 }
 

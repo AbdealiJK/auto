@@ -101,8 +101,7 @@ int pc_get_int() {
   return temp * neg;
 }
 
-void listen()
-{
+void listen() {
   char temp = !PC_END;
   Serial.print("Waiting for next");
   while (NEXT && temp != PC_END)
@@ -118,8 +117,8 @@ void listen()
   }
   Serial.print("DONENEEE");
 }
-void listen_noloop()
-{
+
+void listen_noloop() {
   char temp = !PC_END;
   //Serial.print("Waiting for next");
   if (NEXT && temp != PC_END)
@@ -134,6 +133,11 @@ void listen_noloop()
     }
   }
   //Serial.print("DONENEEE");
+}
+
+void flush() {
+  while(NEXT.available())
+    NEXT.read();
 }
 
 int q_stop () {

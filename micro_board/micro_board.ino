@@ -1,22 +1,6 @@
 #define SLAVE     0
-#define STANDALONE 0
-
-#if STANDALONE 
-#define QUIT_OR_CONTINUE delay(100);
-#else
-#define QUIT_OR_CONTINUE \
-  PC.println("Waiting for 'c' ... "); \
-  while ( 1 ) { \
-    if ( PC.available() && PC.peek() == 'q' ) return; \
-    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
-  }
-#endif
 
 #if SLAVE
-
-
-
-
 
 #define MY_CLAMP            'r'
 #define PC                  Serial1
@@ -53,6 +37,13 @@
 
 #define MOTOR_PWM   6
 #define PISTON_PIN  A5
+
+#define QUIT_OR_CONTINUE \
+  PC.println("Waiting for 'c' ... "); \
+  while ( 1 ) { \
+    if ( PC.available() && PC.peek() == 'q' ) return; \
+    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
+  }
 
 // Clamp names
 char NEXT_CLAMP = 'r';
