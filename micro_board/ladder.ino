@@ -100,7 +100,6 @@ void ladder() {
     PC.println("Piston openend");
   
     if ( n == 0 ) {
-      QUIT_OR_CONTINUE;
       // close tail piston
       PC.println("DEactivating tail piston through slave");
       QUIT_OR_CONTINUE;
@@ -117,22 +116,35 @@ void ladder() {
     PC.println("Something tripped");
   }
 
-
-
   // Last rung
-
   PC.println("Closing piston");
   QUIT_OR_CONTINUE;
   piston(CLOSE); // clamp open
   PC.println("Piston closed");
-  // something is cuppinghere
+
   PC.println("Going towards home");
   QUIT_OR_CONTINUE;
-  start_time = millis();
+  start_time = millis() + 50000;
   while ( run ( HOME, 200 ) ) { // Bot goes up till home trips
     if ( q_stop() ) break;
     if (start_time != -1 && millis() - start_time > 500) { // % calib
       start_time = -1;
+    }
+    update_fixedclamp_trip();
+    if ( fixedclamp_trip ) {
+      PC.println("Activating tail piston through slave");
+      QUIT_OR_CONTINUE;
+      NEXT.write('r');
+      NEXT.write('p');
+      NEXT.write('c');
+      start_time = millis();      
+    }
+    if ( millis() - start_time > 500 ) {
+      PC.println("DEactivating tail piston through slave");
+      QUIT_OR_CONTINUE;
+      NEXT.write('r');
+      NEXT.write('p');
+      NEXT.write('o');      
     }
   }
   PC.println("Stopped");
@@ -172,38 +184,3 @@ void ladder() {
 
 }
 
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-
-void seesaw() {
-  PC.println(">>>>>>>>>> Seesaw START");
-  PC.println(">>>>>>>>>> Seesaw fully done");
-}
-
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-
-void polewalk() {
-  /*     move both motors towards the left
-          clamp right motor
-          move right motor towards right for some time T1
-          clamp left motor
-          unclamp right motor
-          move right motor to left for some time T2
-          move left motor to right till it trips
-     */
-
-  PC.print("............. Pole Walk satrt ");
-  // move both motors to middle
-
-  // clamp right piston
-
-  // move left to extreme, move right to extreme
-
-  // clamp left
-
-  // move right to middle and left to middle
-
-  PC.println("Polewalk completed .... ");
-
-}

@@ -98,12 +98,10 @@ void setup() {
   fixedclamp_trip = 0;
   comm_trip = 0;
 
-  run(STOP, 255);
-  //update_trips();
-
-#ifdef TEST
-  test();
-#endif
+  run(STOP, 255);;
+  update_home_trip();;
+  update_middle_trip();
+  update_fixedclamp_trip();
 
   // Display initial values :
   PC.print("My clamp : \t");

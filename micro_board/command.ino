@@ -11,15 +11,7 @@ void ui() {
     PC.read();
     while (!PC.available());
     char c2 = PC.read();
-    if ( c2 == 'r' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RESET
-      if ( SLAVE ) Serial.print("Got R");
-      PC.print(MY_CLAMP);
-      PC.print("-motor moving to home trip switch ... ");
-      go_home(HOME_SPEED);
-      PC.println("DONE");
-      PC.print(PC_END);
-    }
-    else if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
+    if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
       // Display initial values :
       if ( SLAVE ) Serial.print("Got W");
       update_home_trip();

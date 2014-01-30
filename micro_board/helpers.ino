@@ -1,3 +1,68 @@
+// ------------------------------------------------
+int run(int dir, int pwm) {
+  update_home_trip();
+  update_middle_trip();
+
+  if ( home_trip && dir == HOME ) {
+    digitalWrite(MOTOR_1, 0);
+    digitalWrite(MOTOR_2, 0);
+    analogWrite(MOTOR_PWM, 255);
+    PC.println("\t Trip switch HOME pressed for some motor ! ");
+    return 0;
+  }
+
+  if ( middle_trip  && dir == MID ) {
+    digitalWrite(MOTOR_1, 0);
+    digitalWrite(MOTOR_2, 0);
+    analogWrite(MOTOR_PWM, 255);
+    PC.println("\t Trip switch MIDDLE pressed for some motor ! ~");
+    return 0;
+  }
+
+  digitalWrite(MOTOR_1, dir / 2);
+  digitalWrite(MOTOR_2, dir % 2);
+  analogWrite(MOTOR_PWM, pwm);
+  return 1;
+}
+
+// ------------------------------------------------
+void piston(int v) {
+  digitalWrite(PISTON_PIN, v == CLOSE);
+}
+
+void update_middle_trip() {
+  if ( ! SLAVE && MIDDLE_TRIP != -1 ) {
+    middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
+  }
+  
+}
+
+void update_home_trip() {
+  if (HOME_TRIP != -1 ) {
+    home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
+  }
+
+}
+
+void update_fixedclamp_trip() {
+//  long int ti = millis();
+  if ( !SLAVE && FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
+    long int temp = 0, lim = 0;
+    for ( lim = 0; lim < 1000; lim++ ) {
+      temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
+      /*
+        
+      */
+    }
+    //      Serial.println(temp);
+    if ( temp > 0.7 * lim )
+      fixedclamp_trip = 1;
+    else
+      fixedclamp_trip = 0;
+  }
+}
+
+
 int pc_get_int() {
   int temp = 0, next_val, neg = 1;
   char temp_c;
@@ -79,49 +144,22 @@ int q_stop () {
   return 0;
 }
 
-
-
-void test () {
-  // Display initial values :
-  while ( !Serial );
-  Serial.println("5sec delay");
-  Serial.println("This is the test mode. If you wish to go to normal mode, uncomment 'test()' in setup");
-  delay(5000);
-  while (1) {
-    update_middle_trip();
-    update_home_trip();
-    update_fixedclamp_trip();
-    
-    Serial.print("My clamp : \t");
-    Serial.println(MY_CLAMP);
-    Serial.print("Next clamp : \t");
-    Serial.println(NEXT_CLAMP);
-    Serial.print("Trips - home : \t");
-    Serial.println(digitalRead(HOME_TRIP));
-    Serial.print("Trips - mid : \t");
-    if ( MIDDLE_TRIP )   Serial.println(digitalRead(MIDDLE_TRIP));
-    else                 Serial.println("Middle trip is not with me");
-    Serial.print("Trips - fixedclamp : \t");
-    if ( FIXEDCLAMP_TRIP )    Serial.println(digitalRead(FIXEDCLAMP_TRIP));
-    else                      Serial.println("Fixedclamp is not with me");
-    Serial.print("Trips - comm : \t");
-    if ( COMM_TRIP )          Serial.println(digitalRead(COMM_TRIP));
-    else                      Serial.println("Communication trip is not with me");
-    Serial.println(" TESTS done");
-    while (!Serial.available() ) {
-      Serial.println("byebye");
-      delay(1000);
-    }
-    while (Serial.available())
-      Serial.read();
-
-  }
-}
-
-
-
-
 /*
+
+PINS on the Board
+Motors :     4, 5
+Motor pwm :  6
+Actuation :
+  Towards l298 - A5
+  Away from l29813 --------------- 13 doesnt work for some reason
+Trips :
+  Trip1 - 11 (mid),
+  Trip2 - 10 (home),
+  Trip3 - a3
+  Trip4 - a4
+Autonic :    7
+
+
 L298 Pin config: (from left)
 1 - current sense A
 2 - out 1
@@ -139,63 +177,6 @@ L298 Pin config: (from left)
 14 - out4
 15 - current sense B
 
-
-
-PINS on the Board
-Motors :     4, 5
-Motor pwm :  6
-Actuation :
-  Towards l298 - A5
-  Away from l29813 --------------- 13 doesnt work for some reason
-Trips :
-  Trip1 - 11 (mid),
-  Trip2 - 10 (home),
-  Trip3 - a3
-  Trip4 - a4
-Autonic :    7
-
-
-
-Sensors :
-CLAMP L
-1. Home trip switch
-2. Middle trip switch
-3. AVS
-CLAMP R
-1. Home trip switch
-2. Ladder trip switch
-3. AVS
-GEN
-1. Comm trip switch
-
-
-Actuations :
-CLAMP L
-1. Piston
-2. Motor
-3.
-CLAMP R
-1. Piston
-2. Motor
-3. Servo
-GEN
-1. Peepee
-
-
-UI :
-CLAMP L
-1. Autonic
-2. 1 trip
-3. HALL x2
-4. Servo
-CLAMP R
-1. Autonic
-2. 1 trip
-3. HALL x2
-
-
-
-(7)
 */
 
 
