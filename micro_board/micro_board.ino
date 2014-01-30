@@ -1,6 +1,22 @@
 #define SLAVE     0
+#define STANDALONE 0
+
+#if STANDALONE 
+#define QUIT_OR_CONTINUE delay(100);
+#else
+#define QUIT_OR_CONTINUE \
+  PC.println("Waiting for 'c' ... "); \
+  while ( 1 ) { \
+    if ( PC.available() && PC.peek() == 'q' ) return; \
+    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
+  }
+#endif
 
 #if SLAVE
+
+
+
+
 
 #define MY_CLAMP            'r'
 #define PC                  Serial1
@@ -29,7 +45,7 @@
 #define MIDDLE_TRIP         A4
 #define FIXEDCLAMP_TRIP     11
 #define COMM_TRIP           -1
-#define IR                  -1
+#define IR_TRIP             12
 #define MIDDLE_TRIPPED      LOW
 #define FIXEDCLAMP_TRIPPED  LOW
 #define COMM_TRIPPED        LOW
@@ -54,14 +70,8 @@ char NEXT_CLAMP = 'r';
 
 #define HOME_SPEED 255
 
-#define QUIT_OR_CONTINUE \
-  PC.println("Waiting for 'c' ... "); \
-  while ( 1 ) { \
-    if ( PC.available() && PC.peek() == 'q' ) return; \
-    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
-  }
 
-int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0,
+int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, ir_trip = 0,
     loop_count = 0, bot_status = 0;
 
 void reset();
@@ -125,6 +135,16 @@ void setup() {
 
 void loop() {
 
+#if STANDALONE
+while ( !comm_trip ){
+  update_comm_trip();
+}
+
+//ladder();
+//polewalk();
+
+
+#else
   ui();
 
   //    update_trips();
@@ -137,8 +157,12 @@ void loop() {
   
   Serial.print(MY_CLAMP);
   update_fixedclamp_trip();
+  update_ir_trip();
+  Serial.print(digitalRead(IR_TRIP));
   Serial.println("-loop");
   delay(100);
+  
+  #endif
 }
 
 

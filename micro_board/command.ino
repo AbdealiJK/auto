@@ -44,7 +44,7 @@ void ui() {
       PC.print(PC_END);
     }
     else if ( c2 == 'f' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>> MOTION with fixed clamp also
-      if ( SLAVE ) Serial.print("Got V");
+      if ( SLAVE ) Serial.print("Got F");
       int vel = pc_get_int();
       PC.print(MY_CLAMP);
       PC.print("-motor moving (with fixed clamp) at pwm = ");
@@ -71,16 +71,38 @@ void ui() {
         PC.println(MY_CLAMP);
         piston(CLOSE);
       }
-    else if( c2 == 'i' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. 
-      else {
-        if ( SLAVE ) Serial.print("Got PO");
-        PC.print("Opening piston ");
-        PC.println(MY_CLAMP);
-        piston(OPEN);
+
+    }
+    else if ( c2 == 'i' && SLAVE ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. IR ( only for SLAVE)
+      if ( SLAVE ) PC.print("Got I");
+      int vel = pc_get_int();
+      PC.print(MY_CLAMP);
+      PC.print("-motor moving at pwm = ");
+      PC.print(vel);
+      PC.print(" ... ");
+      while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
+        if ( q_stop() ) break;
+        update_ir_trip();
+        if ( ir_trip ) {
+          run ( STOP, 255 );
+          PC.print("IR reached.... ");
+          PC.print(MY_CLAMP);
+          PC.println("-clamp Now in middle position");
+          break;
+        }
       }
+      PC.println("DONE");
       PC.print(PC_END);
     }
+    else {
+      if ( SLAVE ) Serial.print("Got PO");
+      PC.print("Opening piston ");
+      PC.println(MY_CLAMP);
+      piston(OPEN);
+    }
+    PC.print(PC_END);
   }
+
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
     delay(2);
@@ -102,7 +124,7 @@ void ui() {
       PC.read();
       ladder () ;
     }
-     else if ( c == '3' ) {
+    else if ( c == '3' ) {
       PC.read();
       polewalk() ;
     }

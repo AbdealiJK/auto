@@ -36,6 +36,12 @@ void update_middle_trip() {
   }
   
 }
+void update_comm_trip() {
+  if ( ! SLAVE && COMM_TRIP != -1 ) {
+    comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;
+  }
+  
+}
 
 void update_home_trip() {
   if (HOME_TRIP != -1 ) {
@@ -56,6 +62,20 @@ void update_fixedclamp_trip() {
       fixedclamp_trip = 1;
     else
       fixedclamp_trip = 0;
+  }
+}
+void update_ir_trip() {
+//  long int ti = millis();
+  if ( SLAVE && IR_TRIP != -1 ) { // Flicker correction for IR.
+    long int temp = 0, lim = 0;
+    for ( lim = 0; lim < 1000; lim++ ) {
+      temp += digitalRead(IR_TRIP) == IR_TRIPPED;
+    }
+    //      Serial.println(temp);
+    if ( temp > 0.7 * lim )
+      ir_trip = 1;
+    else
+      ir_trip = 0;
   }
 }
 
