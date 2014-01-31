@@ -1,5 +1,5 @@
 #define SLAVE     0
-
+#define STANDALONE 0
 #if SLAVE
 
 #define MY_CLAMP            'r'
@@ -76,8 +76,11 @@ void setup() {
   Serial.begin(57600);
   Serial1.begin(57600);
 
-  while (!SLAVE && !PC); // wait for serial port to connect.
+#if STANDALONE
 
+#else
+  while (!SLAVE && !PC); // wait for serial port to connect.
+#endif
   PC.println("Serial started");
 
   // Pinmodes
