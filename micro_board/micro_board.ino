@@ -1,4 +1,4 @@
-#define SLAVE     1
+#define SLAVE     0
 
 #if SLAVE
 
@@ -33,7 +33,7 @@
 #define MIDDLE_TRIPPED      LOW
 #define FIXEDCLAMP_TRIPPED  LOW
 #define COMM_TRIPPED        LOW
-#define IR_TRIPPED          HIGH
+#define IR_TRIPPED          LOW
 
 #define MOTOR_PWM   6
 #define PISTON_PIN  A5
