@@ -30,7 +30,7 @@ void polewalk() {
   // move left to extreme, move right to extreme
   PC.println("Need to move left clamp to the extreme.");
   QUIT_OR_CONTINUE;
-  flush();
+  while(NEXT.available()) NEXT.read();
   NEXT.print('r');
   NEXT.print('v');
   NEXT.print(-255);

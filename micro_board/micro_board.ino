@@ -33,7 +33,7 @@
 #define MIDDLE_TRIPPED      LOW
 #define FIXEDCLAMP_TRIPPED  LOW
 #define COMM_TRIPPED        LOW
-#define IR_TRIPPED          LOW
+#define IR_TRIPPED          HIGH
 
 #define MOTOR_PWM   6
 #define PISTON_PIN  A5
@@ -127,12 +127,12 @@ void setup() {
 void loop() {
 
 #if STANDALONE
-while ( !comm_trip ){
-  update_comm_trip();
-}
+  while ( !comm_trip ) {
+    update_comm_trip();
+  }
 
-//ladder();
-//polewalk();
+  //ladder();
+  //polewalk();
 
 
 #else
@@ -145,15 +145,15 @@ while ( !comm_trip ){
 
   while (NEXT.available())
     NEXT.read();
-  
+
   Serial.print(MY_CLAMP);
   update_fixedclamp_trip();
   update_ir_trip();
   Serial.print(digitalRead(IR_TRIP));
   Serial.println("-loop");
   delay(100);
-  
-  #endif
+
+#endif
 }
 
 
