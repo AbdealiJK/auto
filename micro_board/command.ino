@@ -17,6 +17,7 @@ void ui() {
       update_home_trip();
       update_middle_trip();
       update_fixedclamp_trip();
+      update_ir_trip();      
       PC.print(">>>>>>>>>> data for : ");
       PC.println(MY_CLAMP);
       PC.print("Trips - home : \t");
@@ -27,6 +28,8 @@ void ui() {
       PC.println(fixedclamp_trip);
       PC.print("Trips - comm : \t");
       PC.println(comm_trip);
+      PC.print("Trips - ir : \t");
+      PC.println(ir_trip);
       PC.println(" >> begun");
       PC.print(PC_END);
     }

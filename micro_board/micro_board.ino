@@ -1,4 +1,4 @@
-#define SLAVE     0
+#define SLAVE     1
 
 #if SLAVE
 
@@ -16,7 +16,7 @@
 
 #define MY_CLAMP            'l'
 #define PC                  Serial
-#define NEXT                0 && Serial1
+#define NEXT                Serial1
 // Pins
 #define MOTOR_1             4
 #define MOTOR_2             5
@@ -26,7 +26,7 @@
 
 #endif
 
-#define MIDDLE_TRIP         A3
+#define MIDDLE_TRIP         A4
 #define FIXEDCLAMP_TRIP     -1 // WHAT EES IT
 #define COMM_TRIP           -1
 #define IR_TRIP             12
