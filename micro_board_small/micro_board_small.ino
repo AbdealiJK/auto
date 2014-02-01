@@ -64,7 +64,7 @@ char NEXT_CLAMP = 'r';
 #define HOME_SPEED 255
 
 
-int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, ir_trip = 0,
+int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, comm_ir_trip = 0, ir_trip = 0,
     loop_count = 0, bot_status = 0;
 
 void reset();

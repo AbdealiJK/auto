@@ -64,7 +64,7 @@ char NEXT_CLAMP = 'r';
 #define HOME_SPEED 255
 
 
-int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, ir_trip = 0,
+boolean home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, comm_ir_trip = 0, ir_trip = 0,
     loop_count = 0, bot_status = 0;
 
 void reset();
@@ -92,8 +92,8 @@ void setup() {
     pinMode(MIDDLE_TRIP, INPUT);
     pinMode(FIXEDCLAMP_TRIP, INPUT);
     pinMode(COMM_TRIP, INPUT);
-    pinMode(COMM_IR_TRIP, INPUT);
     digitalWrite(COMM_TRIP, HIGH);
+    pinMode(COMM_IR_TRIP, INPUT);
 
   }
   run(STOP, 255);

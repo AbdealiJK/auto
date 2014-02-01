@@ -17,7 +17,7 @@ void ui() {
       update_home_trip();
       update_middle_trip();
       update_fixedclamp_trip();
-      update_ir_trip();      
+      update_ir_trip();
       PC.print(">>>>>>>>>> data for : ");
       PC.println(MY_CLAMP);
       PC.print("Trips - home : \t");
@@ -106,27 +106,41 @@ void ui() {
       if ( PC.read() == 'c' ) {
         if ( SLAVE ) Serial.print("Got CC");
         PC.print("Waiting for the comm to occur");
+        update_comm_ir_trip();
         while ( !comm_ir_trip ) {
           update_comm_ir_trip();
         }
-        delay(1000);
+        delay(500);
         PC.print("Closing piston  ");
         PC.println(MY_CLAMP);
         piston(CLOSE);
       } else {
         if ( SLAVE ) Serial.print("Got CO");
         PC.print("Waiting for the comm to occur");
+        update_comm_ir_trip();
         while ( !comm_ir_trip ) {
           update_comm_ir_trip();
         }
-        delay(1000);
+        delay(400);
+        digitalWrite(13, HIGH);
+        delay(100);
+        digitalWrite(13, LOW);
+        delay(400);
+        digitalWrite(13, HIGH);
+        delay(100);
+        digitalWrite(13, LOW);
+        delay(400);
+        digitalWrite(13,HIGH);
+       delay(100); 
+       digitalWrite(13, LOW);
+
         PC.print("Opening piston  ");
         PC.println(MY_CLAMP);
         piston(OPEN);
       }
       PC.print(PC_END);
     }
-    
+
   }
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
