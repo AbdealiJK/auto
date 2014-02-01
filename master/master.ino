@@ -40,14 +40,12 @@
 #define MOTOR_PWM   6
 #define PISTON_PIN  A5
 
-/*#define QUIT_OR_CONTINUE \
+#define QUIT_OR_CONTINUE \
   PC.println("Waiting for 'c' ... "); \
   while ( 1 ) { \
     if ( PC.available() && PC.peek() == 'q' ) return; \
     if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
   }
-*/
-#define QUIT_OR_CONTINUE   delay(100)//quit_or_continue();
 
 // Clamp names
 char NEXT_CLAMP = 'r';
@@ -68,8 +66,6 @@ char NEXT_CLAMP = 'r';
 
 int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, comm_ir_trip = 0, ir_trip = 0,
     loop_count = 0, bot_status = 0;
-//TEMPORARY
-int f=1;
 
 void reset();
 int run(int, int);
@@ -134,14 +130,13 @@ void setup() {
 }
 
 void loop() {
-if(1){
-  Serial.println("Started again");
- proceed_comm();
+
+  while ( !comm_trip ) {
+    update_comm_trip();
+  }
   //ladder();
   //polewalk();
-  seesaw();
-  
-}
+
   ui();
 
   //    update_trips();
@@ -159,3 +154,5 @@ if(1){
   delay(100);
 
 }
+
+

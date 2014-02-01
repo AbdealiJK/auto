@@ -166,26 +166,6 @@ int q_stop () {
   return 0;
 }
 
-void proceed_comm()
-{   update_comm_trip();
-    Serial.println("- waiting for comm trip ..... ");
-
-    while ( !comm_trip ) {
-    update_comm_trip();
-  //Serial.print(MY_CLAMP);
-  //Serial.print(  digitalRead(COMM_TRIP) );
-//  Serial.println("- waiting for comm trip ..... ");
-  delay(10);}
-}
-void quit_or_continue()
-{
-PC.println("Waiting for 'c' ... "); 
-  while ( 1 ) { 
-    if ( PC.available() && PC.peek() == 'q' ) return; 
-    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } 
-  }
-}
-
 /*
 
 PINS on the Board
@@ -224,3 +204,5 @@ L298 Pin config: (from left)
 15 - current sense B
 
 */
+
+
