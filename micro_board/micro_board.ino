@@ -1,4 +1,4 @@
-#define SLAVE     0
+#define SLAVE     1
 
 #if SLAVE
 
@@ -66,6 +66,8 @@ char NEXT_CLAMP = 'r';
 
 int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, comm_ir_trip = 0, ir_trip = 0,
     loop_count = 0, bot_status = 0;
+//TEMPORARY
+int f=1;
 
 void reset();
 int run(int, int);
@@ -131,11 +133,20 @@ void setup() {
 
 void loop() {
 
-  while ( !comm_trip ) {
+ while ( !comm_trip ) {
     update_comm_trip();
+    
   }
   //ladder();
   //polewalk();
+ /*if(f)
+  {
+  seesaw();
+  f=0;
+  
+  
+  }
+  */
 
   ui();
 
@@ -154,5 +165,3 @@ void loop() {
   delay(100);
 
 }
-
-

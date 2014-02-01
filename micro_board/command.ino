@@ -126,6 +126,31 @@ void ui() {
       }
       PC.print(PC_END);
     }
+    else if ( c2 == 's' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
+      while (!PC.available());
+      if ( PC.read() == 'c' ) {
+        if ( SLAVE ) Serial.print("Got CC");
+        PC.print("Waiting for the comm to occur");
+        while ( !comm_ir_trip ) {
+          update_comm_ir_trip();
+        }
+        delay(1000);
+        PC.print("Closing piston  ");
+        PC.println(MY_CLAMP);
+        piston(CLOSE);
+      } else {
+        if ( SLAVE ) Serial.print("Got CO");
+        PC.print("Waiting for the comm to occur");
+        while ( !comm_ir_trip ) {
+          update_comm_ir_trip();
+        }
+        delay(1000);
+        PC.print("Opening piston  ");
+        PC.println(MY_CLAMP);
+        piston(OPEN);
+      }
+      PC.print(PC_END);
+    }
     
   }
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {

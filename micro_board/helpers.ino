@@ -204,5 +204,3 @@ L298 Pin config: (from left)
 15 - current sense B
 
 */
-
-

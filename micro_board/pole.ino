@@ -28,7 +28,7 @@ void polewalk() {
   NEXT.print('c');
   
   // move left to extreme, move right to extreme
-  PC.println("Need to move left clamp to the extreme.");
+  PC.println("Need to move right clamp to the extreme.");
   QUIT_OR_CONTINUE;
   while(NEXT.available()) NEXT.read();
   NEXT.print('r');
@@ -36,7 +36,7 @@ void polewalk() {
   NEXT.print(-255);
   listen();
   
-  PC.println("Need to move right clamp to the extreme.");
+  PC.println("Need to move left clamp to the extreme.");
   QUIT_OR_CONTINUE;
   while ( run( HOME, 255 ) ) {
     if ( q_stop() ) break;
