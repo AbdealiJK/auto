@@ -45,10 +45,27 @@ void update_comm_trip() {
 
 void update_comm_ir_trip() {
   if ( ! SLAVE && COMM_IR_TRIP != -1 ) {
-    comm_ir_trip = digitalRead(COMM_IR_TRIP) == COMM_IR_TRIPPED;
-  }
-  
+    long int temp = 0, lim = 0;
+    for ( lim = 0; lim < 10000; lim++ ) {
+      temp += digitalRead(COMM_IR_TRIP);
+    }
+    
+    if ( temp > 0.7 * lim ) {
+      if ( COMM_IR_TRIPPED == 1 ) {
+        comm_ir_trip = 1;
+      } else {
+        comm_ir_trip = 0;
+      }
+    } else {
+      if ( COMM_IR_TRIPPED == 1 ) {
+        comm_ir_trip = 0;
+      } else {
+        comm_ir_trip = 1;
+      }
+    }   
+  }  
 }
+
 void update_home_trip() {
   if (HOME_TRIP != -1 ) {
     home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
