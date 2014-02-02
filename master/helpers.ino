@@ -31,20 +31,20 @@ void piston(int v) {
 }
 
 void update_middle_trip() {
-  if ( ! SLAVE && MIDDLE_TRIP != -1 ) {
+  if ( MIDDLE_TRIP != -1 ) {
     middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
   }
   
 }
 void update_comm_trip() {
-  if ( ! SLAVE && COMM_TRIP != -1 ) {
+  if ( COMM_TRIP != -1 ) {
     comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;
   }
   
 }
 
 void update_comm_ir_trip() {
-  if ( ! SLAVE && COMM_IR_TRIP != -1 ) {
+  if ( COMM_IR_TRIP != -1 ) {
     long int temp = 0, lim = 0;
     for ( lim = 0; lim < 10000; lim++ ) {
       temp += digitalRead(COMM_IR_TRIP);
@@ -75,7 +75,7 @@ void update_home_trip() {
 
 void update_fixedclamp_trip() {
 //  long int ti = millis();
-  if ( !SLAVE && FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
+  if ( FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
     long int temp = 0, lim = 0;
     for ( lim = 0; lim < 1000; lim++ ) {
       temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
@@ -143,22 +143,10 @@ void listen() {
 
 int q_stop () {
   if ( PC.available() && PC.peek() == 'q' ) {
-    if ( SLAVE ) Serial.print("Got Q");
     NEXT.print('q');
     run(STOP, 255);
-    PC.print(MY_CLAMP);
-    PC.println("-motor ...manual stop... ");
+    PC.println("master-motor ...manual stop... ");
     Serial.println("STOPPED");
-    PC.print(PC_END);
-    listen();
-    return 1;
-  } else if ( PC.available() && PC.peek() == 'z' ) {
-    if ( SLAVE ) Serial.print("Got Z");
-    NEXT.print('z');
-    run(STOP, 255);
-    piston(OPEN);
-    PC.print(MY_CLAMP);
-    PC.println("-motor ...manual complete halt... ");
     PC.print(PC_END);
     listen();
     return 1;

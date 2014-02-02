@@ -14,7 +14,7 @@ void ladder() {
     NEXT.print(-255);
   */
 
-/*  int n = 4;
+  int n = 4;
   while (n--) {
 
     PC.println("Need to close piston");
@@ -186,6 +186,6 @@ void ladder() {
   PC.println("Ladder Done!!!");
   while(NEXT.available()) NEXT.read();
   
-  */
+
 }
 

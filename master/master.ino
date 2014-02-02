@@ -1,20 +1,6 @@
-#define SLAVE     0
 
-#if SLAVE
 
-#define MY_CLAMP            'r'
-#define PC                  Serial1
-#define NEXT                0 && Serial
-// Pins
-#define MOTOR_1             4
-#define MOTOR_2             5
-
-#define HOME_TRIP           10 // -1 means no trip available
-#define HOME_TRIPPED        LOW
-
-#else
-
-#define MY_CLAMP            'l'
+//#define MY_CLAMP            'l'
 #define PC                  Serial
 #define NEXT                Serial1
 // Pins
@@ -23,8 +9,6 @@
 
 #define HOME_TRIP           10 // -1 means no trip available
 #define HOME_TRIPPED        LOW
-
-#endif
 
 #define MIDDLE_TRIP         A4
 #define FIXEDCLAMP_TRIP     -1 // WHAT EES IT
@@ -88,34 +72,29 @@ void setup() {
   pinMode(MOTOR_PWM, OUTPUT);
   pinMode(PISTON_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
-  if ( !SLAVE ) {
-    pinMode(MIDDLE_TRIP, INPUT);
-    pinMode(FIXEDCLAMP_TRIP, INPUT);
-    pinMode(COMM_TRIP, INPUT);
-    pinMode(COMM_IR_TRIP, INPUT);
-    digitalWrite(COMM_TRIP, HIGH);
 
-  }
+  pinMode(MIDDLE_TRIP, INPUT);
+  pinMode(FIXEDCLAMP_TRIP, INPUT);
+  pinMode(COMM_TRIP, INPUT);
+  pinMode(COMM_IR_TRIP, INPUT);
+  digitalWrite(COMM_TRIP, HIGH);
+
   run(STOP, 255);
 
   // Init basic variables
-  PC.println("Setting up basics ...");
-  NEXT_CLAMP = (MY_CLAMP == 'l') ? 'r' : 'l';
+  PC.println(F("Setting up basics ..."));
 
   middle_trip = 0;
   fixedclamp_trip = 0;
   comm_trip = 0;
 
-  run(STOP, 255);;
-  update_home_trip();;
+  run(STOP, 255);
+  update_home_trip();
+  update_ir_trip();
   update_middle_trip();
   update_fixedclamp_trip();
 
   // Display initial values :
-  PC.print("My clamp : \t");
-  PC.println(MY_CLAMP);
-  PC.print("Next clamp : \t");
-  PC.println(NEXT_CLAMP);
   PC.print("Trips - home : \t");
   PC.println(home_trip);
   PC.print("Trips - mid : \t");
@@ -124,7 +103,8 @@ void setup() {
   PC.println(fixedclamp_trip);
   PC.print("Trips - comm : \t");
   PC.println(comm_trip);
-  PC.println(" >> begun");
+  PC.print("Trips - ir : \t");
+  PC.println(ir_trip);
   PC.print(PC_END);
 
 }
@@ -147,10 +127,9 @@ void loop() {
   while (NEXT.available())
     NEXT.read();
 
-  Serial.print(MY_CLAMP);
   Serial.print(  digitalRead(COMM_IR_TRIP) );
   Serial.print(  digitalRead(COMM_TRIP) );
-  Serial.println("-loop");
+  Serial.println("master-loop");
   delay(100);
 
 }
