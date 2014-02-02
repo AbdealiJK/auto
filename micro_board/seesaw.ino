@@ -7,7 +7,8 @@ void seesaw() {
   PC.println(">>>>>>>>>> Seesaw START");
   
   
-    // move left motor to extreme
+/*    
+  // move left motor to extreme
   PC.println("Need to move left clamp to the extreme.");
   QUIT_OR_CONTINUE;
   while ( run( HOME, 255 ) ) {
@@ -34,8 +35,8 @@ void seesaw() {
   NEXT.print(200);
   delay(150);
   NEXT.print('q');
-  
-  proceed_comm();
+  */
+
   // Clamp
   PC.println("Need to clamp both on seesaw.");
   QUIT_OR_CONTINUE;
@@ -47,7 +48,7 @@ void seesaw() {
   delay(500);
   PC.println("FINISH SEESAW ... Need to UNclamp both on seesaw.");
   QUIT_OR_CONTINUE;
-    proceed_comm();
+
   NEXT.print('r');
   NEXT.print('p');
   NEXT.print('o');

@@ -45,9 +45,9 @@
   while ( 1 ) { \
     if ( PC.available() && PC.peek() == 'q' ) return; \
     if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
-  }
-*/
-#define QUIT_OR_CONTINUE   delay(100)//quit_or_continue();
+  }*/
+  
+  #define QUIT_OR_CONTINUE proceed_comm()
 
 // Clamp names
 char NEXT_CLAMP = 'r';
@@ -97,8 +97,6 @@ void setup() {
     pinMode(FIXEDCLAMP_TRIP, INPUT);
     pinMode(COMM_TRIP, INPUT);
     pinMode(COMM_IR_TRIP, INPUT);
-    digitalWrite(COMM_TRIP, HIGH);
-
   }
   run(STOP, 255);
 
@@ -134,27 +132,18 @@ void setup() {
 }
 
 void loop() {
-if(1){
-  Serial.println("Started again");
- proceed_comm();
-  //ladder();
-  //polewalk();
-  seesaw();
-  
-}
   ui();
+  // update_trips();
 
-  //    update_trips();
-
-  while (PC.available())
+  while ( PC.available() )
     PC.read();
 
   while (NEXT.available())
     NEXT.read();
 
   Serial.print(MY_CLAMP);
-  Serial.print(  digitalRead(COMM_IR_TRIP) );
-  Serial.print(  digitalRead(COMM_TRIP) );
+  update_comm_trip();
+  Serial.print( comm_trip );
   Serial.println("-loop");
   delay(100);
 

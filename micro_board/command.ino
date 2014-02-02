@@ -17,7 +17,7 @@ void ui() {
       update_home_trip();
       update_middle_trip();
       update_fixedclamp_trip();
-      update_ir_trip();      
+      update_ir_trip();
       PC.print(">>>>>>>>>> data for : ");
       PC.println(MY_CLAMP);
       PC.print("Trips - home : \t");
@@ -151,7 +151,7 @@ void ui() {
       }
       PC.print(PC_END);
     }
-    
+
   }
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
@@ -169,11 +169,51 @@ void ui() {
   if ( !SLAVE ) {
     if ( c == '4' ) {
       PC.read();
-      ladder () ;
+      ladder();
     }
     else if ( c == '3' ) {
       PC.read();
       polewalk() ;
+    }
+    else if ( c == '2' ) {
+      PC.read();
+      swing();
+    }
+    else if ( c == '1' ) {
+      PC.read();
+      seesaw();
+    }
+    else if ( c == '5' ) {
+      // move left motor to extreme
+      PC.println("Need to move left clamp to the extreme.");
+      QUIT_OR_CONTINUE;
+      while ( run( HOME, 255 ) ) {
+        if ( q_stop() ) break;
+      }
+      run( MID, 255 );
+      delay(100);
+      run( STOP, 255 );
+      NEXT.print('r');
+      NEXT.print('v');
+      NEXT.print(-255);
+      listen();
+
+      // move right motor to middle
+      PC.println("Right clamp needs to go to the middle position.");
+      QUIT_OR_CONTINUE;
+      NEXT.print('r');
+      NEXT.print('i');
+      NEXT.print(255);
+      listen();
+
+      // make right motor move a small distance
+      PC.println("Need to move right clamp slightly more.");
+      QUIT_OR_CONTINUE;
+      NEXT.print('r');
+      NEXT.print('v');
+      NEXT.print(200);
+      delay(400);
+      NEXT.print('q');
     }
   }
   q_stop();

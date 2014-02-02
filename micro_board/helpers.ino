@@ -34,13 +34,13 @@ void update_middle_trip() {
   if ( ! SLAVE && MIDDLE_TRIP != -1 ) {
     middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
   }
-  
+
 }
 void update_comm_trip() {
   if ( ! SLAVE && COMM_TRIP != -1 ) {
     comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;
   }
-  
+
 }
 
 void update_comm_ir_trip() {
@@ -49,7 +49,7 @@ void update_comm_ir_trip() {
     for ( lim = 0; lim < 10000; lim++ ) {
       temp += digitalRead(COMM_IR_TRIP);
     }
-    
+
     if ( temp > 0.7 * lim ) {
       if ( COMM_IR_TRIPPED == 1 ) {
         comm_ir_trip = 1;
@@ -62,8 +62,8 @@ void update_comm_ir_trip() {
       } else {
         comm_ir_trip = 1;
       }
-    }   
-  }  
+    }
+  }
 }
 
 void update_home_trip() {
@@ -74,7 +74,7 @@ void update_home_trip() {
 }
 
 void update_fixedclamp_trip() {
-//  long int ti = millis();
+  //  long int ti = millis();
   if ( !SLAVE && FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
     long int temp = 0, lim = 0;
     for ( lim = 0; lim < 1000; lim++ ) {
@@ -88,7 +88,7 @@ void update_fixedclamp_trip() {
   }
 }
 void update_ir_trip() {
-//  long int ti = millis();
+  //  long int ti = millis();
   if ( IR_TRIP != -1 ) { // Flicker correction for IR.
     long int temp = 0, lim = 0;
     for ( lim = 0; lim < 1000; lim++ ) {
@@ -166,23 +166,16 @@ int q_stop () {
   return 0;
 }
 
-void proceed_comm()
-{   update_comm_trip();
-    Serial.println("- waiting for comm trip ..... ");
+void proceed_comm() { 
+  update_comm_trip();
+  Serial.println("- waiting for comm trip ..... ");
 
-    while ( !comm_trip ) {
+  while ( !comm_trip ) {
     update_comm_trip();
-  //Serial.print(MY_CLAMP);
-  //Serial.print(  digitalRead(COMM_TRIP) );
-//  Serial.println("- waiting for comm trip ..... ");
-  delay(10);}
-}
-void quit_or_continue()
-{
-PC.println("Waiting for 'c' ... "); 
-  while ( 1 ) { 
-    if ( PC.available() && PC.peek() == 'q' ) return; 
-    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } 
+//    Serial.print(MY_CLAMP);
+//   Serial.println(  digitalRead(COMM_TRIP) );
+    //  Serial.println("- waiting for comm trip ..... ");
+    delay(10);
   }
 }
 
@@ -204,7 +197,7 @@ Hall : A0 - towards the 2 pins for power ( outer side of board)
        D8
 Soft Serial :
   SCK  - outer side
-  MISO - 
+  MISO -
 
 L298 Pin config: (from left)
 1 - current sense A

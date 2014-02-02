@@ -1,44 +1,15 @@
-#define SLAVE     0
-
-#if SLAVE
-
 #define MY_CLAMP            'r'
 #define PC                  Serial1
-#define NEXT                0 && Serial
+
 // Pins
 #define MOTOR_1             4
 #define MOTOR_2             5
-
-#define HOME_TRIP           10 // -1 means no trip available
-#define HOME_TRIPPED        LOW
-
-#else
-
-#define MY_CLAMP            'l'
-#define PC                  Serial
-#define NEXT                Serial1
-// Pins
-#define MOTOR_1             4
-#define MOTOR_2             5
-
-#define HOME_TRIP           10 // -1 means no trip available
-#define HOME_TRIPPED        LOW
-
-#endif
-
-#define MIDDLE_TRIP         A4
-#define FIXEDCLAMP_TRIP     -1 // WHAT EES IT
-#define COMM_TRIP           SCK
-#define COMM_IR_TRIP        A0
-#define IR_TRIP             12
-#define MIDDLE_TRIPPED      LOW
-#define FIXEDCLAMP_TRIPPED  LOW
-#define COMM_TRIPPED        LOW
-#define COMM_IR_TRIPPED     LOW
-#define IR_TRIPPED          LOW
-
 #define MOTOR_PWM   6
+
 #define PISTON_PIN  A5
+
+#define HOME_TRIP           10 // -1 means no trip available
+#define HOME_TRIPPED        LOW
 
 #define QUIT_OR_CONTINUE \
   PC.println("Waiting for 'c' ... "); \
