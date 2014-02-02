@@ -1,25 +1,16 @@
-#define MY_CLAMP            'r'
-#define PC                  Serial1
+#define MASTER              Serial1
 
 // Pins
 #define MOTOR_1             4
 #define MOTOR_2             5
-#define MOTOR_PWM   6
+#define MOTOR_PWM           6
 
-#define PISTON_PIN  A5
+#define PISTON_PIN          A5
 
 #define HOME_TRIP           10 // -1 means no trip available
 #define HOME_TRIPPED        LOW
-
-#define QUIT_OR_CONTINUE \
-  PC.println("Waiting for 'c' ... "); \
-  while ( 1 ) { \
-    if ( PC.available() && PC.peek() == 'q' ) return; \
-    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
-  }
-
-// Clamp names
-char NEXT_CLAMP = 'r';
+#define IR_TRIP             7 // -1 means no trip available
+#define IR_TRIPPED          LOW
 
 // Basic variables
 #define HOME 2
@@ -29,29 +20,24 @@ char NEXT_CLAMP = 'r';
 #define OPEN  1
 #define CLOSE 0
 
-#define PC_BEGIN '$'
-#define PC_END '~'
+#define COMM_END '~'
 
-#define HOME_SPEED 255
+// MY HASH TABLE
+#define CLOSE     'p'
+#define OPEN      'o'
+#define MOVE      'v'
+#define MOVE_MID  'i'
+#define STOP      'q'
+#define DATA      'd'
 
 
-int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, comm_ir_trip = 0, ir_trip = 0,
-    loop_count = 0, bot_status = 0;
-
-void reset();
-int run(int, int);
-void piston(int);
-void go_home(int);
-void update_trip();
+int home_trip = 0, ir_trip = 0;
 
 void setup() {
   // Init serial
-  Serial.begin(57600);
-  Serial1.begin(57600);
+  MASTER.begin(57600);
 
-  //  while (!SLAVE && !PC); // wait for serial port to connect.
-
-  PC.println("Serial started");
+  MASTER.println("Serial started");
 
   // Pinmodes
   pinMode(MOTOR_1, OUTPUT);
@@ -59,71 +45,29 @@ void setup() {
   pinMode(MOTOR_PWM, OUTPUT);
   pinMode(PISTON_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
-  if ( !SLAVE ) {
-    pinMode(MIDDLE_TRIP, INPUT);
-    pinMode(FIXEDCLAMP_TRIP, INPUT);
-    pinMode(COMM_TRIP, INPUT);
-    pinMode(COMM_IR_TRIP, INPUT);
-    digitalWrite(COMM_TRIP, HIGH);
-
-  }
   run(STOP, 255);
 
   // Init basic variables
-  PC.println("Setting up basics ...");
-  NEXT_CLAMP = (MY_CLAMP == 'l') ? 'r' : 'l';
-
-  middle_trip = 0;
-  fixedclamp_trip = 0;
-  comm_trip = 0;
-
-  run(STOP, 255);;
-  update_home_trip();;
-  update_middle_trip();
-  update_fixedclamp_trip();
+  home_trip = 0;
 
   // Display initial values :
-  PC.print("My clamp : \t");
-  PC.println(MY_CLAMP);
-  PC.print("Next clamp : \t");
-  PC.println(NEXT_CLAMP);
-  PC.print("Trips - home : \t");
-  PC.println(home_trip);
-  PC.print("Trips - mid : \t");
-  PC.println(middle_trip);
-  PC.print("Trips - fixedclamp : \t");
-  PC.println(fixedclamp_trip);
-  PC.print("Trips - comm : \t");
-  PC.println(comm_trip);
-  PC.println(" >> begun");
-  PC.print(PC_END);
-
+  update_home_trip();
+  MASTER.print("SLAVE > home-trip : \t");
+  MASTER.println(home_trip);
+  update_ir_trip();
+  MASTER.print("SLAVE > ir-trip : \t");
+  MASTER.println(ir_trip);
+  MASTER.print(COMM_END);
 }
 
 void loop() {
+  slave_commands();
 
-  while ( !comm_trip ) {
-    update_comm_trip();
-  }
-  //ladder();
-  //polewalk();
+  while ( MASTER.available() )
+    MASTER.read();
 
-  ui();
-
-  //    update_trips();
-
-  while (PC.available())
-    PC.read();
-
-  while (NEXT.available())
-    NEXT.read();
-
-  Serial.print(MY_CLAMP);
-  Serial.print(  digitalRead(COMM_IR_TRIP) );
-  Serial.print(  digitalRead(COMM_TRIP) );
-  Serial.println("-loop");
-  delay(100);
+  MASTER.println("I be slave");
+  delay(20);
 
 }
-
 
