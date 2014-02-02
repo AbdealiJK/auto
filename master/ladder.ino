@@ -1,7 +1,4 @@
 void ladder() {
-  /*
-   Problems :
-  */
   PC.println(">>>>>>>>>> Starting LADDER");
 
   long start_time;
@@ -73,9 +70,7 @@ void ladder() {
 
       PC.println("Need to activate the tail");
       QUIT_OR_CONTINUE;
-      NEXT.write('r');
-      NEXT.write('p');
-      NEXT.write('c');
+      SLAVE.print(CLOSE);
     }
 
     PC.println("Need to make bot come down a bit so that fixed clamp doesnt get damaged ");
@@ -98,9 +93,7 @@ void ladder() {
     if ( n == 0 ) {
       PC.println("Need to deactivate tail piston through slave");
       QUIT_OR_CONTINUE;
-      NEXT.write('r');
-      NEXT.write('p');
-      NEXT.write('o');
+      SLAVE.write(OPEN);
     }
 
     PC.println("Need to make the left clamp touch right clamp");
@@ -136,9 +129,7 @@ void ladder() {
       PC.println("Time delay done ");
       run(STOP, 255);
       PC.println("Activating tail piston through slave");
-      NEXT.write('r');
-      NEXT.write('p');
-      NEXT.write('c');
+      SLAVE.write(CLOSE);
       break;
     }
   }
@@ -152,9 +143,7 @@ void ladder() {
     if ( close_tail_flag == 0 && millis() - start_time > 300 ) { // % calib
       PC.println("Time delay done ");
       PC.println("Switching off tail piston through slave");
-      NEXT.write('r');
-      NEXT.write('p');
-      NEXT.write('o');
+      SLAVE.write(OPEN);
       close_tail_flag = 1;
     }
   }
@@ -184,8 +173,6 @@ void ladder() {
   PC.println("Awww ... no flag.");
 
   PC.println("Ladder Done!!!");
-  while(NEXT.available()) NEXT.read();
-  
 
 }
 

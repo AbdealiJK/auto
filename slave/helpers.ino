@@ -8,9 +8,18 @@ int run(int dir, int pwm) {
     return 0;
   }
 
-  digitalWrite(MOTOR_1, dir / 2);
-  digitalWrite(MOTOR_2, dir % 2);
-  analogWrite(MOTOR_PWM, pwm);
+  switch ( dir ) {
+    case STOP : dir = 0;  break;
+    case HOME : dir = 1;  break;
+    case MID :  dir = 2;  break;
+    default :   dir = -1; break;
+  }
+
+  if ( dir != -1 ) {
+    digitalWrite(MOTOR_1, dir / 2);
+    digitalWrite(MOTOR_2, dir % 2);
+    analogWrite(MOTOR_PWM, pwm);
+  }
   return 1;
 }
 
@@ -90,7 +99,7 @@ Hall : A0 - towards the 2 pins for power ( outer side of board)
        D8
 Soft Serial :
   SCK  - outer side
-  MISO - 
+  MISO -
 
 L298 Pin config: (from left)
 1 - current sense A

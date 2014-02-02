@@ -1,27 +1,25 @@
-// ------------------------------------------------
 int run(int dir, int pwm) {
   update_home_trip();
-  update_middle_trip();
 
   if ( home_trip && dir == HOME ) {
     digitalWrite(MOTOR_1, 0);
     digitalWrite(MOTOR_2, 0);
     analogWrite(MOTOR_PWM, 255);
-    PC.println("\t Trip switch HOME pressed for some motor ! ");
     return 0;
   }
 
-  if ( middle_trip  && dir == MID ) {
-    digitalWrite(MOTOR_1, 0);
-    digitalWrite(MOTOR_2, 0);
-    analogWrite(MOTOR_PWM, 255);
-    PC.println("\t Trip switch MIDDLE pressed for some motor ! ~");
-    return 0;
+  switch ( dir ) {
+    case STOP : dir = 0;  break;
+    case HOME : dir = 1;  break;
+    case MID :  dir = 2;  break;
+    default :   dir = -1; break;
   }
 
-  digitalWrite(MOTOR_1, dir / 2);
-  digitalWrite(MOTOR_2, dir % 2);
-  analogWrite(MOTOR_PWM, pwm);
+  if ( dir != -1 ) {
+    digitalWrite(MOTOR_1, dir / 2);
+    digitalWrite(MOTOR_2, dir % 2);
+    analogWrite(MOTOR_PWM, pwm);
+  }
   return 1;
 }
 
@@ -40,7 +38,6 @@ void update_comm_trip() {
   if ( COMM_TRIP != -1 ) {
     comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;
   }
-  
 }
 
 void update_comm_ir_trip() {
@@ -70,7 +67,6 @@ void update_home_trip() {
   if (HOME_TRIP != -1 ) {
     home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
   }
-
 }
 
 void update_fixedclamp_trip() {
@@ -87,6 +83,7 @@ void update_fixedclamp_trip() {
       fixedclamp_trip = 0;
   }
 }
+
 void update_ir_trip() {
 //  long int ti = millis();
   if ( IR_TRIP != -1 ) { // Flicker correction for IR.
@@ -101,7 +98,6 @@ void update_ir_trip() {
       ir_trip = 0;
   }
 }
-
 
 int pc_get_int() {
   int temp = 0, next_val, neg = 1;
@@ -125,17 +121,20 @@ int pc_get_int() {
 }
 
 void listen() {
-  char temp = !PC_END;
+  if ( !SLAVE ) {
+    PC.println(F("Oops, SLAVE not found :(((("));
+  }
+  char temp = !COMM_END;
   Serial.print("Waiting for next");
-  while (NEXT && temp != PC_END)
+  while (temp != COMM_END)
   {
-    if (NEXT.available()) {
-      temp  = NEXT.read();
+    if (SLAVE.available()) {
+      temp  = SLAVE.read();
       PC.print( temp );
     }
     if ( PC.available() && PC.peek() == 'q' ) {
       PC.read();
-      NEXT.print('q'); // charachter to be sent to slave for emergency stop
+      SLAVE.print(STOP); // charachter to be sent to slave for emergency stop
     }
   }
   Serial.print("DONENEEE");
@@ -143,11 +142,11 @@ void listen() {
 
 int q_stop () {
   if ( PC.available() && PC.peek() == 'q' ) {
-    NEXT.print('q');
+    SLAVE.print(STOP);
     run(STOP, 255);
     PC.println("master-motor ...manual stop... ");
     Serial.println("STOPPED");
-    PC.print(PC_END);
+    PC.print(COMM_END);
     listen();
     return 1;
   }

@@ -1,11 +1,12 @@
-
-
-//#define MY_CLAMP            'l'
 #define PC                  Serial
-#define NEXT                Serial1
+#define SLAVE               Serial1
+
 // Pins
 #define MOTOR_1             4
 #define MOTOR_2             5
+#define MOTOR_PWM           6
+
+#define PISTON_PIN          A5
 
 #define HOME_TRIP           10 // -1 means no trip available
 #define HOME_TRIPPED        LOW
@@ -20,9 +21,6 @@
 #define COMM_TRIPPED        LOW
 #define COMM_IR_TRIPPED     LOW
 #define IR_TRIPPED          LOW
-
-#define MOTOR_PWM   6
-#define PISTON_PIN  A5
 
 #define QUIT_OR_CONTINUE \
   PC.println("Waiting for 'c' ... "); \
@@ -39,17 +37,17 @@ char NEXT_CLAMP = 'r';
 #define MID  1
 #define STOP  0
 
-#define OPEN  1
-#define CLOSE 0
+// MY HASH TABLE
+#define COMM_END  '~'
+#define CLOSE     'p'
+#define OPEN      'o'
+#define MOVE      'v'
+#define MOVE_MID  'i'
+#define STOP      'q'
+#define DATA      'd'
 
-#define PC_BEGIN '$'
-#define PC_END '~'
-
-#define HOME_SPEED 255
-
-
-int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0, comm_trip = 0, comm_ir_trip = 0, ir_trip = 0,
-    loop_count = 0, bot_status = 0;
+int home_trip = 0, middle_trip = 0, fixedclamp_trip = 0,
+    comm_trip = 0, comm_ir_trip = 0, ir_trip = 0;
 
 void reset();
 int run(int, int);
@@ -84,15 +82,14 @@ void setup() {
   // Init basic variables
   PC.println(F("Setting up basics ..."));
 
-  middle_trip = 0;
-  fixedclamp_trip = 0;
-  comm_trip = 0;
+  home_trip = middle_trip = fixedclamp_trip = comm_trip = ir_trip = 0;
 
   run(STOP, 255);
   update_home_trip();
-  update_ir_trip();
   update_middle_trip();
   update_fixedclamp_trip();
+  update_comm_trip();
+  update_ir_trip();
 
   // Display initial values :
   PC.print("Trips - home : \t");
@@ -105,31 +102,23 @@ void setup() {
   PC.println(comm_trip);
   PC.print("Trips - ir : \t");
   PC.println(ir_trip);
-  PC.print(PC_END);
+  PC.print(COMM_END);
 
 }
 
 void loop() {
 
-  while ( !comm_trip ) {
-    update_comm_trip();
-  }
-  //ladder();
-  //polewalk();
-
   ui();
-
-  //    update_trips();
 
   while (PC.available())
     PC.read();
 
-  while (NEXT.available())
-    NEXT.read();
+  while (SLAVE.available())
+    SLAVE.read();
 
   Serial.print(  digitalRead(COMM_IR_TRIP) );
   Serial.print(  digitalRead(COMM_TRIP) );
-  Serial.println("master-loop");
+  Serial.println("I be master");
   delay(100);
 
 }

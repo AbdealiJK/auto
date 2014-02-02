@@ -13,7 +13,7 @@ void ui() {
     char c2 = PC.read();
     if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
       // Display initial values :
-
+      
       update_home_trip();
       update_middle_trip();
       update_fixedclamp_trip();
@@ -30,7 +30,7 @@ void ui() {
       PC.print("Trips - ir : \t");
       PC.println(ir_trip);
       PC.println(" >> begun");
-      PC.print(PC_END);
+      PC.print(COMM_END);
     }
     else if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
       int vel = pc_get_int();
@@ -41,7 +41,7 @@ void ui() {
         if ( q_stop() ) break;
       }
       PC.println("DONE");
-      PC.print(PC_END);
+      PC.print(COMM_END);
     }
     else if ( c2 == 'f' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>> MOTION with fixed clamp also
       int vel = pc_get_int();
@@ -58,7 +58,7 @@ void ui() {
         }
       }
       PC.println("DONE");
-      PC.print(PC_END);
+      PC.print(COMM_END);
     }
     else if ( c2 == 'i'  ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. IR ( only for SLAVE )
       int vel = pc_get_int();
@@ -76,7 +76,7 @@ void ui() {
         }
       }
       PC.println("DONE");
-      PC.print(PC_END);
+      PC.print(COMM_END);
     }
     else if ( c2 == 'p' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON
       while (!PC.available());
@@ -87,7 +87,7 @@ void ui() {
         PC.print("Opening piston master");
         piston(OPEN);
       }
-      PC.print(PC_END);
+      PC.print(COMM_END);
     }
     else if ( c2 == 'c' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
       while (!PC.available());
@@ -108,19 +108,19 @@ void ui() {
         PC.print("Opening piston master");
         piston(OPEN);
       }
-      PC.print(PC_END);
+      PC.print(COMM_END);
     }
 
   }
   else if ( c == NEXT_CLAMP ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
     delay(2);
-    if (!(NEXT))
-      Serial.println("Other clamp not present :P ");
+    if ( ! SLAVE )
+      PC.println(F("Oops, SLAVE not found :(((("));
     else {
       Serial.println("Sending it to the other clamp");
       while (PC.available())
-        NEXT.write(PC.read());
+        SLAVE.write(PC.read());
       listen();
     }
   }

@@ -17,12 +17,9 @@
 #define MID  1
 #define STOP  0
 
-#define OPEN  1
-#define CLOSE 0
-
-#define COMM_END '~'
 
 // MY HASH TABLE
+#define COMM_END '~'
 #define CLOSE     'p'
 #define OPEN      'o'
 #define MOVE      'v'
@@ -35,6 +32,7 @@ int home_trip = 0, ir_trip = 0;
 
 void setup() {
   // Init serial
+  Serial.begin(57600);
   MASTER.begin(57600);
 
   MASTER.println(F("Serial started"));
@@ -66,7 +64,7 @@ void loop() {
   while ( MASTER.available() )
     MASTER.read();
 
-  MASTER.println(F("I be slave"));
+//  Serial.println(F("I be slave"));
   delay(20);
 
 }

@@ -1,7 +1,3 @@
-
-// --------------------------------------------------------------------------
-// --------------------------------------------------------------------------
-
 void polewalk() {
 
   PC.print("............. Pole Walk start ");
@@ -9,9 +5,8 @@ void polewalk() {
   // move both motors to middle
   PC.println("Right clamp needs to go to the middle position.");
   QUIT_OR_CONTINUE;
-  NEXT.print('r');
-  NEXT.print('i');
-  NEXT.print(255);
+  SLAVE.print(MOVE_MID);
+  SLAVE.print(255);
   listen();
   
   PC.println("Left clamp needs to go to middle now.");
@@ -23,17 +18,14 @@ void polewalk() {
   // clamp right piston
   PC.println("Need to clamp right poston to the second pole.");
   QUIT_OR_CONTINUE;
-  NEXT.print('r');
-  NEXT.print('p');
-  NEXT.print('c');
+  SLAVE.print(CLOSE);
   
   // move left to extreme, move right to extreme
   PC.println("Need to move left clamp to the extreme.");
   QUIT_OR_CONTINUE;
-  while(NEXT.available()) NEXT.read();
-  NEXT.print('r');
-  NEXT.print('v');
-  NEXT.print(-255);
+  while(SLAVE.available()) SLAVE.read();
+  SLAVE.print(MOVE);
+  SLAVE.print(-255);
   listen();
   
   PC.println("Need to move right clamp to the extreme.");
@@ -48,16 +40,13 @@ void polewalk() {
   QUIT_OR_CONTINUE;
   piston(CLOSE);
   delay(500);
-  NEXT.print('r');
-  NEXT.print('p');
-  NEXT.print('o');
+  SLAVE.print(OPEN);
   
   // move right to middle and left to middle
   PC.println("Right clamp needs to go to the middle position.");
   QUIT_OR_CONTINUE;
-  NEXT.print('r');
-  NEXT.print('i');
-  NEXT.print(255);
+  SLAVE.print(MOVE_MID);
+  SLAVE.print(255);
   listen();
   
   PC.println("Left clamp needs to go to middle now.");
@@ -67,15 +56,11 @@ void polewalk() {
   }
   Serial.println("Right clamp needs to clamp now");
   QUIT_OR_CONTINUE;
-  NEXT.print('r');
-  NEXT.print('p');
-  NEXT.print('c');
+  SLAVE.print(CLOSE);
   Serial.println("Both clamps need to unclamp now");
   QUIT_OR_CONTINUE;
   piston(OPEN);
-  NEXT.print('r');
-  NEXT.print('p');
-  NEXT.print('o');
+  SLAVE.print(OPEN);
  
  
   
