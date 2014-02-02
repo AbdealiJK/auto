@@ -5,7 +5,6 @@ int run(int dir, int pwm) {
     digitalWrite(MOTOR_1, 0);
     digitalWrite(MOTOR_2, 0);
     analogWrite(MOTOR_PWM, 255);
-    MASTER.println("\t Trip switch HOME pressed for some motor ! ");
     return 0;
   }
 
@@ -66,7 +65,7 @@ int get_int(HardwareSerial Ser) {
 int q_stop () {
   if ( MASTER.available() && MASTER.peek() == STOP ) {
     run(STOP, 255);
-    MASTER.println("SLAVE > manual stop ");
+    MASTER.println(F("SLAVE > manual stop "));
     MASTER.print(COMM_END);
     return 1;
   }

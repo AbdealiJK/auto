@@ -37,7 +37,7 @@ void setup() {
   // Init serial
   MASTER.begin(57600);
 
-  MASTER.println("Serial started");
+  MASTER.println(F("Serial started"));
 
   // Pinmodes
   pinMode(MOTOR_1, OUTPUT);
@@ -52,10 +52,10 @@ void setup() {
 
   // Display initial values :
   update_home_trip();
-  MASTER.print("SLAVE > home-trip : \t");
+  MASTER.print(F("SLAVE > home-trip : \t"));
   MASTER.println(home_trip);
   update_ir_trip();
-  MASTER.print("SLAVE > ir-trip : \t");
+  MASTER.print(F("SLAVE > ir-trip : \t"));
   MASTER.println(ir_trip);
   MASTER.print(COMM_END);
 }
@@ -66,7 +66,7 @@ void loop() {
   while ( MASTER.available() )
     MASTER.read();
 
-  MASTER.println("I be slave");
+  MASTER.println(F("I be slave"));
   delay(20);
 
 }
