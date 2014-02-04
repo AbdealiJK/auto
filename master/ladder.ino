@@ -6,8 +6,7 @@ void ladder() {
   /*
     QUIT_OR_CONTINUE;
     PC.println("Setup initial position");
-    NEXT.print(NEXT_CLAMP);
-    NEXT.print('v');
+    NEXT.print(MOVE);
     NEXT.print(-255);
   */
 
@@ -21,12 +20,12 @@ void ladder() {
 
     PC.println("Need to go towards home till just above last rung (i.e. fixed clamp should become untripped)");
     QUIT_OR_CONTINUE;
-    update_fixedclamp_trip();
+    update_trip(FIXEDCLAMP_TRIP);
     if ( ! fixedclamp_trip ) {
       PC.println("Initially, fixed clamp was found to be not tripped ... But it should have been tripped ! (as it should be at the ~prev rung) ... so, maybe it went down too much ... going up till we can find the last rung.");
       while ( run ( HOME, 255) ) {
         if ( q_stop() ) break;
-        update_fixedclamp_trip();
+        update_trip(FIXEDCLAMP_TRIP);
         if ( fixedclamp_trip ) {
           PC.println("Fixed clamp was pressed !");
           run ( STOP, 255 );
@@ -36,7 +35,7 @@ void ladder() {
     }
     while ( run ( HOME, 255) ) {
       if ( q_stop() ) break;
-      update_fixedclamp_trip();
+      update_trip(FIXEDCLAMP_TRIP);
       if ( !fixedclamp_trip ) {
         PC.println("Fixed clamp was un-pressed !");
         run ( STOP, 255 );
@@ -47,7 +46,7 @@ void ladder() {
     QUIT_OR_CONTINUE;
     while ( run ( HOME, 255) ) {
       if ( q_stop() ) break;
-      update_fixedclamp_trip();
+      update_trip(FIXEDCLAMP_TRIP);
       if ( fixedclamp_trip ) {
         PC.println("Fixed clamp was pressed !");
         run ( STOP, 255 );
@@ -113,7 +112,7 @@ void ladder() {
   start_time = millis();
   while ( run ( HOME, 200 ) ) { // Bot goes up till home trips
     if ( q_stop() ) break;
-    update_fixedclamp_trip();
+    update_trip(FIXEDCLAMP_TRIP);
     if ( fixedclamp_trip ) {
       PC.println("Fixed clamp was pressed !");
       run ( STOP, 255 );

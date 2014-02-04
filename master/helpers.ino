@@ -1,5 +1,5 @@
 int run(int dir, int pwm) {
-  update_home_trip();
+  update_trip(HOME_TRIP);
 
   if ( home_trip && dir == HOME ) {
     digitalWrite(MOTOR_1, 0);
@@ -23,81 +23,61 @@ int run(int dir, int pwm) {
   return 1;
 }
 
-// ------------------------------------------------
 void piston(int v) {
   digitalWrite(PISTON_PIN, v == CLOSE);
 }
 
-void update_middle_trip() {
-  if ( MIDDLE_TRIP != -1 ) {
-    middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED;
-  }
-  
-}
-void update_comm_trip() {
-  if ( COMM_TRIP != -1 ) {
-    comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;
-  }
-}
+void update_trip(int tr) {
+  long int temp = 0, lim = 0;
+  switch (tr) {
+    case HOME_TRIP:    home_trip = digitalRead(HOME_TRIP) == HOME_TRIPPED;       break;
+    case MIDDLE_TRIP:  middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED; break;
+    case COMM_TRIP:    comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;       break;
 
-void update_comm_ir_trip() {
-  if ( COMM_IR_TRIP != -1 ) {
-    long int temp = 0, lim = 0;
-    for ( lim = 0; lim < 10000; lim++ ) {
-      temp += digitalRead(COMM_IR_TRIP);
-    }
-    
-    if ( temp > 0.7 * lim ) {
-      if ( COMM_IR_TRIPPED == 1 ) {
-        comm_ir_trip = 1;
-      } else {
-        comm_ir_trip = 0;
+    case COMM_IR_TRIP:
+      for ( lim = 0; lim < 10000; lim++ ) {
+        temp += digitalRead(COMM_IR_TRIP);
       }
-    } else {
-      if ( COMM_IR_TRIPPED == 1 ) {
-        comm_ir_trip = 0;
+
+      if ( temp > 0.7 * lim ) {
+        if ( COMM_IR_TRIPPED == 1 ) {
+          comm_ir_trip = 1;
+        } else {
+          comm_ir_trip = 0;
+        }
       } else {
-        comm_ir_trip = 1;
+        if ( COMM_IR_TRIPPED == 1 ) {
+          comm_ir_trip = 0;
+        } else {
+          comm_ir_trip = 1;
+        }
       }
-    }   
-  }  
-}
+      break;
 
-void update_home_trip() {
-  if (HOME_TRIP != -1 ) {
-    home_trip = ( digitalRead(HOME_TRIP) == HOME_TRIPPED);
+    case FIXEDCLAMP_TRIP:
+      for ( lim = 0; lim < 1000; lim++ ) {
+        temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
+      }
+      //      Serial.println(temp);
+      if ( temp > 0.7 * lim )
+        fixedclamp_trip = 1;
+      else
+        fixedclamp_trip = 0;
+      break;
+      
+    case IR_TRIP:
+      for ( lim = 0; lim < 1000; lim++ ) {
+        temp += digitalRead(IR_TRIP) == IR_TRIPPED;
+      }
+      //      Serial.println(temp);
+      if ( temp > 0.7 * lim )
+        ir_trip = 1;
+      else
+        ir_trip = 0;
+      break;
   }
 }
 
-void update_fixedclamp_trip() {
-//  long int ti = millis();
-  if ( FIXEDCLAMP_TRIP != -1 ) { // Flicker correction for fixed clamp.
-    long int temp = 0, lim = 0;
-    for ( lim = 0; lim < 1000; lim++ ) {
-      temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
-    }
-    //      Serial.println(temp);
-    if ( temp > 0.7 * lim )
-      fixedclamp_trip = 1;
-    else
-      fixedclamp_trip = 0;
-  }
-}
-
-void update_ir_trip() {
-//  long int ti = millis();
-  if ( IR_TRIP != -1 ) { // Flicker correction for IR.
-    long int temp = 0, lim = 0;
-    for ( lim = 0; lim < 1000; lim++ ) {
-      temp += digitalRead(IR_TRIP) == IR_TRIPPED;
-    }
-    //      Serial.println(temp);
-    if ( temp > 0.7 * lim )
-      ir_trip = 1;
-    else
-      ir_trip = 0;
-  }
-}
 
 int pc_get_int() {
   int temp = 0, next_val, neg = 1;
@@ -123,6 +103,7 @@ int pc_get_int() {
 void listen() {
   if ( !SLAVE ) {
     PC.println(F("Oops, SLAVE not found :(((("));
+    return;
   }
   char temp = !COMM_END;
   Serial.print("Waiting for next");
@@ -171,7 +152,7 @@ Hall : A0 - towards the 2 pins for power ( outer side of board)
        D8
 Soft Serial :
   SCK  - outer side
-  MISO - 
+  MISO -
 
 L298 Pin config: (from left)
 1 - current sense A

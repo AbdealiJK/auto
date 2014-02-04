@@ -14,10 +14,10 @@ void ui() {
     if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
       // Display initial values :
       
-      update_home_trip();
-      update_middle_trip();
-      update_fixedclamp_trip();
-      update_ir_trip();
+      update_trip(HOME_TRIP);
+      update_trip(MIDDLE_TRIP);
+      update_trip(FIXEDCLAMP_TRIP);
+      update_trip(IR_TRIP);
       PC.print(">>>>>>>>>> data for master : ");
       PC.print("Trips - home : \t");
       PC.println(home_trip);
@@ -50,7 +50,7 @@ void ui() {
       PC.print(" ... ");
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
         if ( q_stop() ) break;
-        update_fixedclamp_trip();
+        update_trip(FIXEDCLAMP_TRIP);
         if ( fixedclamp_trip ) {
           run ( STOP, 255 );
           PC.println("fixed clamp pressed ... ");
@@ -67,7 +67,7 @@ void ui() {
       PC.print(" ... ");
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
         if ( q_stop() ) break;
-        update_ir_trip();
+        update_trip(IR_TRIP);
         if ( ir_trip ) {
           run ( STOP, 255 );
           PC.print("IR reached.... ");
@@ -94,7 +94,7 @@ void ui() {
       if ( PC.read() == 'c' ) {
         PC.print("Waiting for the comm to occur");
         while ( !comm_ir_trip ) {
-          update_comm_ir_trip();
+          update_trip(COMM_IR_TRIP);
         }
         delay(1000);
         PC.print("Closing piston master");
@@ -102,7 +102,7 @@ void ui() {
       } else {
         PC.print("Waiting for the comm to occur");
         while ( !comm_ir_trip ) {
-          update_comm_ir_trip();
+          update_trip(COMM_IR_TRIP);
         }
         delay(1000);
         PC.print("Opening piston master");
@@ -112,7 +112,7 @@ void ui() {
     }
 
   }
-  else if ( c == NEXT_CLAMP ) {
+  else if ( c == 'r' ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
     delay(2);
     if ( ! SLAVE )
@@ -135,4 +135,13 @@ void ui() {
   }
   q_stop();
 }
+
+
+
+
+
+
+
+
+
 
