@@ -1,7 +1,7 @@
 void ladder_init() {
   PC.println(F(">>>>>>>>>> Setting up LADDER"));
   QUIT_OR_CONTINUE;
-  PC.println("Setup initial position");
+  PC.println(F("Setup initial position"));
   SLAVE.print(MOVE);
   SLAVE.print(-255); 
   
