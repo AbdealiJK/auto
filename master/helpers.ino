@@ -106,7 +106,7 @@ void listen() {
     return;
   }
   char temp = !COMM_END;
-  Serial.print("Waiting for next");
+  Serial.print(F("Waiting for next"));
   while (temp != COMM_END)
   {
     if (SLAVE.available()) {
@@ -118,20 +118,29 @@ void listen() {
       SLAVE.print(STOP); // charachter to be sent to slave for emergency stop
     }
   }
-  Serial.print("DONENEEE");
+  Serial.print(F("DONENEEE"));
 }
 
 int q_stop () {
   if ( PC.available() && PC.peek() == 'q' ) {
     SLAVE.print(STOP);
     run(STOP, 255);
-    PC.println("master-motor ...manual stop... ");
-    Serial.println("STOPPED");
+    PC.println(F("master-motor ...manual stop... "));
+    Serial.println(F("STOPPED"));
     PC.print(COMM_END);
     listen();
     return 1;
   }
   return 0;
+}
+
+bool quit_or_continue()
+{
+  PC.println(F("Waiting for 'c' ... ")); 
+  while ( 1 ) { 
+    if ( PC.available() && PC.peek() == 'q' ) return 1; // simply return
+    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); return 0; } 
+  }
 }
 
 /*

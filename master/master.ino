@@ -21,12 +21,13 @@
 #define COMM_IR_TRIPPED     LOW
 #define IR_TRIPPED          LOW
 
-#define QUIT_OR_CONTINUE \
-  PC.println("Waiting for 'c' ... "); \
+/*#define QUIT_OR_CONTINUE \
+  PC.println(F("Waiting for 'c' ... ")); \
   while ( 1 ) { \
     if ( PC.available() && PC.peek() == 'q' ) return; \
     if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
-  }
+  }*/
+#define QUIT_OR_CONTINUE if(quit_or_continue()) return;
   
 // Basic variables
 #define HOME 2
@@ -42,7 +43,7 @@
 #define STOP      'q'
 #define DATA      'd'
 
-char home_trip = 0, middle_trip = 0, fixedclamp_trip = 0,
+bool home_trip = 0, middle_trip = 0, fixedclamp_trip = 0,
     comm_trip = 0, comm_ir_trip = 0, ir_trip = 0;
 
 void setup() {
@@ -52,7 +53,7 @@ void setup() {
 
   while (!PC); // wait for serial port to connect.
 
-  PC.println("Serial started");
+  PC.println(F("Serial started"));
 
   // Pinmodes
   pinMode(MOTOR_1, OUTPUT);
@@ -82,15 +83,15 @@ void setup() {
   update_trip(IR_TRIP);
 
   // Display initial values :
-  PC.print("Trips - home : \t");
+  PC.print(F("Trips - home : \t"));
   PC.println(home_trip);
-  PC.print("Trips - mid : \t");
+  PC.print(F("Trips - mid : \t"));
   PC.println(middle_trip);
-  PC.print("Trips - fixedclamp : \t");
+  PC.print(F("Trips - fixedclamp : \t"));
   PC.println(fixedclamp_trip);
-  PC.print("Trips - comm : \t");
+  PC.print(F("Trips - comm : \t"));
   PC.println(comm_trip);
-  PC.print("Trips - ir : \t");
+  PC.print(F("Trips - ir : \t"));
   PC.println(ir_trip);
 }
 
@@ -103,7 +104,7 @@ void loop() {
   while (SLAVE.available())
     SLAVE.read();
 
-  Serial.println("I be master");
+  Serial.println(F("I be master"));
   delay(100);
 
 }

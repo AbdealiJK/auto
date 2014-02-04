@@ -3,7 +3,7 @@ void seesaw() {
   PC.println(F(">>>>>>>>>> Seesaw START"));
   
   // move left motor to extreme
-  PC.println("Need to move left clamp to the extreme.");
+  PC.println(F("Need to move left clamp to the extreme."));
   QUIT_OR_CONTINUE;
   while ( run( HOME, 255 ) ) {
     if ( q_stop() ) break;
@@ -13,14 +13,14 @@ void seesaw() {
   listen();
   
   // move right motor to middle
-  PC.println("Right clamp needs to go to the middle position.");
+  PC.println(F("Right clamp needs to go to the middle position."));
   QUIT_OR_CONTINUE;
   SLAVE.print(MOVE_MID);
   SLAVE.print(255);
   listen();
 
   // make right motor move a small distance
-  PC.println("Need to move right clamp slightly more.");
+  PC.println(F("Need to move right clamp slightly more."));
   QUIT_OR_CONTINUE;
   SLAVE.print(MOVE);
   SLAVE.print(200);
@@ -29,13 +29,13 @@ void seesaw() {
 
 
   // Clamp
-  PC.println("Need to clamp both on seesaw.");
+  PC.println(F("Need to clamp both on seesaw."));
   QUIT_OR_CONTINUE;
 
   SLAVE.print(CLOSE);
   piston(CLOSE);
   delay(500);
-  PC.println("FINISH SEESAW ... Need to UNclamp both on seesaw.");
+  PC.println(F("FINISH SEESAW ... Need to UNclamp both on seesaw."));
   QUIT_OR_CONTINUE;
 
   SLAVE.print(OPEN);
