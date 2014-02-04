@@ -1,10 +1,14 @@
 int run(int dir, int pwm) {
-  update_trip(HOME_TRIP);
+  update(HOME_TRIP);
+  update(MID_TRIP);
 
   if ( home_trip && dir == HOME ) {
-    digitalWrite(MOTOR_1, 0);
-    digitalWrite(MOTOR_2, 0);
-    analogWrite(MOTOR_PWM, 255);
+    digitalWrite(MOTOR_1, 0); digitalWrite(MOTOR_2, 0); analogWrite(MOTOR_PWM, 255);
+    return 0;
+  }
+
+  if ( mid_trip && dir == MID ) {
+    digitalWrite(MOTOR_1, 0); digitalWrite(MOTOR_2, 0); analogWrite(MOTOR_PWM, 255);
     return 0;
   }
 
@@ -27,57 +31,57 @@ void piston(int v) {
   digitalWrite(PISTON_PIN, v == CLOSE);
 }
 
-void update_trip(int tr) {
+// ------------------------------------------------------------------------------------
+
+void update(int tr) {
   long int temp = 0, lim = 0;
+  bool *val, tripped, pin;
+  long int loops = -1;
+
   switch (tr) {
-    case HOME_TRIP:    home_trip = digitalRead(HOME_TRIP) == HOME_TRIPPED;       break;
-    case MIDDLE_TRIP:  middle_trip = digitalRead(MIDDLE_TRIP) == MIDDLE_TRIPPED; break;
-    case COMM_TRIP:    comm_trip = digitalRead(COMM_TRIP) == COMM_TRIPPED;       break;
+    case HOME_TRIP:
+      val = &home_trip;  pin = HOME_TRIP;   tripped = HOME_TRIPPED;  loops = 1;
+      break;
+    case MID_TRIP:
+      val = &mid_trip;  pin = MID_TRIP;   tripped = MID_TRIPPED;     loops = 1;
+      break;
+    case COMM_TRIP:
+      val = &comm_trip;  pin = COMM_TRIP;   tripped = COMM_TRIPPED;   loops = 1;
+      break;
+    case LADDER_IR:
+      val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 1000;
+      break;
+    case COMM_IR:
+      val = &comm_ir;  pin = COMM_IR;   tripped = COMM_IR_FOUND;   loops = 10000;
+      break;
+    case MID_IR:
+      val = &mid_ir;  pin = MID_IR;   tripped = MID_IR_FOUND;   loops = 10000;
+      break;
+  }
 
-    case COMM_IR_TRIP:
-      for ( lim = 0; lim < 10000; lim++ ) {
-        temp += digitalRead(COMM_IR_TRIP);
-      }
+  if ( loops > 0 ) {
+    long int temp;
+    for ( long int lim = 0; lim < loops; lim++ ) {
+      temp += digitalRead(COMM_IR);
+    }
 
-      if ( temp > 0.7 * lim ) {
-        if ( COMM_IR_TRIPPED == 1 ) {
-          comm_ir_trip = 1;
-        } else {
-          comm_ir_trip = 0;
-        }
+    if ( temp > 0.7 * loops ) {
+      if ( tripped == 1 ) {
+        *val = 1;
       } else {
-        if ( COMM_IR_TRIPPED == 1 ) {
-          comm_ir_trip = 0;
-        } else {
-          comm_ir_trip = 1;
-        }
+        *val = 0;
       }
-      break;
-
-    case FIXEDCLAMP_TRIP:
-      for ( lim = 0; lim < 1000; lim++ ) {
-        temp += digitalRead(FIXEDCLAMP_TRIP) == FIXEDCLAMP_TRIPPED;
+    } else {
+      if ( tripped == 1 ) {
+        *val = 0;
+      } else {
+        *val = 1;
       }
-      //      Serial.println(temp);
-      if ( temp > 0.7 * lim )
-        fixedclamp_trip = 1;
-      else
-        fixedclamp_trip = 0;
-      break;
-      
-    case IR_TRIP:
-      for ( lim = 0; lim < 1000; lim++ ) {
-        temp += digitalRead(IR_TRIP) == IR_TRIPPED;
-      }
-      //      Serial.println(temp);
-      if ( temp > 0.7 * lim )
-        ir_trip = 1;
-      else
-        ir_trip = 0;
-      break;
+    }
   }
 }
 
+// ----------------------------------------------------------------------------------------
 
 int pc_get_int() {
   int temp = 0, next_val, neg = 1;
@@ -107,8 +111,7 @@ void listen() {
   }
   char temp = !COMM_END;
   Serial.print(F("Waiting for next"));
-  while (temp != COMM_END)
-  {
+  while (temp != COMM_END) {
     if (SLAVE.available()) {
       temp  = SLAVE.read();
       PC.print( temp );
@@ -118,7 +121,7 @@ void listen() {
       SLAVE.print(STOP); // charachter to be sent to slave for emergency stop
     }
   }
-  Serial.print(F("DONENEEE"));
+  Serial.print(F("DONE"));
 }
 
 int q_stop () {
@@ -134,12 +137,14 @@ int q_stop () {
   return 0;
 }
 
-bool quit_or_continue()
-{
-  PC.println(F("Press 'c' ... ")); 
-  while ( 1 ) { 
-    if ( PC.available() && PC.peek() == 'q' ) return 1; // simply return
-    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); return 0; } 
+bool quit_or_continue() {
+  PC.println(F("Press 'c' ... "));
+  while ( 1 ) {
+    if ( PC.available() && PC.peek() == 'q' ) return 1;
+    if ( PC.available() && PC.peek() == 'c' ) {
+      PC.read();
+      return 0;
+    }
   }
 }
 

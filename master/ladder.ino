@@ -1,14 +1,17 @@
+void ladder_init() {
+  PC.println(F(">>>>>>>>>> Setting up LADDER"));
+  QUIT_OR_CONTINUE;
+  PC.println("Setup initial position");
+  SLAVE.print(MOVE);
+  SLAVE.print(-255); 
+  
+  // What should the left clamp do ?
+}
+
 void ladder() {
   PC.println(F(">>>>>>>>>> Starting LADDER"));
 
   long start_time;
-
-  /*
-    QUIT_OR_CONTINUE;
-    PC.println("Setup initial position");
-    NEXT.print(MOVE);
-    NEXT.print(-255);
-  */
 
   int n = 4;
   while (n--) {
@@ -20,13 +23,13 @@ void ladder() {
 
     PC.println(F("Need to go towards home till just above last rung (i.e. fixed clamp should become untripped)"));
     QUIT_OR_CONTINUE;
-    update_trip(FIXEDCLAMP_TRIP);
-    if ( ! fixedclamp_trip ) {
+    update(LADDER_IR);
+    if ( ! ladder_ir ) {
       PC.println(F("Initially, fixed clamp was not tripped... But it should have been tripped ! (as it was at the ~prev rung)... so, maybe it went down too much ... going up till the last rung."));
       while ( run ( HOME, 255) ) {
         if ( q_stop() ) break;
-        update_trip(FIXEDCLAMP_TRIP);
-        if ( fixedclamp_trip ) {
+        update(LADDER_IR);
+        if ( ladder_ir ) {
           PC.println(F("Fixed clamp was pressed !"));
           run ( STOP, 255 );
           break;
@@ -35,8 +38,8 @@ void ladder() {
     }
     while ( run ( HOME, 255) ) {
       if ( q_stop() ) break;
-      update_trip(FIXEDCLAMP_TRIP);
-      if ( !fixedclamp_trip ) {
+      update(LADDER_IR);
+      if ( !ladder_ir ) {
         PC.println(F("Fixed clamp un-pressed !"));
         run ( STOP, 255 );
         break;
@@ -46,8 +49,8 @@ void ladder() {
     QUIT_OR_CONTINUE;
     while ( run ( HOME, 255) ) {
       if ( q_stop() ) break;
-      update_trip(FIXEDCLAMP_TRIP);
-      if ( fixedclamp_trip ) {
+      update(LADDER_IR);
+      if ( ladder_ir ) {
         PC.println(F("Fixed clamp pressed !"));
         run ( STOP, 255 );
         break;
@@ -58,9 +61,9 @@ void ladder() {
       PC.println(F("For the last rung, need to come down a little so tail gets support"));
       QUIT_OR_CONTINUE;
       start_time = millis();
-      while ( run ( MID, 255 ) ) { // Bot goes down a little
+      while ( run ( MID, 255 ) ) {
         if ( q_stop() ) break;
-        if ( millis() - start_time > 200 ) { // % calib
+        if ( millis() - start_time > 200 ) { // DELAY alert
           run(STOP, 255);
           PC.println(F("Time delay done "));
           break;
@@ -75,9 +78,9 @@ void ladder() {
     PC.println(F("Need to make bot come down a bit so that fixed clamp doesnt get damaged "));
     QUIT_OR_CONTINUE;
     start_time = millis();
-    while ( run ( MID, 255 ) ) { // Bot goes down a little
+    while ( run ( MID, 255 ) ) {
       if ( q_stop() ) break;
-      if ( millis() - start_time > 200 ) { // % calib
+      if ( millis() - start_time > 200 ) { // DELAY alert
         run(STOP, 255);
         PC.println(F("Time delay done "));
         break;
@@ -112,8 +115,8 @@ void ladder() {
   start_time = millis();
   while ( run ( HOME, 200 ) ) { // Bot goes up till home trips
     if ( q_stop() ) break;
-    update_trip(FIXEDCLAMP_TRIP);
-    if ( fixedclamp_trip ) {
+    update(LADDER_IR);
+    if ( ladder_ir ) {
       PC.println(F("Fixed clamp was pressed !"));
       run ( STOP, 255 );
       break;
@@ -124,9 +127,9 @@ void ladder() {
   start_time = millis();
   while ( run ( MID, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
-    if ( millis() - start_time > 200 ) { // % calib
-      PC.println(F("Time delay done "));
+    if ( millis() - start_time > 200 ) { // DELAY alert
       run(STOP, 255);
+      PC.println(F("Time delay done "));
       PC.println(F("Activating tail piston through slave"));
       SLAVE.write(CLOSE);
       break;
@@ -157,7 +160,7 @@ void ladder() {
   start_time = millis();
   while ( run ( MID, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
-    if ( millis() - start_time > 1200 ) { // % calib
+    if ( millis() - start_time > 1200 ) { // DELAY alert
       run(STOP, 255);
       PC.println(F("Time delay done "));
       break;

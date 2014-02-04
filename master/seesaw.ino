@@ -1,7 +1,6 @@
-void seesaw() {
-   
-  PC.println(F(">>>>>>>>>> Seesaw START"));
-  
+void seesaw_init() {
+  PC.println(F(">>>>>>>>>> Setting up Seesaw")); 
+ 
   // move left motor to extreme
   PC.println(F("Need to move left clamp to the extreme."));
   QUIT_OR_CONTINUE;
@@ -27,11 +26,21 @@ void seesaw() {
   delay(150);
   SLAVE.print(STOP);
 
+  
+}
 
+void seesaw_geton() {
+  
+  PC.println(F(">>>>>>>>>> Getting on to Seesaw"));
+  
   // Clamp
   PC.println(F("Need to clamp both on seesaw."));
   QUIT_OR_CONTINUE;
+}
 
+void seesaw_getoff() {
+   PC.println(F(">>>>>>>>>> Seesaw START"));
+ 
   SLAVE.print(CLOSE);
   piston(CLOSE);
   delay(500);

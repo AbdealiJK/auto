@@ -9,17 +9,17 @@
 #define PISTON_PIN          A5
 
 #define HOME_TRIP           10 // -1 means no trip available
-#define MIDDLE_TRIP         A4
-#define FIXEDCLAMP_TRIP     -1
+#define MID_TRIP            A4
 #define COMM_TRIP           SCK
-#define COMM_IR_TRIP        A0
-#define IR_TRIP             12
+#define LADDER_IR           -1
+#define COMM_IR             A0
+#define MID_IR              12
 #define HOME_TRIPPED        LOW
-#define MIDDLE_TRIPPED      LOW
-#define FIXEDCLAMP_TRIPPED  LOW
+#define MID_TRIPPED         LOW
 #define COMM_TRIPPED        LOW
-#define COMM_IR_TRIPPED     LOW
-#define IR_TRIPPED          LOW
+#define LADDER_IR_FOUND     LOW
+#define COMM_IR_FOUND       LOW
+#define MID_IR_FOUND        LOW
 
 #define QUIT_OR_CONTINUE if(quit_or_continue()) return;
   
@@ -29,16 +29,17 @@
 #define STOP  0
 
 // MY HASH TABLE
-#define COMM_END  '~'
-#define CLOSE     'p'
-#define OPEN      'o'
-#define MOVE      'v'
-#define MOVE_MID  'i'
-#define STOP      'q'
-#define DATA      'd'
+#define COMM_END    '~'
+#define CLOSE       'p'
+#define OPEN        'o'
+#define MOVE        'v'
+#define MOVE_MID    'i'
+#define MOVE_LADDER 'f'
+#define STOP        'q'
+#define DATA        'd'
 
-bool home_trip = 0, middle_trip = 0, fixedclamp_trip = 0,
-    comm_trip = 0, comm_ir_trip = 0, ir_trip = 0;
+bool home_trip = 0, mid_trip = 0, comm_trip = 0,
+      ladder_ir = 0, comm_ir = 0, mid_ir = 0;
 
 void setup() {
   // Init serial
@@ -55,38 +56,38 @@ void setup() {
   pinMode(MOTOR_PWM, OUTPUT);
   pinMode(PISTON_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
-  pinMode(MIDDLE_TRIP, INPUT);
-  pinMode(FIXEDCLAMP_TRIP, INPUT);
+  pinMode(MID_TRIP, INPUT);
+  pinMode(LADDER_IR, INPUT);
   pinMode(COMM_TRIP, INPUT);
-  pinMode(COMM_IR_TRIP, INPUT);
-  pinMode(IR_TRIP, INPUT);
+  pinMode(COMM_IR, INPUT);
+  pinMode(MID_IR, INPUT);
 
   run(STOP, 255);
 
   // Init basic variables
   PC.println(F("Setting up basics ..."));
 
-  home_trip = middle_trip = fixedclamp_trip = comm_trip = comm_ir_trip = ir_trip = 0;
+  home_trip = mid_trip = comm_trip = ladder_ir = comm_ir = mid_ir = 0;
 
   run(STOP, 255);
-  update_trip(HOME_TRIP);
-  update_trip(MIDDLE_TRIP);
-  update_trip(FIXEDCLAMP_TRIP);
-  update_trip(COMM_TRIP);
-  update_trip(COMM_IR_TRIP);
-  update_trip(IR_TRIP);
+  update(HOME_TRIP);
+  update(MID_TRIP);
+  update(COMM_TRIP);
+  update(LADDER_IR);
+  update(COMM_IR);
+  update(MID_IR);
 
   // Display initial values :
   PC.print(F("Trips - home:"));
   PC.println(home_trip);
   PC.print(F(" mid:"));
-  PC.println(middle_trip);
-  PC.print(F(" fixedclamp:"));
-  PC.println(fixedclamp_trip);
+  PC.println(mid_trip);
+  PC.print(F(" ladder:"));
+  PC.println(ladder_ir);
   PC.print(F(" comm:"));
   PC.println(comm_trip);
-  PC.print(F(" ir:"));
-  PC.println(ir_trip);
+  PC.print(F(" mid-ir:"));
+  PC.println(mid_ir);
 }
 
 void loop() {
