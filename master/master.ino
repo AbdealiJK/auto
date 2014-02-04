@@ -21,12 +21,6 @@
 #define COMM_IR_TRIPPED     LOW
 #define IR_TRIPPED          LOW
 
-/*#define QUIT_OR_CONTINUE \
-  PC.println(F("Waiting for 'c' ... ")); \
-  while ( 1 ) { \
-    if ( PC.available() && PC.peek() == 'q' ) return; \
-    if ( PC.available() && PC.peek() == 'c' ) { PC.read(); break; } \
-  }*/
 #define QUIT_OR_CONTINUE if(quit_or_continue()) return;
   
 // Basic variables
@@ -83,15 +77,15 @@ void setup() {
   update_trip(IR_TRIP);
 
   // Display initial values :
-  PC.print(F("Trips - home : \t"));
+  PC.print(F("Trips - home:"));
   PC.println(home_trip);
-  PC.print(F("Trips - mid : \t"));
+  PC.print(F(" mid:"));
   PC.println(middle_trip);
-  PC.print(F("Trips - fixedclamp : \t"));
+  PC.print(F(" fixedclamp:"));
   PC.println(fixedclamp_trip);
-  PC.print(F("Trips - comm : \t"));
+  PC.print(F(" comm:"));
   PC.println(comm_trip);
-  PC.print(F("Trips - ir : \t"));
+  PC.print(F(" ir:"));
   PC.println(ir_trip);
 }
 
@@ -104,7 +98,7 @@ void loop() {
   while (SLAVE.available())
     SLAVE.read();
 
-  Serial.println(F("I be master"));
+  Serial.println(F("master"));
   delay(100);
 
 }

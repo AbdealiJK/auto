@@ -4,7 +4,7 @@ void ui() {
     return;
 
   char c = PC.peek();
-  Serial.print(F("GOt :"));
+  Serial.print(F("Got :"));
   Serial.println(c);
   if ( c == 'l' ) {
     // >>>>>>>>>>>>>> CODE FOR MY CLAMP !!!!!!!!!!!!!!!!!
@@ -13,28 +13,28 @@ void ui() {
     char c2 = PC.read();
     if ( c2 == 'w' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
       // Display initial values :
-      
+
       update_trip(HOME_TRIP);
       update_trip(MIDDLE_TRIP);
       update_trip(FIXEDCLAMP_TRIP);
       update_trip(IR_TRIP);
-      PC.print(F(">>>>>>>>>> data for master : "));
-      PC.print(F("Trips - home : \t"));
+      PC.print(F(">>> data for master : "));
+      PC.print(F("Trips - home:"));
       PC.println(home_trip);
-      PC.print(F("Trips - mid : \t"));
+      PC.print(F(" mid:"));
       PC.println(middle_trip);
-      PC.print(F("Trips - fixedclamp : \t"));
+      PC.print(F(" fixedclamp:"));
       PC.println(fixedclamp_trip);
-      PC.print(F("Trips - comm : \t"));
+      PC.print(F(" comm:"));
       PC.println(comm_trip);
-      PC.print(F("Trips - ir : \t"));
+      PC.print(F(" ir:"));
       PC.println(ir_trip);
       PC.println(F(" >> begun"));
       PC.print(COMM_END);
     }
     else if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
       int vel = pc_get_int();
-      PC.print(F("master-motor moving at pwm = "));
+      PC.print(F("Mas-motor moving at pwm = "));
       PC.print(vel);
       PC.print(F(" ... "));
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
@@ -45,7 +45,7 @@ void ui() {
     }
     else if ( c2 == 'f' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>> MOTION with fixed clamp also
       int vel = pc_get_int();
-      PC.print(F("master-motor moving (with fixed clamp) at pwm = "));
+      PC.print(F("Mas-motor moving (with fixed clamp) at pwm = "));
       PC.print(vel);
       PC.print(F(" ... "));
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
@@ -53,7 +53,7 @@ void ui() {
         update_trip(FIXEDCLAMP_TRIP);
         if ( fixedclamp_trip ) {
           run ( STOP, 255 );
-          PC.println(F("fixed clamp pressed ... "));
+          PC.println(F("fixed clamp pressed... "));
           break;
         }
       }
@@ -62,7 +62,7 @@ void ui() {
     }
     else if ( c2 == 'i'  ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. IR ( only for SLAVE )
       int vel = pc_get_int();
-      PC.print(F("master-motor moving at pwm = "));
+      PC.print(F("Mas-motor moving at pwm = "));
       PC.print(vel);
       PC.print(F(" ... "));
       while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
@@ -71,7 +71,7 @@ void ui() {
         if ( ir_trip ) {
           run ( STOP, 255 );
           PC.print(F("IR reached.... "));
-          PC.println(F("master-clamp Now in middle position"));
+          PC.println(F("Mas-clamp Now in middle position"));
           break;
         }
       }
@@ -81,10 +81,10 @@ void ui() {
     else if ( c2 == 'p' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON
       while (!PC.available());
       if ( PC.read() == 'c' ) {
-        PC.print(F("Closing piston master"));
+        PC.print(F("Closing piston Mas"));
         piston(CLOSE);
       } else {
-        PC.print(F("Opening piston master"));
+        PC.print(F("Opening piston Mas"));
         piston(OPEN);
       }
       PC.print(COMM_END);
@@ -92,20 +92,20 @@ void ui() {
     else if ( c2 == 'c' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
       while (!PC.available());
       if ( PC.read() == 'c' ) {
-        PC.print(F("Waiting for the comm to occur"));
+        PC.print(F("Waiting for the comm"));
         while ( !comm_ir_trip ) {
           update_trip(COMM_IR_TRIP);
         }
         delay(1000);
-        PC.print(F("Closing piston master"));
+        PC.print(F("Closing piston Mas"));
         piston(CLOSE);
       } else {
-        PC.print(F("Waiting for the comm to occur"));
+        PC.print(F("Waiting for the comm"));
         while ( !comm_ir_trip ) {
           update_trip(COMM_IR_TRIP);
         }
         delay(1000);
-        PC.print(F("Opening piston master"));
+        PC.print(F("Opening piston Mas"));
         piston(OPEN);
       }
       PC.print(COMM_END);
@@ -118,7 +118,7 @@ void ui() {
     if ( ! SLAVE )
       PC.println(F("Oops, SLAVE not found :(((("));
     else {
-      Serial.println(F("Sending it to the other clamp"));
+      Serial.println(F("Sending to other clamp"));
       while (PC.available())
         SLAVE.write(PC.read());
       listen();

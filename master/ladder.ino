@@ -22,7 +22,7 @@ void ladder() {
     QUIT_OR_CONTINUE;
     update_trip(FIXEDCLAMP_TRIP);
     if ( ! fixedclamp_trip ) {
-      PC.println(F("Initially, fixed clamp was found to be not tripped ... But it should have been tripped ! (as it should be at the ~prev rung) ... so, maybe it went down too much ... going up till we can find the last rung."));
+      PC.println(F("Initially, fixed clamp was not tripped... But it should have been tripped ! (as it was at the ~prev rung)... so, maybe it went down too much ... going up till the last rung."));
       while ( run ( HOME, 255) ) {
         if ( q_stop() ) break;
         update_trip(FIXEDCLAMP_TRIP);
@@ -37,7 +37,7 @@ void ladder() {
       if ( q_stop() ) break;
       update_trip(FIXEDCLAMP_TRIP);
       if ( !fixedclamp_trip ) {
-        PC.println(F("Fixed clamp was un-pressed !"));
+        PC.println(F("Fixed clamp un-pressed !"));
         run ( STOP, 255 );
         break;
       }
@@ -48,7 +48,7 @@ void ladder() {
       if ( q_stop() ) break;
       update_trip(FIXEDCLAMP_TRIP);
       if ( fixedclamp_trip ) {
-        PC.println(F("Fixed clamp was pressed !"));
+        PC.println(F("Fixed clamp pressed !"));
         run ( STOP, 255 );
         break;
       }

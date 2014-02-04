@@ -125,7 +125,7 @@ int q_stop () {
   if ( PC.available() && PC.peek() == 'q' ) {
     SLAVE.print(STOP);
     run(STOP, 255);
-    PC.println(F("master-motor ...manual stop... "));
+    PC.println(F("Mas-motor ...manual stop... "));
     Serial.println(F("STOPPED"));
     PC.print(COMM_END);
     listen();
@@ -136,7 +136,7 @@ int q_stop () {
 
 bool quit_or_continue()
 {
-  PC.println(F("Waiting for 'c' ... ")); 
+  PC.println(F("Press 'c' ... ")); 
   while ( 1 ) { 
     if ( PC.available() && PC.peek() == 'q' ) return 1; // simply return
     if ( PC.available() && PC.peek() == 'c' ) { PC.read(); return 0; } 
