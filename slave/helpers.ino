@@ -49,23 +49,23 @@ void update_ir_trip() {
 }
 
 // ------------------------------------------------
-int get_int(HardwareSerial Ser) {
+int get_int() {
   int temp = 0, next_val, neg = 1;
   char temp_c;
 
-  while (!Ser.available());
+  while (!MASTER.available());
   delay(2);
-  next_val = Ser.peek();
+  next_val = MASTER.peek();
   if ( next_val == '-' ) {
     neg = -1;
-    Ser.read();
-    next_val = Ser.peek();
+    MASTER.read();
+    next_val = MASTER.peek();
   }
-  while ( Ser.available() && next_val <= '9' && next_val >= '0' ) {
-    Ser.read();
+  while ( MASTER.available() && next_val <= '9' && next_val >= '0' ) {
+    MASTER.read();
     temp *= 10;
     temp += next_val - '0';
-    next_val = Ser.peek();
+    next_val = MASTER.peek();
   }
   return temp * neg;
 }
@@ -74,8 +74,10 @@ int get_int(HardwareSerial Ser) {
 int q_stop () {
   if ( MASTER.available() && MASTER.peek() == STOP ) {
     run(STOP, 255);
-    MASTER.println(F("SLAVE > manual stop "));
+    MASTER.read();
+    MASTER.println(F("SLAVE > ...manual stop... "));
     MASTER.print(COMM_END);
+    Serial.println("Slave received 'q'");
     return 1;
   }
   return 0;

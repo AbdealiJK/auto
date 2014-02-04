@@ -20,22 +20,28 @@ void slave_commands() {
     MASTER.print(COMM_END);
   }
   else if ( c == MOVE ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
-    int vel = get_int(MASTER);
+    int vel = get_int();
     MASTER.print(F("SLAVE > moving at pwm : \t"));
     MASTER.println(vel);
-    MASTER.print(COMM_END);
+    
     while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
       if ( q_stop() ) break;
-    }
+      Serial.print("Slave is running  ");
+      Serial.print(MASTER.peek());
+      Serial.print('\t');
+      Serial.println(MASTER.available());    
+      delay(10);
+  
+}
     MASTER.println(F("SLAVE > Stopped moving"));
     MASTER.print(COMM_END);
     
   }
   else if ( c == MOVE_MID  ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>. IR
-    int vel = get_int(MASTER);
+    int vel = get_int();
     MASTER.print(F("SLAVE > moving at pwm = "));
     MASTER.println(vel);
-    MASTER.print(COMM_END);
+    
     while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
       if ( q_stop() ) break;
       update_ir_trip();

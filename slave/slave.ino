@@ -5,11 +5,11 @@
 #define MOTOR_2             5
 #define MOTOR_PWM           6
 
-#define PISTON_PIN          A5
+#define PISTON_PIN          11
 
 #define HOME_TRIP           10 // -1 means no trip available
+#define IR_TRIP             -1
 #define HOME_TRIPPED        LOW
-#define IR_TRIP             7 // -1 means no trip available
 #define IR_TRIPPED          LOW
 
 // Basic variables
@@ -17,9 +17,8 @@
 #define MID  1
 #define STOP  0
 
-
 // MY HASH TABLE
-#define COMM_END '~'
+#define COMM_END  '~'
 #define CLOSE     'p'
 #define OPEN      'o'
 #define MOVE      'v'

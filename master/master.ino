@@ -6,14 +6,14 @@
 #define MOTOR_2             5
 #define MOTOR_PWM           6
 
-#define PISTON_PIN          A5
+#define PISTON_PIN          11
 
 #define HOME_TRIP           10 // -1 means no trip available
 #define MID_TRIP            A4
-#define COMM_TRIP           SCK
+#define COMM_TRIP           -1
 #define LADDER_IR           -1
-#define COMM_IR             A0
-#define MID_IR              12
+#define COMM_IR             -1
+#define MID_IR              -1
 #define HOME_TRIPPED        LOW
 #define MID_TRIPPED         LOW
 #define COMM_TRIPPED        LOW

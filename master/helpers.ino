@@ -38,28 +38,21 @@ void update(int tr) {
   bool *val, tripped, pin;
   long int loops = -1;
 
-  switch (tr) {
-    case HOME_TRIP:
-      val = &home_trip;  pin = HOME_TRIP;   tripped = HOME_TRIPPED;  loops = 1;
-      break;
-    case MID_TRIP:
-      val = &mid_trip;  pin = MID_TRIP;   tripped = MID_TRIPPED;     loops = 1;
-      break;
-    case COMM_TRIP:
-      val = &comm_trip;  pin = COMM_TRIP;   tripped = COMM_TRIPPED;   loops = 1;
-      break;
-    case LADDER_IR:
-      val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 1000;
-      break;
-    case COMM_IR:
-      val = &comm_ir;  pin = COMM_IR;   tripped = COMM_IR_FOUND;   loops = 10000;
-      break;
-    case MID_IR:
-      val = &mid_ir;  pin = MID_IR;   tripped = MID_IR_FOUND;   loops = 10000;
-      break;
+  if ( tr == HOME_TRIP ) {
+    val = &home_trip;  pin = HOME_TRIP;   tripped = HOME_TRIPPED;  loops = 1;
+  } else if ( tr == MID_TRIP ) {
+    val = &mid_trip;  pin = MID_TRIP;   tripped = MID_TRIPPED;     loops = 1;
+  } else if ( tr == COMM_TRIP ) {
+    val = &comm_trip;  pin = COMM_TRIP;   tripped = COMM_TRIPPED;   loops = 1;
+  } else if ( tr == LADDER_IR ) {
+    val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 1000;
+  } else if ( tr == COMM_IR ) {
+    val = &comm_ir;  pin = COMM_IR;   tripped = COMM_IR_FOUND;   loops = 10000;
+  } else if ( tr == MID_IR ) {
+    val = &mid_ir;  pin = MID_IR;   tripped = MID_IR_FOUND;   loops = 10000;
   }
 
-  if ( loops > 0 ) {
+  if ( loops > 0 && pin >= 0) {
     long int temp;
     for ( long int lim = 0; lim < loops; lim++ ) {
       temp += digitalRead(COMM_IR);
@@ -116,8 +109,9 @@ void listen() {
       temp  = SLAVE.read();
       PC.print( temp );
     }
-    if ( PC.available() && PC.peek() == 'q' ) {
+    if ( PC.available() && PC.peek() == STOP ) {
       PC.read();
+      Serial.println(F("Master > Stopping Slave "));
       SLAVE.print(STOP); // charachter to be sent to slave for emergency stop
     }
   }
@@ -125,10 +119,10 @@ void listen() {
 }
 
 int q_stop () {
-  if ( PC.available() && PC.peek() == 'q' ) {
+  if ( PC.available() && PC.peek() == STOP ) {
     SLAVE.print(STOP);
     run(STOP, 255);
-    PC.println(F("Mas-motor ...manual stop... "));
+    PC.println(F("MASTER > ...manual stop... "));
     Serial.println(F("STOPPED"));
     PC.print(COMM_END);
     listen();
