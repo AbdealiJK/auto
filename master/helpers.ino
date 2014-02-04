@@ -62,7 +62,7 @@ void update(int tr) {
   if ( loops > 0 ) {
     long int temp;
     for ( long int lim = 0; lim < loops; lim++ ) {
-      temp += digitalRead(COMM_IR);
+      temp += digitalRead(pin);
     }
 
     if ( temp > 0.7 * loops ) {
