@@ -35,7 +35,8 @@ void piston(int v) {
 
 void update(int tr) {
   long int temp = 0, lim = 0;
-  bool *val, tripped, pin;
+  bool *val;
+  int tripped, pin;
   long int loops = -1;
 
   if ( tr == HOME_TRIP ) {

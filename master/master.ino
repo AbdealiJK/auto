@@ -99,7 +99,8 @@ void loop() {
   while (SLAVE.available())
     SLAVE.read();
 
-  Serial.println(F("master"));
+  Serial.print(F("master"));
+  Serial.println(digitalRead(HOME_TRIP));
   delay(100);
 
 }

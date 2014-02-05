@@ -26,11 +26,6 @@ void slave_commands() {
     
     while ( run( ( vel < 0 ) ? HOME : MID, abs(vel)) ) {
       if ( q_stop() ) break;
-      Serial.print("Slave is running  ");
-      Serial.print(MASTER.peek());
-      Serial.print('\t');
-      Serial.println(MASTER.available());    
-      delay(10);
   
 }
     MASTER.println(F("SLAVE > Stopped moving"));
