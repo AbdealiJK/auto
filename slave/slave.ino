@@ -37,13 +37,13 @@ void setup() {
   MASTER.println(F("Serial started"));
 
   // Pinmodes
-/*  pinMode(MOTOR_1, OUTPUT);
+  pinMode(MOTOR_1, OUTPUT);
   pinMode(MOTOR_2, OUTPUT);
   pinMode(MOTOR_PWM, OUTPUT);
   pinMode(PISTON_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
   pinMode(MID_IR, INPUT);
-*/
+
   run(STOP, 255);
 
   // Init basic variables
