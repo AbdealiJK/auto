@@ -1,14 +1,12 @@
-#define MASTER              Serial1
+#define MASTER              Serial
 
-// Pins
+// Slave Pin chars
 #define MOTOR_1             4
 #define MOTOR_2             5
 #define MOTOR_PWM           6
-
-#define PISTON_PIN          11
-
-#define HOME_TRIP           10 // -1 means no trip available
-#define IR_TRIP             -1
+#define PISTON_PIN          10
+#define HOME_TRIP           A4 // -1 means no trip available
+#define IR_TRIP             12
 #define HOME_TRIPPED        LOW
 #define IR_TRIPPED          LOW
 

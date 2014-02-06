@@ -9,11 +9,11 @@
 #define PISTON_PIN          11
 
 #define HOME_TRIP           10 // -1 means no trip available
-#define MID_TRIP            A4
+#define MID_TRIP            A3
 #define COMM_TRIP           -1
 #define LADDER_IR           -1
 #define COMM_IR             -1
-#define MID_IR              -1
+#define MID_IR              12
 #define HOME_TRIPPED        LOW
 #define MID_TRIPPED         LOW
 #define COMM_TRIPPED        LOW
@@ -86,7 +86,7 @@ void setup() {
   PC.println(ladder_ir);
   PC.print(F(" comm:"));
   PC.println(comm_trip);
-  PC.print(F(" mid-ir:"));
+  PC.print(F(" mid-ir:"));  
   PC.println(mid_ir);
 }
 
@@ -99,8 +99,21 @@ void loop() {
   while (SLAVE.available())
     SLAVE.read();
 
-  Serial.print(F("master"));
-  Serial.println(digitalRead(HOME_TRIP));
+/*  
+  Serial.print("\tHOME_TRIP : ");
+  Serial.print(digitalRead(HOME_TRIP));
+  Serial.print("\tMCOMM_TRIP : ");
+  Serial.print(digitalRead(COMM_TRIP));
+  Serial.print("\tMID_TRIP : ");
+  Serial.print(digitalRead(MID_TRIP));
+  Serial.print("\tLADDER_IR : ");
+  Serial.print(digitalRead(LADDER_IR));
+  Serial.print("\tCOMM_IR : ");
+  Serial.print(digitalRead(COMM_IR));
+  Serial.print("\tMID_IR : ");
+  Serial.print(digitalRead(MID_IR));
+*/
+  Serial.println(F("\tmaster"));
   delay(100);
 
 }

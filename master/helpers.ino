@@ -54,11 +54,12 @@ void update(int tr) {
   }
 
   if ( loops > 0 && pin >= 0) {
-    long int temp;
+   
+    long int temp=0;
     for ( long int lim = 0; lim < loops; lim++ ) {
       temp += digitalRead(pin);
     }
-
+    
     if ( temp > 0.7 * loops ) {
       if ( tripped == 1 ) {
         *val = 1;
@@ -162,6 +163,7 @@ Hall : A0 - towards the 2 pins for power ( outer side of board)
 Soft Serial :
   SCK  - outer side
   MISO -
+Servo 12
 
 L298 Pin config: (from left)
 1 - current sense A
