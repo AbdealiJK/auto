@@ -2,7 +2,7 @@ void ui() {
 
   if ( ! PC.available() )
     return;
-
+  
   char c = PC.peek();
   Serial.print(F("Got :"));
   Serial.println(c);
@@ -114,6 +114,10 @@ void ui() {
     seesaw_init();
     seesaw_geton();
     seesaw_getoff();
+  }
+  
+  else if ( c == '=' ) {
+    slave_pins();
   }
   q_stop();
 }

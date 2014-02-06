@@ -21,11 +21,24 @@
 #define COMM_IR_FOUND       LOW
 #define MID_IR_FOUND        LOW
 
+
+/// >>>>>>>> SLAVE
+#define SLAVE_MOTOR_1             4
+#define SLAVE_MOTOR_2             5
+#define SLAVE_MOTOR_PWM           6
+
+#define SLAVE_PISTON_PIN          10
+
+#define SLAVE_HOME_TRIP           A4
+#define SLAVE_MID_IR              12
+#define SLAVE_HOME_TRIPPED        LOW
+#define SLAVE_MID_IR_FOUND        LOW
+
 #define QUIT_OR_CONTINUE if(quit_or_continue()) return;
   
 // Basic variables
-#define HOME 2
-#define MID  1
+#define HOME  2
+#define MID   1
 #define STOP  0
 
 // MY HASH TABLE
@@ -37,8 +50,9 @@
 #define MOVE_LADDER 'f'
 #define STOP        'q'
 #define DATA        'd'
+#define PINS        '='
 
-bool home_trip = 0, mid_trip = 0, comm_trip = 0,
+bool  home_trip = 0, mid_trip = 0, comm_trip = 0,
       ladder_ir = 0, comm_ir = 0, mid_ir = 0;
 
 void setup() {

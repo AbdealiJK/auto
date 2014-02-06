@@ -34,17 +34,17 @@ void update_home_trip() {
   }
 }
 
-void update_ir_trip() {
-  if ( IR_TRIP != -1 ) { // Flicker correction for IR.
+void update_mid_ir() {
+  if ( MID_IR != -1 ) { // Flicker correction for IR.
     long int temp = 0, lim = 0;
     for ( lim = 0; lim < 1000; lim++ ) {
-      temp += digitalRead(IR_TRIP) == IR_TRIPPED;
+      temp += digitalRead(MID_IR) == MID_IR_FOUND;
     }
     //      Serial.println(temp);
     if ( temp > 0.7 * lim )
-      ir_trip = 1;
+      mid_ir = 1;
     else
-      ir_trip = 0;
+      mid_ir = 0;
   }
 }
 

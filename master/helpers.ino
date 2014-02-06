@@ -133,6 +133,22 @@ int q_stop () {
   return 0;
 }
 
+void slave_pins () {
+  SLAVE.print( PINS );
+  
+  SLAVE.print( char( SLAVE_MOTOR_1 ) );
+  SLAVE.print( char( SLAVE_MOTOR_2 ) );
+  SLAVE.print( char( SLAVE_MOTOR_PWM ) );
+  SLAVE.print( char( SLAVE_PISTON_PIN ) );
+  SLAVE.print( char( SLAVE_HOME_TRIP ) );
+  SLAVE.print( char( SLAVE_MID_IR ) );
+  SLAVE.print( char( SLAVE_HOME_TRIPPED ) );
+  SLAVE.print( char( SLAVE_MID_IR_FOUND ) );
+  
+  SLAVE.print( PINS );
+  
+}
+
 bool quit_or_continue() {
   PC.println(F("Press 'c' ... "));
   while ( 1 ) {
