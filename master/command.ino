@@ -111,9 +111,9 @@ void ui() {
   } else if ( c == '3' ) {
     PC.read();
     polewalk_init();
-    polewalk_geton();
-    polewalk();
-    polewalk_getoff();
+    //polewalk_geton();
+    //polewalk();
+    //polewalk_getoff();
   } else if ( c == '2' ) {
     PC.read();
     swing();

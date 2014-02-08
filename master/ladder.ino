@@ -7,7 +7,6 @@ void ladder_init() {
   
   // What should the left clamp do ?
 }
-
 void ladder() {
   PC.println(F(">>>>>>>>>> Starting LADDER"));
 

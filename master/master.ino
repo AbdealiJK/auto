@@ -113,8 +113,8 @@ void setup() {
 
 void loop() {
   ui();
-//  seesaw_geton();
-//  seesaw_getoff();    
+//  polewalk_geton();
+//  polewalk_getoff();    
   
   while (PC.available())
     PC.read();
