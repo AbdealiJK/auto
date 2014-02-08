@@ -7,10 +7,11 @@
 #define MOTOR_PWM           6
 
 #define PISTON_PIN          11
+#define PP_PIN              A0
 
 #define HOME_TRIP           10 // -1 means no trip available
 #define MID_TRIP            A3
-#define COMM_TRIP           -1
+#define COMM_TRIP           8
 #define LADDER_IR           -1
 #define COMM_IR             -1
 #define MID_IR              12
@@ -21,13 +22,13 @@
 #define COMM_IR_FOUND       LOW
 #define MID_IR_FOUND        LOW
 
-
 /// >>>>>>>> SLAVE
 #define SLAVE_MOTOR_1             4
 #define SLAVE_MOTOR_2             5
 #define SLAVE_MOTOR_PWM           6
 
 #define SLAVE_PISTON_PIN          10
+#define SLAVE_PP_PIN              A6
 
 #define SLAVE_HOME_TRIP           A4
 #define SLAVE_MID_IR              12
@@ -48,19 +49,23 @@
 #define MOVE        'v'
 #define MOVE_MID    'i'
 #define MOVE_LADDER 'f'
-#define STOP        'q'
 #define DATA        'd'
+#define EXTEND      'e'
+#define SHRINK      's'
 #define PINS        '='
+#define STOP        'q'
 
 bool  home_trip = 0, mid_trip = 0, comm_trip = 0,
       ladder_ir = 0, comm_ir = 0, mid_ir = 0;
+      
+int loop_count = 0;
 
 void setup() {
   // Init serial
   Serial.begin(57600);
   Serial1.begin(57600);
 
-  while (!PC); // wait for serial port to connect.
+ // while (!PC); // wait for serial port to connect.
 
   PC.println(F("Serial started"));
 
@@ -69,10 +74,12 @@ void setup() {
   pinMode(MOTOR_2, OUTPUT);
   pinMode(MOTOR_PWM, OUTPUT);
   pinMode(PISTON_PIN, OUTPUT);
+  pinMode(PP_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
   pinMode(MID_TRIP, INPUT);
   pinMode(LADDER_IR, INPUT);
   pinMode(COMM_TRIP, INPUT);
+  digitalWrite(COMM_TRIP, HIGH);
   pinMode(COMM_IR, INPUT);
   pinMode(MID_IR, INPUT);
 
@@ -106,17 +113,19 @@ void setup() {
 
 void loop() {
   ui();
-
+//  seesaw_geton();
+//  seesaw_getoff();    
+  
   while (PC.available())
     PC.read();
 
   while (SLAVE.available())
     SLAVE.read();
 
-/*  
+/*
   Serial.print("\tHOME_TRIP : ");
   Serial.print(digitalRead(HOME_TRIP));
-  Serial.print("\tMCOMM_TRIP : ");
+  Serial.print("\tCOMM_TRIP : ");
   Serial.print(digitalRead(COMM_TRIP));
   Serial.print("\tMID_TRIP : ");
   Serial.print(digitalRead(MID_TRIP));
@@ -128,6 +137,7 @@ void loop() {
   Serial.print(digitalRead(MID_IR));
 */
   Serial.println(F("\tmaster"));
+  loop_count ++;
   delay(100);
 
 }

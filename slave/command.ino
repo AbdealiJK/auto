@@ -60,7 +60,7 @@ void slave_commands() {
     MASTER.print(COMM_END);
   } 
   
-  else if ( c == PINS ) {
+  /*else if ( c == PINS ) {
     pinMode(MOTOR_1, INPUT);
     pinMode(MOTOR_2, INPUT);
     pinMode(MOTOR_PWM, INPUT);
@@ -84,8 +84,7 @@ void slave_commands() {
     pinMode(PISTON_PIN, OUTPUT);
     pinMode(HOME_TRIP, INPUT);
     pinMode(MID_IR, INPUT);
-    
-    
   }
+  */
 }
 
