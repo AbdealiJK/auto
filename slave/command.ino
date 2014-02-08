@@ -58,8 +58,16 @@ void slave_commands() {
     MASTER.println(F("SLAVE > opening "));
     piston(OPEN);
     MASTER.print(COMM_END);
-  } 
-  
+  } else if ( c2 == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP EXTEND
+    PC.print(F("SLAVE > Extending pp"));
+    digitalWrite(PP_PIN, HIGH);
+    PC.print(COMM_END);
+  } else if ( c2 == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP SHRINK
+    PC.print(F("SLAVE > Shrinking pp"));
+    digitalWrite(PP_PIN, LOW);
+    PC.print(COMM_END);
+  }
+
   /*else if ( c == PINS ) {
     pinMode(MOTOR_1, INPUT);
     pinMode(MOTOR_2, INPUT);
@@ -67,7 +75,7 @@ void slave_commands() {
     pinMode(PISTON_PIN, INPUT);
     pinMode(HOME_TRIP, INPUT);
     pinMode(MID_IR, INPUT);
-    
+
     MOTOR_1      = MASTER.read();
     MOTOR_2      = MASTER.read();
     MOTOR_PWM    = MASTER.read();
@@ -76,8 +84,8 @@ void slave_commands() {
     MID_IR       = MASTER.read();
     HOME_TRIPPED = MASTER.read();
     MID_IR_FOUND = MASTER.read();
-    
-    
+
+
     pinMode(MOTOR_1, OUTPUT);
     pinMode(MOTOR_2, OUTPUT);
     pinMode(MOTOR_PWM, OUTPUT);

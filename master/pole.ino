@@ -1,35 +1,6 @@
 void polewalk_init() {
   PC.print(F("............. Setting up Pole Walk "));
 
-  // ----------------------------------------------------------- GO TO MID WITH MASTER
-  PC.println(F("Need to move both clamps to the extreme."));
-  QUIT_OR_CONTINUE;
-  SLAVE.print(MOVE);
-  SLAVE.print(-255);
-  while ( run( HOME, 255 ) ) {
-    if ( q_stop() ) break;
-  }
-  listen();
-
-  PC.println(F("Both clamps go to mid."));
-  QUIT_OR_CONTINUE;
-  while ( run( MID, 255 ) ) {
-    if ( q_stop() ) break;
-    update(MID_IR);
-    if ( mid_ir ) {
-      run ( STOP, 255 );
-      PC.print(F("IR reached.... "));
-      break;
-    }
-  }
-  SLAVE.print(MOVE);
-  SLAVE.print(255);
-  update(MID_TRIP);
-  while ( !mid_trip ) {
-    update(MID_TRIP);
-  }
-  SLAVE.print(STOP);
-
 
 /*** 
   // ------------------------------------------------------------- GO TO MID WITH SLAVE

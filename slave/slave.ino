@@ -1,10 +1,11 @@
 #define MASTER              Serial
 
 // Slave Pin chars
-char MOTOR_1             = 4,
-     MOTOR_2             = 5,
-     MOTOR_PWM           = 6,
+char MOTOR_1             = 3,
+     MOTOR_2             = 2,
+     MOTOR_PWM           = 9,
      PISTON_PIN          = 10,
+     PP_PIN              = A0,
      HOME_TRIP           = A4, // -1 means no trip available
      MID_IR              = 12,
      HOME_TRIPPED        = LOW,
@@ -17,14 +18,16 @@ char MOTOR_1             = 4,
 #define STOP  0
 
 // MY HASH TABLE
-#define COMM_END  '~'
-#define CLOSE     'p'
-#define OPEN      'o'
-#define MOVE      'v'
-#define MOVE_MID  'i'
-#define STOP      'q'
-#define DATA      'd'
-#define PINS      '='
+#define COMM_END    '~'
+#define CLOSE       'p'
+#define OPEN        'o'
+#define MOVE        'v'
+#define MOVE_MID    'i'
+#define MOVE_LADDER 'f'
+#define DATA        'd'
+#define EXTEND      'e'
+#define SHRINK      's'
+#define STOP        'q'
 
 
 int home_trip = 0, mid_ir = 0;
@@ -71,8 +74,8 @@ void loop() {
   Serial.print(digitalRead(MID_IR));
 
   Serial.println(F("slave"));
-  
-*/
+  */
+
   delay(20);
 
 }

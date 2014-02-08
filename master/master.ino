@@ -2,15 +2,15 @@
 #define SLAVE               Serial1
 
 // Pins
-#define MOTOR_1             4
-#define MOTOR_2             5
-#define MOTOR_PWM           6
+#define MOTOR_1             2
+#define MOTOR_2             3
+#define MOTOR_PWM           9
 
 #define PISTON_PIN          11
 #define PP_PIN              A0
 
 #define HOME_TRIP           10 // -1 means no trip available
-#define MID_TRIP            A3
+#define MID_TRIP            A4
 #define COMM_TRIP           8
 #define LADDER_IR           -1
 #define COMM_IR             -1
@@ -21,19 +21,6 @@
 #define LADDER_IR_FOUND     LOW
 #define COMM_IR_FOUND       LOW
 #define MID_IR_FOUND        LOW
-
-/// >>>>>>>> SLAVE
-#define SLAVE_MOTOR_1             4
-#define SLAVE_MOTOR_2             5
-#define SLAVE_MOTOR_PWM           6
-
-#define SLAVE_PISTON_PIN          10
-#define SLAVE_PP_PIN              A6
-
-#define SLAVE_HOME_TRIP           A4
-#define SLAVE_MID_IR              12
-#define SLAVE_HOME_TRIPPED        LOW
-#define SLAVE_MID_IR_FOUND        LOW
 
 #define QUIT_OR_CONTINUE if(quit_or_continue()) return;
   
@@ -52,7 +39,6 @@
 #define DATA        'd'
 #define EXTEND      'e'
 #define SHRINK      's'
-#define PINS        '='
 #define STOP        'q'
 
 bool  home_trip = 0, mid_trip = 0, comm_trip = 0,
@@ -113,8 +99,9 @@ void setup() {
 
 void loop() {
   ui();
-//  polewalk_geton();
-//  polewalk_getoff();    
+
+  seesaw_geton();
+  seesaw_getoff();    
   
   while (PC.available())
     PC.read();

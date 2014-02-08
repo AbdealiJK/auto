@@ -133,7 +133,7 @@ int q_stop () {
   return 0;
 }
 
-void slave_pins () {
+/*void slave_pins () {
   SLAVE.print( PINS );
   
   SLAVE.print( char( SLAVE_MOTOR_1 ) );
@@ -147,7 +147,7 @@ void slave_pins () {
   
   SLAVE.print( PINS );
   
-}
+}*/
 
 bool quit_or_continue() {
   PC.println(F("Press 'c' ... "));

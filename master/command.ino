@@ -81,12 +81,12 @@ void ui() {
       PC.print(F("Opening piston Mas"));
       piston(OPEN);
       PC.print(COMM_END);
-    } else if ( c2 == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON CLOSE
-      PC.print(F("Extending pungi Mas"));
+    } else if ( c2 == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP EXTEND
+      PC.print(F("Extending pp Mas"));
       digitalWrite(PP_PIN, HIGH);
       PC.print(COMM_END);
-    } else if ( c2 == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PISTON CLOSE
-      PC.print(F("Shrinking pungi Mas"));
+    } else if ( c2 == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP SHRINK
+      PC.print(F("Shrinking pp Mas"));
       digitalWrite(PP_PIN, LOW);
       PC.print(COMM_END);
     }
@@ -124,9 +124,9 @@ void ui() {
     //seesaw_getoff();
   }
   
-  else if ( c == '=' ) {
+  /*else if ( c == PINS ) {
     slave_pins();
-  }
+  }*/
   q_stop();
 }
 
