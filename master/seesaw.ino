@@ -108,7 +108,7 @@ void seesaw_init() {
   SLAVE.print(STOP);
   ***/
   
-  //------------------------------------------------------- MAKE IT GO TO THE MID DELYS
+  //------------------------------------------------------- MAKE IT GO TO THE EDGE and DELYS
   PC.println(F(">>>>>>>>>> Setting up Seesaw"));
  
   // move left motor to extreme

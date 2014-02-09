@@ -47,7 +47,10 @@ void setup() {
   pinMode(HOME_TRIP, INPUT);
   pinMode(MID_IR, INPUT);
 
+  // Init state
   run(STOP, 255);
+  piston(OPEN);
+  digitalWrite(PP_PIN, LOW);
 
   // Init basic variables
   home_trip = mid_ir =  0;

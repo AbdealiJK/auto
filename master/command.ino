@@ -15,19 +15,23 @@ void ui() {
 
       update(HOME_TRIP);
       update(MID_TRIP);
+      update(COMM_TRIP);
       update(LADDER_IR);
       update(MID_IR);
+      update(COMM_IR);
       PC.print(F(">>> data for master : "));
-      PC.print(F("Trips - home:"));
+      PC.print(F("Trips - home-trip:"));
       PC.println(home_trip);
-      PC.print(F(" mid:"));
+      PC.print(F(" mid-trip:"));
       PC.println(mid_trip);
-      PC.print(F(" ladder:"));
-      PC.println(ladder_ir);
-      PC.print(F(" comm:"));
+      PC.print(F(" comm-trip:"));
       PC.println(comm_trip);
+      PC.print(F(" ladder-ir:"));
+      PC.println(ladder_ir);
       PC.print(F(" mid-ir:"));
       PC.println(mid_ir);
+      PC.print(F(" comm-ir:"));
+      PC.println(comm_ir);
       PC.println(F(" >> begun"));
       PC.print(COMM_END);
     } else if ( c2 == MOVE ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
@@ -119,9 +123,9 @@ void ui() {
     swing();
   } else if ( c == '1' ) {
     PC.read();
-    seesaw_init();
-    //seesaw_geton();
-    //seesaw_getoff();
+    //seesaw_init();
+    seesaw_geton();
+    seesaw_getoff();
   }
   
   /*else if ( c == PINS ) {

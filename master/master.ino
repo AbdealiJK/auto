@@ -11,13 +11,13 @@
 
 #define HOME_TRIP           10 // -1 means no trip available
 #define MID_TRIP            A4
-#define COMM_TRIP           8
+#define COMM_TRIP           MISO
 #define LADDER_IR           -1
 #define COMM_IR             -1
 #define MID_IR              12
 #define HOME_TRIPPED        LOW
 #define MID_TRIPPED         LOW
-#define COMM_TRIPPED        LOW
+#define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
 #define COMM_IR_FOUND       LOW
 #define MID_IR_FOUND        LOW
@@ -65,11 +65,16 @@ void setup() {
   pinMode(MID_TRIP, INPUT);
   pinMode(LADDER_IR, INPUT);
   pinMode(COMM_TRIP, INPUT);
-  digitalWrite(COMM_TRIP, HIGH);
   pinMode(COMM_IR, INPUT);
   pinMode(MID_IR, INPUT);
 
+  // Init state
   run(STOP, 255);
+  piston(OPEN);
+  digitalWrite(PP_PIN, LOW);
+  SLAVE.print(STOP);
+  SLAVE.print(OPEN);
+  SLAVE.print(SHRINK);
 
   // Init basic variables
   PC.println(F("Setting up basics ..."));
