@@ -2,6 +2,7 @@ void ui() {
 
   if ( ! PC.available() )
     return;
+  Serial.println("In UI");
   
   char c = PC.peek();
   Serial.print(F("Got :"));
@@ -87,11 +88,11 @@ void ui() {
       PC.print(COMM_END);
     } else if ( c2 == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP EXTEND
       PC.print(F("Extending pp Mas"));
-      digitalWrite(PP_PIN, HIGH);
+      pp(OPEN);
       PC.print(COMM_END);
     } else if ( c2 == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP SHRINK
       PC.print(F("Shrinking pp Mas"));
-      digitalWrite(PP_PIN, LOW);
+      pp(CLOSE);
       PC.print(COMM_END);
     }
   } else if ( c == 'r' ) {

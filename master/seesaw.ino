@@ -148,7 +148,6 @@ void seesaw_geton() {
   while ( comm_trip ) {
     update(COMM_TRIP);
   }
-  delay(500);
   SLAVE.print(CLOSE);
   piston(CLOSE);
 
@@ -164,7 +163,6 @@ void seesaw_getoff() {
   while ( ! comm_trip ) {
     update(COMM_TRIP);
   }
-  delay(500);
   SLAVE.print(OPEN);
   piston(OPEN);
 

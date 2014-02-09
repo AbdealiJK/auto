@@ -1,13 +1,42 @@
 void polewalk_init() {
   PC.print(F("............. Setting up Pole Walk "));
 
+  // move left motor to extreme
+  PC.println(F("Need to move both clamps to the extreme."));
+  QUIT_OR_CONTINUE;
+  SLAVE.print(MOVE);
+  SLAVE.print(-255);
+  while ( run( HOME, 255 ) ) {
+    if ( q_stop() ) break;
+  }
+  listen();
 
+  // ------------------------------------------------------------- GO TO MID WITH MASTER
+  PC.println(F("Move master to mid first and then slave to mid"));
+  QUIT_OR_CONTINUE;
+  while ( run( MID, 255 ) ) {
+    if ( q_stop() ) break;
+    update(MID_IR);
+    if ( mid_ir ) {
+      run ( STOP, 255 );
+      PC.print(F("IR reached.... "));
+      break;
+    }
+  }
+  SLAVE.print(MOVE);
+  SLAVE.print(255);
+  update(MID_TRIP);
+  while ( !mid_trip ) {
+    update(MID_TRIP);
+  }
+  SLAVE.print(STOP);
+  
 /*** 
   // ------------------------------------------------------------- GO TO MID WITH SLAVE
   PC.println(F("Right clamp needs to go to the middle position."));
   QUIT_OR_CONTINUE;
   SLAVE.print(MOVE_MID);
-  SLAVE.print(255);
+  SLAVE.print(255);M
   listen();
   
   PC.println(F("Left clamp needs to go to middle now."));
@@ -20,17 +49,18 @@ void polewalk_init() {
 }
 
 void polewalk_geton() {
-  PC.print(F("............. Get on to Pole Walk "));
 
-  // move both motors to middle
-  PC.println(F("Need to clamp both on pole walk... "));
+  PC.println(F(">>>>>>>>>> Getting on to Pole Walk"));
+
+  // Clamp
+  PC.println(F("Need to clamp both on Pole Walk... "));
   update(COMM_TRIP);
   while ( comm_trip ) {
     update(COMM_TRIP);
   }
-  delay(500);
-  piston(CLOSE);
   SLAVE.print(CLOSE);
+  piston(CLOSE);
+
    
 }
 

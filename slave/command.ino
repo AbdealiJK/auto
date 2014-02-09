@@ -58,13 +58,13 @@ void slave_commands() {
     MASTER.println(F("SLAVE > opening "));
     piston(OPEN);
     MASTER.print(COMM_END);
-  } else if ( c2 == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP EXTEND
-    MASTER.print(F("SLAVE > Extending pp"));
-    digitalWrite(PP_PIN, HIGH);
+  } else if ( c == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP EXTEND
+    MASTER.print(F("Extending pp Mas"));
+    pp(OPEN);
     MASTER.print(COMM_END);
-  } else if ( c2 == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP SHRINK
-    MASTER.print(F("SLAVE > Shrinking pp"));
-    digitalWrite(PP_PIN, LOW);
+  } else if ( c == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP SHRINK
+    MASTER.print(F("Shrinking pp Mas"));
+    pp(CLOSE);
     MASTER.print(COMM_END);
   }
 

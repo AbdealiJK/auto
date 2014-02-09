@@ -31,6 +31,10 @@ void piston(int v) {
   digitalWrite(PISTON_PIN, v == CLOSE);
 }
 
+void pp(int v) {
+  digitalWrite(PP_PIN, v == OPEN);
+}
+
 // ------------------------------------------------------------------------------------
 
 void update(int tr) {

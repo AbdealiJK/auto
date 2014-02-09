@@ -12,10 +12,10 @@
 #define HOME_TRIP           10 // -1 means no trip available
 #define MID_TRIP            A4
 #define COMM_TRIP           MISO
-#define LADDER_IR           -1
+#define LADDER_IR           8
 #define COMM_IR             -1
 #define MID_IR              12
-#define HOME_TRIPPED        LOW
+#define HOME_TRIPPED        HIGH
 #define MID_TRIPPED         LOW
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
@@ -51,7 +51,7 @@ void setup() {
   Serial.begin(57600);
   Serial1.begin(57600);
 
- // while (!PC); // wait for serial port to connect.
+  while (!PC); // wait for serial port to connect.
 
   PC.println(F("Serial started"));
 
@@ -104,9 +104,11 @@ void setup() {
 
 void loop() {
   ui();
-
-  seesaw_geton();
-  seesaw_getoff();    
+ 
+//00  pp(OPEN);
+ 
+//  seesaw_geton();  seesaw_getoff();    
+//  polewalk_geton();  polewalk_getoff();    
   
   while (PC.available())
     PC.read();
@@ -129,7 +131,7 @@ void loop() {
   Serial.print(digitalRead(MID_IR));
 */
   Serial.println(F("\tmaster"));
-  loop_count ++;
+
   delay(100);
 
 }
