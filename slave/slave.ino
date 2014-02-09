@@ -15,7 +15,6 @@ char MOTOR_1             = 3,
 // Basic variables
 #define HOME  2
 #define MID   1
-#define STOP  0
 
 // MY HASH TABLE
 #define COMM_END    '~'
@@ -34,8 +33,8 @@ int home_trip = 0, mid_ir = 0;
 
 void setup() {
   // Init serial
-  Serial.begin(57600);
-  MASTER.begin(57600);
+  Serial.begin(19200);
+  MASTER.begin(19200);
 
   MASTER.println(F("Serial started"));
 

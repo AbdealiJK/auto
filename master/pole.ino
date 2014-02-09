@@ -25,18 +25,20 @@ void polewalk_init() {
   }
   SLAVE.print(MOVE);
   SLAVE.print(255);
-  update(MID_TRIP);
+   PC.print(F("Slave moving "));
+      update(MID_TRIP);
   while ( !mid_trip ) {
     update(MID_TRIP);
   }
   SLAVE.print(STOP);
-  
+  PC.println("Stopped both motors !");
+  listen();
 /*** 
   // ------------------------------------------------------------- GO TO MID WITH SLAVE
   PC.println(F("Right clamp needs to go to the middle position."));
   QUIT_OR_CONTINUE;
   SLAVE.print(MOVE_MID);
-  SLAVE.print(255);M
+  SLAVE.print(255);
   listen();
   
   PC.println(F("Left clamp needs to go to middle now."));
@@ -61,25 +63,29 @@ void polewalk_geton() {
   SLAVE.print(CLOSE);
   piston(CLOSE);
 
+  while(SLAVE.available()) SLAVE.read();
    
 }
 
 void polewalk() {
   PC.print(F("............. Starting Pole Walk "));
+  delay(1000);
+  piston(CLOSE);
   
   // move left to extreme, move right to extreme
   PC.println(F("Need to move left clamp to the extreme."));
   QUIT_OR_CONTINUE;
   while(SLAVE.available()) SLAVE.read();
-  SLAVE.print(MOVE);
-  SLAVE.print(-255);
-  listen();
-  
-  PC.println(F("Need to move right clamp to the extreme."));
-  QUIT_OR_CONTINUE;
+  piston(OPEN);
   while ( run( HOME, 255 ) ) {
     if ( q_stop() ) break;
   }
+  
+  PC.println(F("Need to open and move rihgt clamp to the extreme."));
+  QUIT_OR_CONTINUE;
+  SLAVE.print(MOVE);
+  SLAVE.print(-255);
+  listen();
   
   
   // clamp left
@@ -89,19 +95,28 @@ void polewalk() {
   delay(500);
   SLAVE.print(OPEN);
   
-  // move right to middle and left to middle
-  PC.println(F("Right clamp needs to go to the middle position."));
-  QUIT_OR_CONTINUE;
-  SLAVE.print(MOVE_MID);
-  SLAVE.print(255);
-  listen();
-  
-  PC.println(F("Left clamp needs to go to middle now."));
+  PC.println(F("Move master to mid first and then slave to mid"));
   QUIT_OR_CONTINUE;
   while ( run( MID, 255 ) ) {
     if ( q_stop() ) break;
+    update(MID_IR);
+    if ( mid_ir ) {
+      run ( STOP, 255 );
+      PC.print(F("IR reached.... "));
+      break;
+    }
   }
-  Serial.println(F("Right clamp needs to clamp now"));
+  SLAVE.print(MOVE);
+  SLAVE.print(255);
+   PC.print(F("Slave moving "));
+      update(MID_TRIP);
+  while ( !mid_trip ) {
+    update(MID_TRIP);
+  }
+  SLAVE.print(STOP);
+  listen();
+  
+  PC.println(F("Right clamp needs to clamp now"));
   QUIT_OR_CONTINUE;
   SLAVE.print(CLOSE);
  
@@ -114,11 +129,11 @@ void polewalk_getoff() {
 
   // move both motors to middle
   PC.println(F("Need to UNclamp both on pole walk... "));
-  update(COMM_TRIP);
-  while ( ! comm_trip ) {
-    update(COMM_TRIP);
+  update(COMM_IR);
+  while ( ! comm_ir ) {
+    update(COMM_IR);
   }
-  delay(500);
+  delay(1000);
   piston(OPEN);
   SLAVE.print(OPEN);
 }

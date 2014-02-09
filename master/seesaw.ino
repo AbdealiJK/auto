@@ -153,6 +153,10 @@ void seesaw_geton() {
 
 }
 
+void seesaw() {
+  
+}
+
 void seesaw_getoff() {
   PC.println(F(">>>>>>>>>> Seesaw START"));
 

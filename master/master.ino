@@ -13,7 +13,7 @@
 #define MID_TRIP            A4
 #define COMM_TRIP           MISO
 #define LADDER_IR           8
-#define COMM_IR             -1
+#define COMM_IR             SCK
 #define MID_IR              12
 #define HOME_TRIPPED        HIGH
 #define MID_TRIPPED         LOW
@@ -27,7 +27,6 @@
 // Basic variables
 #define HOME  2
 #define MID   1
-#define STOP  0
 
 // MY HASH TABLE
 #define COMM_END    '~'
@@ -48,10 +47,10 @@ int loop_count = 0;
 
 void setup() {
   // Init serial
-  Serial.begin(57600);
-  Serial1.begin(57600);
+  Serial.begin(19200);
+  Serial1.begin(19200);
 
-  while (!PC); // wait for serial port to connect.
+//  while (!PC); // wait for serial port to connect.
 
   PC.println(F("Serial started"));
 
@@ -104,11 +103,18 @@ void setup() {
 
 void loop() {
   ui();
+  //  seesaw_geton();  seesaw_getoff();
+  
+//  PC.println("Please place the child on the parent bot and activate the suction");
+//  while ( !comm_trip ) {
+//    update(COMM_TRIP);
+//  }
+//  PC.println("Leave the childbot on polewalk");
+//  pp(OPEN);
  
-//00  pp(OPEN);
- 
-//  seesaw_geton();  seesaw_getoff();    
-//  polewalk_geton();  polewalk_getoff();    
+
+//  polewalk_init();
+//  polewalk_geton(); delay(500); polewalk(); polewalk_getoff();    
   
   while (PC.available())
     PC.read();

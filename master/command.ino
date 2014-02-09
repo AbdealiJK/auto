@@ -110,23 +110,53 @@ void ui() {
   }
 
   if ( c == '4' ) {
+    delay(1);
     PC.read();
-    ladder_init();
-    ladder();
+    char c2 = PC.read();
+    if ( c2 == 'a' ) {
+      ladder_init();
+    } else if ( c2 == 'b' ) {
+      ladder();
+    }
   } else if ( c == '3' ) {
+    delay(1);
     PC.read();
-    polewalk_init();
-    //polewalk_geton();
-    //polewalk();
-    //polewalk_getoff();
+    char c2 = PC.read();
+    if ( c2 == 'a' ) {
+      polewalk_init();
+    } else if ( c2 == 'b' ) {
+      polewalk_geton();
+    } else if ( c2 == 'c' ) {
+      polewalk();
+    } else if ( c2 == 'd' ) {
+      polewalk_getoff();
+    }
   } else if ( c == '2' ) {
+    delay(1);
     PC.read();
-    swing();
+    char c2 = PC.read();
+    if ( c2 == 'a' ) {
+      swing_init();
+    } else if ( c2 == 'b' ) {
+      swing_geton();
+    } else if ( c2 == 'c' ) {
+      swing();
+    } else if ( c2 == 'd' ) {
+      swing_getoff();
+    }
   } else if ( c == '1' ) {
+    delay(1);
     PC.read();
-    //seesaw_init();
-    seesaw_geton();
-    seesaw_getoff();
+    char c2 = PC.read();
+    if ( c2 == 'a' ) {
+      seesaw_init();
+    } else if ( c2 == 'b' ) {
+      seesaw_geton();
+    } else if ( c2 == 'c' ) {
+      seesaw();
+    } else if ( c2 == 'd' ) {
+      seesaw_getoff();
+    }
   }
   
   /*else if ( c == PINS ) {
