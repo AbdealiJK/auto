@@ -1,3 +1,7 @@
+#include <SoftwareSerial.h>
+
+SoftwareSerial mySerial(10, 11);
+
 #define SLAVE     0
 
 #if SLAVE
@@ -9,19 +13,19 @@
 #define MOTOR_1             4
 #define MOTOR_2             5
 
-#define HOME_TRIP           10 // -1 means no trip available
+#define HOME_TRIP           -1 // -1 means no trip available
 #define HOME_TRIPPED        LOW
 
 #else
 
 #define MY_CLAMP            'l'
 #define PC                  Serial
-#define NEXT                Serial1
+#define NEXT                mySerial
 // Pins
 #define MOTOR_1             4
 #define MOTOR_2             5
 
-#define HOME_TRIP           10 // -1 means no trip available
+#define HOME_TRIP           -1 // -1 means no trip available
 #define HOME_TRIPPED        LOW
 
 #endif
@@ -80,7 +84,9 @@ void update_trip();
 void setup() {
   // Init serial
   Serial.begin(57600);
-  Serial1.begin(57600);
+//  Serial1.begin(57600);
+  mySerial.begin(9600);
+  mySerial.println("Hello, world?");
 
   //  while (!SLAVE && !PC); // wait for serial port to connect.
 

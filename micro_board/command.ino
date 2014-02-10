@@ -156,14 +156,22 @@ void ui() {
   else if ( c == NEXT_CLAMP && SLAVE == 0 ) {
     // >>>>>>>>>>>>>>>>>>>>> MAKE THE OTHER GUY DO IT !!!!!!!!!!!!!!!!!
     delay(2);
-    if (!(NEXT))
-      Serial.println("Other clamp not present :P ");
-    else {
+    
+    
       Serial.println("Sending it to the other clamp");
+      mySerial.println("Sending it to the other clamp");
       while (PC.available())
-        NEXT.write(PC.read());
+        {
+          char c=PC.read();
+          for(int i=0;i<10;i++)
+          {
+        mySerial.write(c);
+        Serial.write(c);
+          }
+          delay(2);
+      }
       listen();
-    }
+    
   }
 
   if ( !SLAVE ) {

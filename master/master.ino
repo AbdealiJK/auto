@@ -52,7 +52,7 @@ void setup() {
 
 //  while (!PC); // wait for serial port to connect.
 
-  PC.println(F("Serial started"));
+  PC.println(F("Master laireS begun"));
 
   // Pinmodes
   pinMode(MOTOR_1, OUTPUT);
@@ -70,7 +70,7 @@ void setup() {
   // Init state
   run(STOP, 255);
   piston(OPEN);
-  digitalWrite(PP_PIN, LOW);
+  pp(CLOSE);
   SLAVE.print(STOP);
   SLAVE.print(OPEN);
   SLAVE.print(SHRINK);
@@ -104,7 +104,7 @@ void setup() {
 void loop() {
   ui();
   
-  seesaw_geton();  
+//  seesaw_geton();  
  // seesaw_getoff();
  // delay(5000);
     //delay(5000);
@@ -116,12 +116,15 @@ void loop() {
 //  PC.println("Leave the childbot on polewalk");
 //  pp(OPEN);
  
-
-  //polewalk_init();
-  //delay(5000);
-  //polewalk_geton(); 
-  //delay(500);// polewalk(); polewalk_getoff();    
-  
+/*
+  polewalk_init();
+  QUIT_OR_CONTINUE
+  polewalk_geton(); 
+  QUIT_OR_CONTINUE
+  polewalk(); 
+  QUIT_OR_CONTINUE
+  polewalk_getoff();    
+*/  
   while (PC.available())
     PC.read();
 

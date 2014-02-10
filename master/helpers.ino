@@ -161,6 +161,9 @@ bool quit_or_continue() {
       PC.read();
       return 0;
     }
+    update(LADDER_IR);
+    if( ladder_ir ) //// added switch to be removed in future
+      return 0;
   }
 }
 

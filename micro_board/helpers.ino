@@ -127,7 +127,7 @@ int pc_get_int() {
 void listen() {
   char temp = !PC_END;
   Serial.print("Waiting for next");
-  while (NEXT && temp != PC_END)
+  while (temp != PC_END)
   {
     if (NEXT.available()) {
       temp  = NEXT.read();
