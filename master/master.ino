@@ -103,7 +103,11 @@ void setup() {
 
 void loop() {
   ui();
-  //  seesaw_geton();  seesaw_getoff();
+  
+  seesaw_geton();  
+ // seesaw_getoff();
+ // delay(5000);
+    //delay(5000);
   
 //  PC.println("Please place the child on the parent bot and activate the suction");
 //  while ( !comm_trip ) {
@@ -113,11 +117,14 @@ void loop() {
 //  pp(OPEN);
  
 
-//  polewalk_init();
-//  polewalk_geton(); delay(500); polewalk(); polewalk_getoff();    
+  //polewalk_init();
+  //delay(5000);
+  //polewalk_geton(); 
+  //delay(500);// polewalk(); polewalk_getoff();    
   
   while (PC.available())
     PC.read();
+
 
   while (SLAVE.available())
     SLAVE.read();

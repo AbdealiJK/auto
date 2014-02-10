@@ -33,6 +33,9 @@ void polewalk_init() {
   SLAVE.print(STOP);
   PC.println("Stopped both motors !");
   listen();
+  
+  pp(OPEN);
+  
 /*** 
   // ------------------------------------------------------------- GO TO MID WITH SLAVE
   PC.println(F("Right clamp needs to go to the middle position."));
