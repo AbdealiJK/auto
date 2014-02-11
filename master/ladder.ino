@@ -30,7 +30,7 @@ void ladder() {
         update(LADDER_IR);
         if ( ladder_ir ) {
           PC.println(F("Fixed clamp was pressed !"));
-          run ( STOP, 255 );
+          run ( STOP, 0 );
           break;
         }
       }
@@ -40,7 +40,7 @@ void ladder() {
       update(LADDER_IR);
       if ( !ladder_ir ) {
         PC.println(F("Fixed clamp un-pressed !"));
-        run ( STOP, 255 );
+        run ( STOP, 0 );
         break;
       }
     }
@@ -51,7 +51,7 @@ void ladder() {
       update(LADDER_IR);
       if ( ladder_ir ) {
         PC.println(F("Fixed clamp pressed !"));
-        run ( STOP, 255 );
+        run ( STOP, 0 );
         break;
       }
     }
@@ -63,7 +63,7 @@ void ladder() {
       while ( run ( MID, 255 ) ) {
         if ( q_stop() ) break;
         if ( millis() - start_time > 200 ) { // DELAY alert
-          run(STOP, 255);
+          run(STOP, 0);
           PC.println(F("Time delay done "));
           break;
         }
@@ -80,7 +80,7 @@ void ladder() {
     while ( run ( MID, 255 ) ) {
       if ( q_stop() ) break;
       if ( millis() - start_time > 200 ) { // DELAY alert
-        run(STOP, 255);
+        run(STOP, 0);
         PC.println(F("Time delay done "));
         break;
       }
@@ -117,7 +117,7 @@ void ladder() {
     update(LADDER_IR);
     if ( ladder_ir ) {
       PC.println(F("Fixed clamp was pressed !"));
-      run ( STOP, 255 );
+      run ( STOP, 0 );
       break;
     }
   }
@@ -127,7 +127,7 @@ void ladder() {
   while ( run ( MID, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
     if ( millis() - start_time > 200 ) { // DELAY alert
-      run(STOP, 255);
+      run(STOP, 0);
       PC.println(F("Time delay done "));
       PC.println(F("Activating tail piston through slave"));
       SLAVE.write(CLOSE);
@@ -160,7 +160,7 @@ void ladder() {
   while ( run ( MID, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
     if ( millis() - start_time > 1200 ) { // DELAY alert
-      run(STOP, 255);
+      run(STOP, 0);
       PC.println(F("Time delay done "));
       break;
     }

@@ -47,7 +47,7 @@ void setup() {
   pinMode(MID_IR, INPUT);
 
   // Init state
-  run(STOP, 255);
+  run(STOP, 0);
   piston(OPEN);
   digitalWrite(PP_PIN, LOW);
 

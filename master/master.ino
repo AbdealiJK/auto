@@ -68,7 +68,7 @@ void setup() {
   pinMode(MID_IR, INPUT);
 
   // Init state
-  run(STOP, 255);
+  run(STOP, 0);
   piston(OPEN);
   pp(CLOSE);
   SLAVE.print(STOP);
@@ -80,7 +80,6 @@ void setup() {
 
   home_trip = mid_trip = comm_trip = ladder_ir = comm_ir = mid_ir = 0;
 
-  run(STOP, 255);
   update(HOME_TRIP);
   update(MID_TRIP);
   update(COMM_TRIP);

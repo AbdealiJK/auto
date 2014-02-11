@@ -2,23 +2,28 @@ int run(int dir, int pwm) {
   update_home_trip();
 
   if ( home_trip && dir == HOME ) {
-    digitalWrite(MOTOR_1, 0);
-    digitalWrite(MOTOR_2, 0);
-    analogWrite(MOTOR_PWM, 255);
+    digitalWrite(MOTOR_1, LOW); 
+    digitalWrite(MOTOR_2, LOW); 
+    analogWrite(MOTOR_PWM, 0);
     return 0;
   }
 
   switch ( dir ) {
-    case STOP : dir = 0;  break;
-    case HOME : dir = 1;  break;
-    case MID :  dir = 2;  break;
-    default :   dir = -1; break;
-  }
-
-  if ( dir != -1 ) {
-    digitalWrite(MOTOR_1, dir / 2);
-    digitalWrite(MOTOR_2, dir % 2);
-    analogWrite(MOTOR_PWM, pwm);
+    case STOP :
+      digitalWrite(MOTOR_1, LOW);
+      digitalWrite(MOTOR_2, LOW);
+      analogWrite(MOTOR_PWM, 0);
+      break;
+    case HOME :
+      digitalWrite(MOTOR_1, LOW);
+      digitalWrite(MOTOR_2, HIGH);
+      analogWrite(MOTOR_PWM, 0);
+      break;
+    case MID :
+      digitalWrite(MOTOR_1, HIGH);
+      digitalWrite(MOTOR_2, LOW);
+      analogWrite(MOTOR_PWM, 0);
+      break;
   }
   return 1;
 }

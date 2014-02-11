@@ -44,7 +44,7 @@ void slave_commands() {
       if ( q_stop() ) break;
       update_mid_ir();
       if ( mid_ir ) {
-        run ( STOP, 255 );
+        run ( STOP, 0 );
         MASTER.println(F("SLAVE > reached middle position"));
         break;
       }

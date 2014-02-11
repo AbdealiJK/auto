@@ -39,7 +39,7 @@ void seesaw_init() {
         if ( q_stop() ) break;
         update(MID_IR);
         if ( mid_ir ) {
-          run ( STOP, 255 );
+          run ( STOP, 0 );
           PC.print(F("IR reached.... "));
           break;
         }
@@ -51,7 +51,7 @@ void seesaw_init() {
         if ( q_stop() ) break;
         update(MID_IR);
         if ( millis() - start_time > 600 ) {
-          run ( STOP, 255 );
+          run ( STOP, 0 );
           PC.print(F(" Seesaw position reached "));
           break;
         }
@@ -79,7 +79,7 @@ void seesaw_init() {
     if ( q_stop() ) break;
     update(MID_IR);
     if ( mid_ir ) {
-      run ( STOP, 255 );
+      run ( STOP, 0 );
       PC.print(F("IR reached.... "));
       break;
     }
@@ -98,7 +98,7 @@ void seesaw_init() {
   while ( run( HOME, 255 ) ) {
     if ( q_stop() ) break;
     if ( millis() - start_time > 500 ) {
-      run ( STOP, 255 );
+      run ( STOP, 0 );
       break;
     }
   }
@@ -127,7 +127,7 @@ void seesaw_init() {
   while ( run( MID, 255 ) ) {
     if ( q_stop() ) break;
     if ( millis() - start_time > 1200 ) {
-      run ( STOP, 255 );
+      run ( STOP, 0 );
       break;
     }
   }

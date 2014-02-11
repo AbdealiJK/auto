@@ -18,7 +18,7 @@ void polewalk_init() {
     if ( q_stop() ) break;
     update(MID_IR);
     if ( mid_ir ) {
-      run ( STOP, 255 );
+      run ( STOP, 0 );
       PC.print(F("IR reached.... "));
       break;
     }
@@ -111,7 +111,7 @@ void polewalk() {
     if ( q_stop() ) break;
     update(MID_IR);
     if ( mid_ir ) {
-      run ( STOP, 255 );
+      run ( STOP, 0 );
       PC.print(F("IR reached.... "));
       break;
     }

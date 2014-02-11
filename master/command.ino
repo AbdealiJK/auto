@@ -54,7 +54,7 @@ void ui() {
         if ( q_stop() ) break;
         update(LADDER_IR);
         if ( ladder_ir ) {
-          run ( STOP, 255 );
+          run ( STOP, 0 );
           PC.println(F("fixed clamp pressed... "));
           break;
         }
@@ -70,7 +70,7 @@ void ui() {
         if ( q_stop() ) break;
         update(MID_IR);
         if ( mid_ir ) {
-          run ( STOP, 255 );
+          run ( STOP, 0 );
           PC.print(F("IR reached.... "));
           PC.println(F("Mas-clamp Now in middle position"));
           break;

@@ -3,26 +3,35 @@ int run(int dir, int pwm) {
   update(MID_TRIP);
 
   if ( home_trip && dir == HOME ) {
-    digitalWrite(MOTOR_1, 0); digitalWrite(MOTOR_2, 0); analogWrite(MOTOR_PWM, 255);
+    digitalWrite(MOTOR_1, LOW); 
+    digitalWrite(MOTOR_2, LOW); 
+    analogWrite(MOTOR_PWM, 0);
     return 0;
   }
 
   if ( mid_trip && dir == MID ) {
-    digitalWrite(MOTOR_1, 0); digitalWrite(MOTOR_2, 0); analogWrite(MOTOR_PWM, 255);
+    digitalWrite(MOTOR_1, LOW); 
+    digitalWrite(MOTOR_2, LOW); 
+    analogWrite(MOTOR_PWM, 0);
     return 0;
   }
 
   switch ( dir ) {
-    case STOP : dir = 0;  break;
-    case HOME : dir = 1;  break;
-    case MID :  dir = 2;  break;
-    default :   dir = -1; break;
-  }
-
-  if ( dir != -1 ) {
-    digitalWrite(MOTOR_1, dir / 2);
-    digitalWrite(MOTOR_2, dir % 2);
-    analogWrite(MOTOR_PWM, pwm);
+    case STOP :
+      digitalWrite(MOTOR_1, LOW);
+      digitalWrite(MOTOR_2, LOW);
+      analogWrite(MOTOR_PWM, 0);
+      break;
+    case HOME :
+      digitalWrite(MOTOR_1, LOW);
+      digitalWrite(MOTOR_2, HIGH);
+      analogWrite(MOTOR_PWM, 0);
+      break;
+    case MID :
+      digitalWrite(MOTOR_1, HIGH);
+      digitalWrite(MOTOR_2, LOW);
+      analogWrite(MOTOR_PWM, 0);
+      break;
   }
   return 1;
 }
@@ -58,12 +67,12 @@ void update(int tr) {
   }
 
   if ( loops > 0 && pin >= 0) {
-   
-    long int temp=0;
+
+    long int temp = 0;
     for ( long int lim = 0; lim < loops; lim++ ) {
       temp += digitalRead(pin);
     }
-    
+
     if ( temp > 0.7 * loops ) {
       if ( tripped == 1 ) {
         *val = 1;
@@ -127,7 +136,7 @@ void listen() {
 int q_stop () {
   if ( PC.available() && PC.peek() == STOP ) {
     SLAVE.print(STOP);
-    run(STOP, 255);
+    run(STOP, 0);
     PC.println(F("MASTER > ...manual stop... "));
     Serial.println(F("STOPPED"));
     PC.print(COMM_END);
@@ -139,7 +148,7 @@ int q_stop () {
 
 /*void slave_pins () {
   SLAVE.print( PINS );
-  
+
   SLAVE.print( char( SLAVE_MOTOR_1 ) );
   SLAVE.print( char( SLAVE_MOTOR_2 ) );
   SLAVE.print( char( SLAVE_MOTOR_PWM ) );
@@ -148,9 +157,9 @@ int q_stop () {
   SLAVE.print( char( SLAVE_MID_IR ) );
   SLAVE.print( char( SLAVE_HOME_TRIPPED ) );
   SLAVE.print( char( SLAVE_MID_IR_FOUND ) );
-  
+
   SLAVE.print( PINS );
-  
+
 }*/
 
 bool quit_or_continue() {
@@ -163,7 +172,7 @@ bool quit_or_continue() {
       return 0;
     }
     update(LADDER_IR);
-    if( flag == 0 && ladder_ir ) {
+    if ( flag == 0 && ladder_ir ) {
       flag++;
     }
     if ( flag == 1 && !ladder_ir ) {
