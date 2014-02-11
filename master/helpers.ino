@@ -155,6 +155,7 @@ int q_stop () {
 
 bool quit_or_continue() {
   PC.println(F("Press 'c' ... "));
+  int flag = 0;
   while ( 1 ) {
     if ( PC.available() && PC.peek() == 'q' ) return 1;
     if ( PC.available() && PC.peek() == 'c' ) {
@@ -162,8 +163,12 @@ bool quit_or_continue() {
       return 0;
     }
     update(LADDER_IR);
-    if( ladder_ir ) //// added switch to be removed in future
+    if( flag == 0 && ladder_ir ) {
+      flag++;
+    }
+    if ( flag == 1 && !ladder_ir ) {
       return 0;
+    }
   }
 }
 

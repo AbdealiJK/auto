@@ -47,8 +47,8 @@ int loop_count = 0;
 
 void setup() {
   // Init serial
-  Serial.begin(19200);
-  Serial1.begin(19200);
+  Serial.begin(57600);
+  Serial1.begin(57600);
 
 //  while (!PC); // wait for serial port to connect.
 
@@ -115,17 +115,16 @@ void loop() {
 //  }
 //  PC.println("Leave the childbot on polewalk");
 //  pp(OPEN);
- 
-/*
+
   polewalk_init();
   QUIT_OR_CONTINUE
-  polewalk_geton(); 
+  polewalk_geton();
   QUIT_OR_CONTINUE
-  polewalk(); 
+  polewalk();
   QUIT_OR_CONTINUE
-  polewalk_getoff();    
-*/  
-  while (PC.available())
+  polewalk_getoff();
+  
+    while (PC.available())
     PC.read();
 
 

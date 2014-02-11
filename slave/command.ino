@@ -5,6 +5,9 @@ void slave_commands() {
 
   q_stop();
 
+  if ( ! MASTER.available() )
+    return;
+
   char c = MASTER.read();
   MASTER.print(F("SLAVE >>>>> GOT :"));
   MASTER.println(c);
@@ -12,11 +15,11 @@ void slave_commands() {
   if ( c == DATA ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> WATCH
     // Display initial values :
     update_home_trip();
-//    MASTER.print(F("SLAVE > home-trip : \t"));
-//    MASTER.println(home_trip);
+    MASTER.print(F("SLAVE > home-trip : \t"));
+    MASTER.println(home_trip);
     update_mid_ir();
-//    MASTER.print(F("SLAVE > mid-ir : \t"));
-//    MASTER.println(mid_ir);
+    MASTER.print(F("SLAVE > mid-ir : \t"));
+    MASTER.println(mid_ir);
     MASTER.print(COMM_END);
   }
   else if ( c == MOVE ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY

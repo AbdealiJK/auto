@@ -6,7 +6,7 @@ char MOTOR_1             = 3,
      MOTOR_PWM           = 9,
      PISTON_PIN          = 10,
      PP_PIN              = A0,
-     HOME_TRIP           = A4, // -1 means no trip available
+     HOME_TRIP           = A3, // -1 means no trip available
      MID_IR              = 12,
      HOME_TRIPPED        = LOW,
      MID_IR_FOUND        = LOW;
@@ -33,8 +33,8 @@ int home_trip = 0, mid_ir = 0;
 
 void setup() {
   // Init serial
-  Serial.begin(19200);
-  MASTER.begin(19200);
+  //Serial.begin(57600);
+  MASTER.begin(57600);
 
   MASTER.println(F("Serial started"));
 
@@ -74,9 +74,9 @@ void loop() {
   Serial.print(digitalRead(HOME_TRIP));
   Serial.print("\tMID_IR : ");
   Serial.print(digitalRead(MID_IR));
-
-  Serial.println(F("slave"));
-  */
+*/
+//  Serial.println(F("slave"));
+  
 
   delay(20);
 

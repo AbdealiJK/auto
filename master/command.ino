@@ -103,8 +103,33 @@ void ui() {
       PC.println(F("Oops, SLAVE not found :(((("));
     else {
       PC.println(F("Sending to other clamp"));
-      while (PC.available())
-        SLAVE.write(PC.read());
+      delay(1);
+      char c2 = PC.read();
+      if ( c2 == MOVE || c2 == MOVE_MID ) {
+        int vel = pc_get_int();
+        if ( vel > 0 ) {
+          SLAVE.print(c2);
+          SLAVE.print(vel);
+          update(MID_TRIP);
+          while(1) {
+            if ( q_stop() ) break;
+            update(MID_TRIP);
+            if ( mid_trip ) {
+              SLAVE.print(STOP);
+              break; 
+            }
+          }
+          
+        } else {
+          SLAVE.print(c2);
+          SLAVE.print(vel); 
+        }
+      }
+      else {
+        SLAVE.print(c2);
+        while (PC.available())
+          SLAVE.write(PC.read());
+      }
       listen();
     }
   }

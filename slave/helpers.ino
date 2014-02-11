@@ -77,11 +77,19 @@ int get_int() {
 // ------------------------------------------------
 int q_stop () {
   if ( MASTER.available() && MASTER.peek() == STOP ) {
-    run(STOP, 255);
+    
     MASTER.read();
-    MASTER.println(F("SLAVE > ...manual stop... "));
+    //MASTER.println(F("SLAVE > Q "));
+    //MASTER.print(COMM_END);
+//    for ( int  i = 255 ; i > 0; i-- ) {
+//      analogWrite(MOTOR_PWM, i);
+//      delayMicroseconds(500);
+//    }
+    run(STOP, 0);
+    //MASTER.println(F("SLAVE > Q "));
+    //MASTER.print(COMM_END);
+    MASTER.print('SLAVE > Q');
     MASTER.print(COMM_END);
-    Serial.println("Slave received 'q'");
     return 1;
   }
   return 0;
