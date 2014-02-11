@@ -115,15 +115,15 @@ void loop() {
 //  PC.println("Leave the childbot on polewalk");
 //  pp(OPEN);
 
-  polewalk_init();
+/*  polewalk_init();
   QUIT_OR_CONTINUE
   polewalk_geton();
   QUIT_OR_CONTINUE
   polewalk();
   QUIT_OR_CONTINUE
   polewalk_getoff();
-  
-    while (PC.available())
+  */
+  while (PC.available())
     PC.read();
 
 

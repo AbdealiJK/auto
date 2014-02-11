@@ -25,12 +25,12 @@ int run(int dir, int pwm) {
     case HOME :
       digitalWrite(MOTOR_1, LOW);
       digitalWrite(MOTOR_2, HIGH);
-      analogWrite(MOTOR_PWM, 0);
+      analogWrite(MOTOR_PWM, pwm);
       break;
     case MID :
       digitalWrite(MOTOR_1, HIGH);
       digitalWrite(MOTOR_2, LOW);
-      analogWrite(MOTOR_PWM, 0);
+      analogWrite(MOTOR_PWM, pwm);
       break;
   }
   return 1;

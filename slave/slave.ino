@@ -5,7 +5,7 @@ char MOTOR_1             = 3,
      MOTOR_2             = 2,
      MOTOR_PWM           = 9,
      PISTON_PIN          = 10,
-     PP_PIN              = A0,
+     PP_PIN              = 8,
      HOME_TRIP           = A3, // -1 means no trip available
      MID_IR              = 12,
      HOME_TRIPPED        = LOW,
@@ -43,6 +43,7 @@ void setup() {
   pinMode(MOTOR_2, OUTPUT);
   pinMode(MOTOR_PWM, OUTPUT);
   pinMode(PISTON_PIN, OUTPUT);
+  pinMode(PP_PIN, OUTPUT);
   pinMode(HOME_TRIP, INPUT);
   pinMode(MID_IR, INPUT);
 
@@ -75,7 +76,7 @@ void loop() {
   Serial.print("\tMID_IR : ");
   Serial.print(digitalRead(MID_IR));
 */
-//  Serial.println(F("slave"));
+  Serial.println(F("slave"));
   
 
   delay(20);
