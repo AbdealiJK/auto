@@ -41,7 +41,7 @@ void piston(int v) {
 }
 
 void pp(int v) {
-  digitalWrite(PP_PIN, v == OPEN);
+  digitalWrite(PP_PIN, v == EXTEND);
 }
 
 // ------------------------------------------------------------------------------------
@@ -172,10 +172,10 @@ bool quit_or_continue() {
       return 0;
     }
     update(LADDER_IR);
-    if ( flag == 0 && ladder_ir ) {
+    if ( !flag && ladder_ir ) {
       flag++;
     }
-    if ( flag == 1 && !ladder_ir ) {
+    if ( flag && !ladder_ir ) {
       return 0;
     }
   }

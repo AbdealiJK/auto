@@ -76,7 +76,7 @@ void loop() {
   Serial.print("\tMID_IR : ");
   Serial.print(digitalRead(MID_IR));
 */
-  Serial.println(F("slave"));
+//  Serial.println(F("slave"));
   
 
   delay(20);

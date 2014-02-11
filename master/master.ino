@@ -70,7 +70,7 @@ void setup() {
   // Init state
   run(STOP, 0);
   piston(OPEN);
-  pp(CLOSE);
+  pp(SHRINK);
   SLAVE.print(STOP);
   SLAVE.print(OPEN);
   SLAVE.print(SHRINK);
@@ -115,14 +115,14 @@ void loop() {
 //  PC.println("Leave the childbot on polewalk");
 //  pp(OPEN);
 
-/*  polewalk_init();
+  polewalk_init();
   QUIT_OR_CONTINUE
   polewalk_geton();
   QUIT_OR_CONTINUE
   polewalk();
   QUIT_OR_CONTINUE
   polewalk_getoff();
-  */
+  
   while (PC.available())
     PC.read();
 

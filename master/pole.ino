@@ -41,7 +41,8 @@ void polewalk_init() {
   PC.println("Stopped both motors !");
   listen();
 
-  pp(OPEN);
+  SLAVE.print(EXTEND);
+  pp(SHRINK);
 
   /***
     // ------------------------------------------------------------- GO TO MID WITH SLAVE
@@ -79,7 +80,7 @@ void polewalk_geton() {
 
 void polewalk() {
   PC.print(F("............. Starting Pole Walk "));
-  delay(1000);
+
   piston(CLOSE);
 
   // move left to extreme, move right to extreme
@@ -133,6 +134,8 @@ void polewalk() {
   }
   PC.println("Stopped both motors !");
   listen();
+  SLAVE.print(SHRINK);
+  pp(EXTEND);
 
   PC.println(F("Right clamp needs to clamp now"));
   QUIT_OR_CONTINUE;

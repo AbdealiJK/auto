@@ -88,11 +88,11 @@ void ui() {
       PC.print(COMM_END);
     } else if ( c2 == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP EXTEND
       PC.print(F("Extending pp Mas"));
-      pp(OPEN);
+      pp(EXTEND);
       PC.print(COMM_END);
     } else if ( c2 == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP SHRINK
       PC.print(F("Shrinking pp Mas"));
-      pp(CLOSE);
+      pp(SHRINK);
       PC.print(COMM_END);
     }
   } else if ( c == 'r' ) {

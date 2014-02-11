@@ -1,4 +1,4 @@
-void slave_commands() {
+  void slave_commands() {
 
   if ( ! MASTER.available() )
     return;
@@ -63,11 +63,11 @@ void slave_commands() {
     MASTER.print(COMM_END);
   } else if ( c == EXTEND ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP EXTEND
 //    MASTER.print(F("Extending pp Mas"));
-    pp(OPEN);
+    pp(EXTEND);
     MASTER.print(COMM_END);
   } else if ( c == SHRINK ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PP SHRINK
 //    MASTER.print(F("Shrinking pp Mas"));
-    pp(CLOSE);
+    pp(SHRINK);
     MASTER.print(COMM_END);
   }
 

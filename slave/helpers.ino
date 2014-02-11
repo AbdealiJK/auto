@@ -33,7 +33,7 @@ void piston(int v) {
 }
 
 void pp(int v) {
-  digitalWrite(PP_PIN, v == OPEN);
+  digitalWrite(PP_PIN, v == EXTEND);
 }
 
 // ------------------------------------------------
