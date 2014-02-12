@@ -1,12 +1,12 @@
-#define MASTER              Serial
+#define MASTER              Serial1
 
 // Slave Pin chars
-char MOTOR_1             = 3,
-     MOTOR_2             = 2,
+char MOTOR_1             = 2,
+     MOTOR_2             = 3,
      MOTOR_PWM           = 9,
-     PISTON_PIN          = 10,
+     PISTON_PIN          = A4,
      PP_PIN              = 8,
-     HOME_TRIP           = A3, // -1 means no trip available
+     HOME_TRIP           = 10, // -1 means no trip available
      MID_IR              = 12,
      HOME_TRIPPED        = LOW,
      MID_IR_FOUND        = LOW;

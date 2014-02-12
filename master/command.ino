@@ -3,7 +3,7 @@ void ui() {
   if ( ! PC.available() )
     return;
   Serial.println("In UI");
-  
+
   char c = PC.peek();
   Serial.print(F("Got :"));
   Serial.println(c);
@@ -111,18 +111,18 @@ void ui() {
           SLAVE.print(c2);
           SLAVE.print(vel);
           update(MID_TRIP);
-          while(1) {
+          while (1) {
             if ( q_stop() ) break;
             update(MID_TRIP);
             if ( mid_trip ) {
               SLAVE.print(STOP);
-              break; 
+              break;
             }
           }
-          
+
         } else {
           SLAVE.print(c2);
-          SLAVE.print(vel); 
+          SLAVE.print(vel);
         }
       }
       else {
@@ -144,16 +144,23 @@ void ui() {
       ladder();
     }
   } else if ( c == '3' ) {
-    delay(1);
     PC.read();
-    char c2 = PC.read();
-    if ( c2 == 'a' ) {
+    delay(1);
+    if ( PC.available() ) {
+      char c2 = PC.read();
+      if ( c2 == 'a' ) {
+        polewalk_init();
+      } else if ( c2 == 'b' ) {
+        polewalk_geton();
+      } else if ( c2 == 'c' ) {
+        polewalk();
+      } else if ( c2 == 'd' ) {
+        polewalk_getoff();
+      }
+    } else {
       polewalk_init();
-    } else if ( c2 == 'b' ) {
       polewalk_geton();
-    } else if ( c2 == 'c' ) {
       polewalk();
-    } else if ( c2 == 'd' ) {
       polewalk_getoff();
     }
   } else if ( c == '2' ) {
@@ -183,7 +190,7 @@ void ui() {
       seesaw_getoff();
     }
   }
-  
+
   /*else if ( c == PINS ) {
     slave_pins();
   }*/

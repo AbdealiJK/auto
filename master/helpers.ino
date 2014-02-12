@@ -59,7 +59,7 @@ void update(int tr) {
   } else if ( tr == COMM_TRIP ) {
     val = &comm_trip;  pin = COMM_TRIP;   tripped = COMM_TRIPPED;   loops = 1;
   } else if ( tr == LADDER_IR ) {
-    val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 1000;
+    val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 10000;
   } else if ( tr == COMM_IR ) {
     val = &comm_ir;  pin = COMM_IR;   tripped = COMM_IR_FOUND;   loops = 10000;
   } else if ( tr == MID_IR ) {
@@ -73,7 +73,7 @@ void update(int tr) {
       temp += digitalRead(pin);
     }
 
-    if ( temp > 0.7 * loops ) {
+    if ( temp > 0.9 * loops ) {
       if ( tripped == 1 ) {
         *val = 1;
       } else {
@@ -163,7 +163,7 @@ int q_stop () {
 }*/
 
 bool quit_or_continue() {
-  PC.println(F("Press 'c' ... "));
+  /*PC.println(F("Press 'c' ... "));
   int flag = 0;
   while ( 1 ) {
     if ( PC.available() && PC.peek() == 'q' ) return 1;
@@ -178,7 +178,8 @@ bool quit_or_continue() {
     if ( flag && !ladder_ir ) {
       return 0;
     }
-  }
+  }*/
+  delay(1000);
 }
 
 /*

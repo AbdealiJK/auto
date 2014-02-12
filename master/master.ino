@@ -2,8 +2,8 @@
 #define SLAVE               Serial1
 
 // Pins
-#define MOTOR_1             2
-#define MOTOR_2             3
+#define MOTOR_1             3
+#define MOTOR_2             2
 #define MOTOR_PWM           9
 
 #define PISTON_PIN          11
@@ -11,7 +11,7 @@
 
 #define HOME_TRIP           10 // -1 means no trip available
 #define MID_TRIP            A4
-#define COMM_TRIP           MISO
+#define COMM_TRIP           A3//MISO
 #define LADDER_IR           8
 #define COMM_IR             SCK
 #define MID_IR              12
@@ -114,17 +114,18 @@ void loop() {
 //  }
 //  PC.println("Leave the childbot on polewalk");
 //  pp(OPEN);
+//
+//  polewalk_init();
+//  QUIT_OR_CONTINUE
+//  polewalk_geton();
+//  QUIT_OR_CONTINUE
+//  polewalk();
+//  QUIT_OR_CONTINUE
+//  polewalk_getoff();
 
-  polewalk_init();
-  QUIT_OR_CONTINUE
-  polewalk_geton();
-  QUIT_OR_CONTINUE
-  polewalk();
-  QUIT_OR_CONTINUE
-  polewalk_getoff();
-  
   while (PC.available())
     PC.read();
+
 
 
   while (SLAVE.available())
