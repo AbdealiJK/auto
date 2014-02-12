@@ -153,3 +153,48 @@ int q_stop () {
   return 0;
 }
 
+
+
+void go_home(char ch)
+{
+  
+  if( ch == BOTH )
+  {
+    run( LEFT,  HOME , H_VEL);
+    run( RIGHT, HOME , H_VEL);
+  }
+  else if( ch == LEFT )
+  {
+      run( LEFT,  HOME , H_VEL);
+  }
+  else if( ch == RIGHT )
+  {
+      run( RIGHT,  HOME , H_VEL);
+  }  
+  else
+    return;
+    
+    while ( l_running || r_running ) {
+      if ( q_stop() ) break;
+    }
+}
+void go_mid(int vel)
+{
+  go_home(BOTH);
+  run(LEFT, MID, vel);
+  while (l_running ) {
+    if ( q_stop() ) break;
+    update(MID_IR);
+    if ( mid_ir ) {
+      run ( LEFT, STOP, 0 );
+      PC.print(F("IR reached.... "));
+      break;
+    }
+  }
+  run(RIGHT, MID, vel);
+  while (r_running) {
+  if ( q_stop() ) break;
+  }
+
+}
+

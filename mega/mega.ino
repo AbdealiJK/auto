@@ -47,7 +47,13 @@
 #define SHRINK      0
 #define H_VEL 255
 
+
 int l_running = 0, r_running = 0;
+
+#define QUIT_OR_CONTINUE delay(1000);
+
+bool l_running = 0, r_running = 0;
+
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0;
 
