@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 
 void swing_init()
 {
@@ -51,5 +49,4 @@ void swing()
   swing_geton();
   swing_getoff();
 }
->>>>>>> 88da8667a53cf510c941e4c30bfbe1d553ee7ab7
 

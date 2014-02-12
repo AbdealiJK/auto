@@ -1,7 +1,6 @@
-
-<<<<<<< HEAD
-=======
-  // move left motor to extreme
+#define PW_MIRROR 0
+void polewalk_init()
+{// move left motor to extreme
   PC.println(F("Need to move both clamps to the extreme."));
   QUIT_OR_CONTINUE;
   go_home( BOTH );
@@ -76,4 +75,4 @@ void polewalk_getoff() {
   piston(RIGHT, OPEN);
   
 }
->>>>>>> 88da8667a53cf510c941e4c30bfbe1d553ee7ab7
+

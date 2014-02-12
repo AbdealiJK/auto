@@ -1,6 +1,3 @@
-
-<<<<<<< HEAD
-=======
 #define SS_VEL 255
 #define MID_TIME 500 // both clamps go to mid and go towards home for sli amount of time = MID_TIME
 void seesaw_init()
@@ -64,4 +61,3 @@ void seesaw()
   seesaw_getoff();
 }
 
->>>>>>> 88da8667a53cf510c941e4c30bfbe1d553ee7ab7

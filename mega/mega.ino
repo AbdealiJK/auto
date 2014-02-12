@@ -1,15 +1,15 @@
 #define PC                  Serial
 
 #define L_MOTOR_1           4
-#define L_MOTOR_2           5
-#define L_MOTOR_PWM         6
+#define L_MOTOR_2           6
+#define L_MOTOR_PWM         5
 #define L_PISTON_PIN        27
 #define L_HOME_TRIP         2 //
 #define L_HOME_TRIPPED      LOW
 
-#define R_MOTOR_1           7
-#define R_MOTOR_2           8
-#define R_MOTOR_PWM         9
+#define R_MOTOR_1           9
+#define R_MOTOR_2           7
+#define R_MOTOR_PWM         8
 #define R_PISTON_PIN        31
 #define R_HOME_TRIP         20 //
 #define R_HOME_TRIPPED      LOW
@@ -50,9 +50,9 @@
 
 int l_running = 0, r_running = 0;
 
-#define QUIT_OR_CONTINUE delay(1000);
+#define QUIT_OR_CONTINUE delay(200);
 
-bool l_running = 0, r_running = 0;
+
 
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0;

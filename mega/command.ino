@@ -111,6 +111,32 @@ void ui() {
     PC.println(F(" >> begun"));
 
   }
+  if( c == 'h')
+  {
+       PC.read();
+      go_home(BOTH);
+      
+  }
+  else if( c == 'm')
+  {
+      PC.read();
+      go_mid(BOTH);
+  }
+  else if( c =='1')
+  {
+      PC.read();
+      seesaw();
+  }
+  else if( c =='2')
+  {
+      PC.read();
+      swing();
+  }
+  else if( c =='3')
+  {
+      PC.read();
+      polewalk();
+  }  
   q_stop();
 }
 

@@ -180,7 +180,7 @@ void go_home(char ch)
 }
 void go_mid(int vel)
 {
-  go_home(BOTH);
+ // go_home(BOTH);
   run(LEFT, MID, vel);
   while (l_running ) {
     if ( q_stop() ) break;
