@@ -5,12 +5,17 @@ void run(int c, int dir, int pwm) {
     m2 = L_MOTOR_2;
     mp = L_MOTOR_PWM;
     l_running = dir;
+    
+   
   } else if ( c == RIGHT ) {
     m1 = R_MOTOR_1;
     m2 = R_MOTOR_2;
     mp = R_MOTOR_PWM;
     r_running = dir;
-  }
+        
+     }
+     
+       
   if ( m1 && m2 ) {
     digitalWrite(m1, dir / 2);
     digitalWrite(m2, dir % 2);
@@ -23,12 +28,14 @@ void l_home_trip_isr () {
     run(LEFT, STOP, 0);
     l_running = 0;
   }
+    Serial.print('L');
 }
 void r_home_trip_isr () {
   if ( r_running == HOME ) {
     run(RIGHT, STOP, 0);
     r_running = 0;
   }
+  Serial.print('R');
 }
 void mid_trip_isr () {
   if ( l_running == MID) {
@@ -38,7 +45,9 @@ void mid_trip_isr () {
   if ( r_running == MID) {
     run(RIGHT, STOP, 0);
     r_running = 0;
+    
   }
+    Serial.print('M');
 }
 
 void piston(int c, int v) {
@@ -144,41 +153,3 @@ int q_stop () {
   return 0;
 }
 
-void go_home(int choice)
-{
-  if( choice == BOTH )
-  {
-    run( LEFT,  HOME , H_VEL);
-    run( RIGHT, HOME , H_VEL);
-  }
-  else if( choice == LEFT )
-  {
-      run( LEFT,  HOME , H_VEL);
-  }
-  else if( choice == RIGHT )
-  {
-      run( RIGHT,  HOME , H_VEL);
-  }  
-    while ( l_running || r_running ) {
-      if ( q_stop() ) break;
-    }
-}
-void go_mid()
-{
-  go_home();
-  run(LEFT, MID, SS_VEL);
-  while (l_running) ) {
-    if ( q_stop() ) break;
-    update(MID_IR);
-    if ( mid_ir ) {
-      run ( LEFT, STOP, 0 );
-      PC.print(F("IR reached.... "));
-      break;
-    }
-  }
-  run(RIGHT, MID, SS_VEL);
-  while (r_running) {
-  if ( q_stop() ) break;
-  }
-
-}

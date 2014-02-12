@@ -1,27 +1,30 @@
 #define PC                  Serial
 
-#define L_MOTOR_1           3
-#define L_MOTOR_2           2
-#define L_MOTOR_PWM         9
-#define L_PISTON_PIN        11
-#define L_HOME_TRIP         10 // -1 means no trip available
-#define L_HOME_TRIPPED      HIGH
+#define L_MOTOR_1           4
+#define L_MOTOR_2           5
+#define L_MOTOR_PWM         6
+#define L_PISTON_PIN        27
+#define L_HOME_TRIP         2 //
+#define L_HOME_TRIPPED      LOW
 
-#define R_MOTOR_1           3
-#define R_MOTOR_2           2
+#define R_MOTOR_1           7
+#define R_MOTOR_2           8
 #define R_MOTOR_PWM         9
-#define R_PISTON_PIN        11
-#define R_HOME_TRIP         10 // -1 means no trip available
-#define R_HOME_TRIPPED      HIGH
+#define R_PISTON_PIN        31
+#define R_HOME_TRIP         20 //
+#define R_HOME_TRIPPED      LOW
 
-#define L_PP_PIN            A0
-#define R_PP_PIN            A0
+#define R_HOME_TRIP_INT     3
+#define L_HOME_TRIP_INT     0
+#define MID_TRIP_INT        1
+#define L_PP_PIN            29
+#define R_PP_PIN            33
 
-#define MID_TRIP            A4
-#define COMM_TRIP           A3
-#define LADDER_IR           8
-#define COMM_IR             SCK
-#define MID_IR              12
+#define MID_TRIP            3 //
+#define COMM_TRIP           21 //
+#define LADDER_IR           -1 
+#define COMM_IR             -1
+#define MID_IR              18 //
 #define MID_TRIPPED         LOW
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
@@ -44,7 +47,7 @@
 #define SHRINK      0
 #define H_VEL 255
 
-bool l_running = 0, r_running = 0;
+int l_running = 0, r_running = 0;
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0;
 
@@ -71,9 +74,9 @@ void setup() {
   pinMode(COMM_IR, INPUT);
   pinMode(MID_IR, INPUT);
 
-  attachInterrupt(L_HOME_TRIP, l_home_trip_isr, HIGH);
-  attachInterrupt(R_HOME_TRIP, r_home_trip_isr, HIGH);
-  attachInterrupt(MID_TRIP, mid_trip_isr, HIGH);
+  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
+  attachInterrupt(R_HOME_TRIP_INT, r_home_trip_isr, HIGH);
+  attachInterrupt(MID_TRIP_INT, mid_trip_isr, HIGH);
 }
 
 void loop() {
@@ -98,7 +101,7 @@ void loop() {
     Serial.print("\tMID_IR : ");
     Serial.print(digitalRead(MID_IR));
   */
-  Serial.println(F("\tmaster"));
+  Serial.println(F("\tloop"));
 
   delay(100);
 
