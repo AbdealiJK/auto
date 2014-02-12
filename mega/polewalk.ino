@@ -6,12 +6,12 @@ void polewalk_init() {
   // move left motor to extreme
   PC.println(F("Need to move both clamps to the extreme."));
   QUIT_OR_CONTINUE;
-  go_home(BOTH);
+  go_home( BOTH );
   // move both motors to mid
   PC.println(F("Move both clamps to mid"));
   QUIT_OR_CONTINUE;
-  move_mid();
-  PC.println("Stopped both motors !");
+  go_mid(255);
+  PC.println(F("Stopped both motors !"));
   
   if( PW_MIRROR )
   {
@@ -45,66 +45,18 @@ void polewalk_geton() {
 void polewalk() {
   PC.print(F("............. Starting Pole Walk "));
 
-  piston(LEFT,CLOSE);
-  piston(RIGHT,OPEN);
-  
   // move left to extreme, move right to extreme
-  PC.println(F("Need to move left clamp to the extreme."));
+  PC.println(F("Need to unclamp left and move both to the extreme."));
   QUIT_OR_CONTINUE;
-
-  piston(OPEN);
-  while ( run( HOME, 255 ) ) {
-    if ( q_stop() ) break;
-  }
-
-  PC.println(F("Need to open and move right clamp to the extreme."));
-  SLAVE.print(MOVE);
-  SLAVE.print(-255);
-  listen();
-
-
-  // clamp left
-  PC.println(F("Left clamp needs to be clamped now."));
-  QUIT_OR_CONTINUE;
-  piston(CLOSE);
+  piston(RIGHT, CLOSE);
+  piston(LEFT, OPEN);
+  go_home(BOTH); // moves both motor home simultaenolusly
+  piston(LEFT, CLOSE);
   delay(500);
-  SLAVE.print(OPEN);
-
-  PC.println(F("Move master to mid first and then slave to mid"));
-  QUIT_OR_CONTINUE;
-  while ( run( MID, 255 ) ) {
-    if ( q_stop() ) break;
-    update(MID_IR);
-    if ( mid_ir ) {
-      run ( STOP, 0 );
-      PC.print(F("IR reached.... "));
-      break;
-    }
-  }
-
-  PC.print(F("Need to move slave"));
-  //  QUIT_OR_CONTINUE;
-  SLAVE.print(MOVE);
-  SLAVE.print(150);
-  PC.print(F("Slave moving "));
-  update(MID_TRIP);
-  while (1) {
-    if ( q_stop() ) break;
-    update(MID_TRIP);
-    if ( mid_trip ) {
-      SLAVE.print(STOP);
-      break;
-    }
-  }
-  PC.println("Stopped both motors !");
-  listen();
-  SLAVE.print(SHRINK);
-  pp(EXTEND);
-
-  PC.println(F("Right clamp needs to clamp now"));
-  QUIT_OR_CONTINUE;
-  //MSLAVE.print(CLOSE);
-
+  piston(RIGHT, OPEN);
+  go_mid(255); // moves both to home, then moves left to mid and then right
+  piston(RIGHT, CLOSE);
+  pp(LEFT, EXTEND);
   PC.println(F("Polewalk completed .... "));
 
 }
@@ -118,11 +70,11 @@ void polewalk_getoff() {
   while ( ! comm_ir ) {
     update(COMM_IR);
   }
+  PC.println(F("Fingers detected! Waiting for the manual bot to stabilize"));
   delay(3000);
-
-  SLAVE.print(SHRINK);
-  pp(SHRINK);
-  piston(OPEN);
-  SLAVE.print(OPEN);
-  delay(5000);
+  pp(LEFT, SHRINK);
+  pp(RIGHT, SHRINK);
+  piston(LEFT, OPEN);
+  piston(RIGHT, OPEN);
+  
 }

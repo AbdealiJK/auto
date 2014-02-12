@@ -144,30 +144,34 @@ int q_stop () {
   return 0;
 }
 
-void go_home(int choice)
+void go_home(char ch)
 {
-  if( choice == BOTH )
+  
+  if( ch == BOTH )
   {
     run( LEFT,  HOME , H_VEL);
     run( RIGHT, HOME , H_VEL);
   }
-  else if( choice == LEFT )
+  else if( ch == LEFT )
   {
       run( LEFT,  HOME , H_VEL);
   }
-  else if( choice == RIGHT )
+  else if( ch == RIGHT )
   {
       run( RIGHT,  HOME , H_VEL);
   }  
+  else
+    return;
+    
     while ( l_running || r_running ) {
       if ( q_stop() ) break;
     }
 }
-void go_mid()
+void go_mid(int vel)
 {
-  go_home();
-  run(LEFT, MID, SS_VEL);
-  while (l_running) ) {
+  go_home(BOTH);
+  run(LEFT, MID, vel);
+  while (l_running ) {
     if ( q_stop() ) break;
     update(MID_IR);
     if ( mid_ir ) {
@@ -176,7 +180,7 @@ void go_mid()
       break;
     }
   }
-  run(RIGHT, MID, SS_VEL);
+  run(RIGHT, MID, vel);
   while (r_running) {
   if ( q_stop() ) break;
   }

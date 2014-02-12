@@ -1,5 +1,4 @@
-#define SW_H_VEL 255
-#define SW_VEL 255
+
 void swing_init()
 {
 
@@ -7,11 +6,11 @@ void swing_init()
   // move left motor to extreme
   PC.println(F("Need to move both clamps to the extreme."));
   QUIT_OR_CONTINUE;
-  go_home();
+  go_home( BOTH );// moves both motor home simultaenolusly
 
   PC.println(F("Both clamps go to mid."));
   QUIT_OR_CONTINUE;
-  go_mid();
+  go_mid(255);// moves both to home, then moves left to mid and then right
 
 
 }
