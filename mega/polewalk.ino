@@ -1,13 +1,22 @@
 void polewalk_init() {
   PC.println(F("POLEWALK init"));
+  update(COMM_TRIP);  
+  if( ! comm_ir)
+  {
+    PC.println(F("next : both home"));
+    QUIT_OR_CONTINUE;
+    go_home( BOTH, 255 );
   
-  PC.println(F("next : both home"));
-  QUIT_OR_CONTINUE;
-  go_home( BOTH, 200 );
+    PC.println(F("next : both mid"));
+    QUIT_OR_CONTINUE;
+    go_mid(BOTH, 255);
+  }
+  else{
+    PC.println(F("Left already at middle. moving right to middle"));
+    QUIT_OR_CONTINUE;
+    go_mid(RIGHT, 255);
+  }
   
-  PC.println(F("next : both mid"));
-  QUIT_OR_CONTINUE;
-  go_mid(BOTH, 200);
   PC.println(F("both stopped"));
   run(BOTH, STOP, 0);
   
@@ -36,7 +45,7 @@ void polewalk_geton() {
   piston(LEFT,CLOSE);
   piston(RIGHT,CLOSE);
   
-  delay(200);
+  delay(255);
   pp(LEFT,SHRINK);
   pp(RIGHT,SHRINK);
   PC.println(F("POLEWALK goton"));
@@ -49,12 +58,14 @@ void polewalk() {
   QUIT_OR_CONTINUE;
   if ( MIRROR ) {
     piston(RIGHT, CLOSE);
+    delay(500);
     piston(LEFT, OPEN);
   } else {
-    piston(RIGHT, OPEN);
     piston(LEFT, CLOSE);
+    delay(500);
+    piston(RIGHT, OPEN);
   }
-  go_home(BOTH, 200);
+  go_home(BOTH, 255);
 
   PC.println(F("next : clamp / unclamp"));
   QUIT_OR_CONTINUE;
@@ -64,17 +75,17 @@ void polewalk() {
     piston(RIGHT, OPEN);
     delay(500);
   } else {
-    piston(LEFT, OPEN);
-    delay(500);
     piston(RIGHT, CLOSE);
+    delay(500);
+    piston(LEFT, OPEN);
     delay(500);
   }
   PC.println(F("next : both mid"));
   QUIT_OR_CONTINUE;
-  go_mid(BOTH, 200); // moves both to home, then moves left to mid and then right
+  go_mid(BOTH, 255); // moves both to home, then moves left to mid and then right
   piston(RIGHT, CLOSE);
-  pp(LEFT, EXTEND);
-  pp(RIGHT, SHRINK);
+  pp(RIGHT, EXTEND);
+  pp(LEFT, SHRINK);
 
   PC.println(F("POLEWALK task done"));
 
@@ -82,7 +93,8 @@ void polewalk() {
 
 void polewalk_getoff() {
   PC.println(F("POLEWALK getoff"));
-
+  piston(LEFT, CLOSE);
+  piston(RIGHT, CLOSE);
   PC.println(F("next : unclamp ... waiting on comm ir"));
   update(COMM_IR);
   while ( ! comm_ir ) {

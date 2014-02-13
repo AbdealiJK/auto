@@ -123,7 +123,7 @@ void ui() {
     go_mid(BOTH, 255);
   } else if ( c == '4' ) {
     PC.read();
-    delay(1);
+/*    delay(1);
     if ( PC.available() ) {
       char c2 = PC.read();
       if ( c2 == 'a' ) {
@@ -141,6 +141,7 @@ void ui() {
       ladder();
       ladder_getoff();
     }
+*/
   } else if ( c == '3' ) {
     PC.read();
     delay(1);
