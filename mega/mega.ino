@@ -1,9 +1,14 @@
+#include <PS2X_lib.h>
+
 #define PC                  Serial
 
 #define MIRROR              0
 #define LADDER_TIME         200
 #define SEESAW_TIME         1500
-#define SWING_TIME     1000
+#define SWING_TIME          1000
+
+//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+ #define QUIT_OR_CONTINUE delay(200);
 
 #define L_MOTOR_1           4
 #define L_MOTOR_2           6
@@ -55,12 +60,14 @@
 
 int l_running = 0, r_running = 0;
 
-//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
- #define QUIT_OR_CONTINUE delay(200);
+PS2X ps2x;
+int error = 0;
+byte type = 0, vibrate = 0, ps2_on = 0,
+     l_piston_state = 0, r_piston_state = 0,
+     l_pp_state = 0, r_pp_state = 0;
 
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0;
-bool a=0;
 
 void setup() {
   PC.begin(57600);
@@ -88,21 +95,14 @@ void setup() {
   attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
   attachInterrupt(R_HOME_TRIP_INT, r_home_trip_isr, HIGH);
   attachInterrupt(MID_TRIP_INT, mid_trip_isr, HIGH);
+  
+  ps2_init();
 }
 
 void loop() {
-  ui();
- 
- // swing test
- /*if(!a)
- {
-        swing_init();
-        swing_geton();
-        swing();
-        swing_getoff();
-        a=1;
- } */
-
+  pc_ui();
+  ps2_ui();
+  
   while (PC.available())
     PC.read();
 
@@ -125,7 +125,7 @@ void loop() {
     Serial.print(digitalRead(MID_IR));
   */
 
-  delay(100);
+  delay(10);
 
 
 }

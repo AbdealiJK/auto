@@ -1,7 +1,7 @@
 
 void seesaw_init() {
   PC.println(F("SEESAW init"));
-  
+
   PC.println(F("next : both home"));
   QUIT_OR_CONTINUE;
   go_home(BOTH, 200);
@@ -11,7 +11,7 @@ void seesaw_init() {
   long int start_time = millis();
   run(BOTH, MID, 200);
   while (l_running || r_running ) {
-  if ( q_stop() )   break;
+    if ( q_stop() )   break;
     if ( millis() - start_time > SEESAW_TIME ) {
       run(BOTH, STOP, 0);
       break;

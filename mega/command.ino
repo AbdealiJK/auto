@@ -1,4 +1,4 @@
-void ui() {
+void pc_ui() {
 
   if ( ! PC.available() )
     return;

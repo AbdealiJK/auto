@@ -1,4 +1,3 @@
-
 void swing_init() {
   PC.println(F("SWING init"));
   
@@ -39,13 +38,11 @@ void swing() {
 }
 void swing_getoff() {
   PC.println(F("SWING get off"));
-  update(COMM_TRIP);
+  update(COMM_IR);
 
   PC.println(F("next : unclamp both ... waiting on comm trip"));
-  while ( 1 ) {
-    if ( comm_trip)
-      break;
-    update(COMM_TRIP);
+  while ( ! comm_ir ) {
+    update(COMM_IR);
   }
   piston(RIGHT, OPEN);
   piston(LEFT, OPEN);

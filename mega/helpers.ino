@@ -223,6 +223,14 @@ int q_stop () {
     PC.println(F("Stopping all motors ! > Manual stop"));
     return 1;
   }
+  if ( ps2_on ) {
+    ps2x.read_gamepad(false, vibrate);          //read controller and set large motor to spin at 'vibrate' speed
+    if ( ps2x.Button(PSB_L1) ) { // print stick values if either is TRUE
+      return 1;
+    }
+    delay(10);
+  }
+
   return 0;
 }
 
@@ -234,6 +242,13 @@ bool quit_or_continue() {
       PC.read();
       return 0;
     }
+  }
+  if ( ps2_on ) {
+    ps2x.read_gamepad(false, vibrate);
+    if ( ps2x.Button(PSB_L1) ) {
+      return 0;
+    }
+    delay(10);
   }
 }
 
