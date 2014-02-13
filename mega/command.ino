@@ -7,11 +7,20 @@ void ui() {
   char c = PC.peek();
   Serial.print(F("Got :"));
   Serial.println(c);
-  if ( c == 'l' || c == 'r' ) {
+  if ( c == LEFT || c == RIGHT || c == BOTH ) {
     PC.read();
     while (!PC.available());
     char c2 = PC.read();
-    if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
+    if ( c2 == 'h' ) {
+      int vel = pc_get_int();
+      PC.print(c);
+      PC.print(" - ");
+      PC.print(F("going home at pwm = "));
+      PC.print(vel);
+      PC.print(F(" ... "));
+      go_home(c, abs(vel));
+      PC.println(F("DONE"));
+    } else if ( c2 == 'v' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VELOCITY
       int vel = pc_get_int();
       PC.print(c);
       PC.print(" - ");
@@ -93,7 +102,7 @@ void ui() {
     update(LADDER_IR);
     update(MID_IR);
     update(COMM_IR);
-    PC.println(F(">>> data for master : "));
+    PC.println(F(">>> DATA : "));
     PC.print(F(" LEFT home-trip:"));
     PC.println(l_home_trip);
     PC.print(F(" RIGHT home-trip:"));
@@ -109,34 +118,77 @@ void ui() {
     PC.print(F(" comm-ir:"));
     PC.println(comm_ir);
     PC.println(F(" >> begun"));
-
-  }
-  if( c == 'h')
-  {
-       PC.read();
-      go_home(BOTH);
-      
-  }
-  else if( c == 'm')
-  {
-      PC.read();
-      go_mid(BOTH);
-  }
-  else if( c =='1')
-  {
-      PC.read();
-      seesaw();
-  }
-  else if( c =='2')
-  {
-      PC.read();
-      swing();
-  }
-  else if( c =='3')
-  {
-      PC.read();
+  } else if ( c == 'm') {
+    PC.read();
+    go_mid(BOTH, 255);
+  } else if ( c == '4' ) {
+    PC.read();
+    delay(1);
+    if ( PC.available() ) {
+      char c2 = PC.read();
+      if ( c2 == 'a' ) {
+        ladder_init();
+      } else if ( c2 == 'b' ) {
+        ladder_geton();
+      } else if ( c2 == 'c' ) {
+        ladder();
+      } else if ( c2 == 'd' ) {
+        ladder_getoff();
+      }
+    } else {
+      ladder_init();
+      ladder_geton();
+      ladder();
+      ladder_getoff();
+    }
+  } else if ( c == '3' ) {
+    PC.read();
+    delay(1);
+    if ( PC.available() ) {
+      char c2 = PC.read();
+      if ( c2 == 'a' ) {
+        polewalk_init();
+      } else if ( c2 == 'b' ) {
+        polewalk_geton();
+      } else if ( c2 == 'c' ) {
+        polewalk();
+      } else if ( c2 == 'd' ) {
+        polewalk_getoff();
+      }
+    } else {
+      polewalk_init();
+      polewalk_geton();
       polewalk();
-  }  
+      polewalk_getoff();
+    }
+  } else if ( c == '2' ) {
+    delay(1);
+    PC.read();
+    char c2 = PC.read();
+    if ( c2 == 'a' ) {
+      swing_init();
+    } else if ( c2 == 'b' ) {
+      swing_geton();
+    } else if ( c2 == 'c' ) {
+      swing();
+    } else if ( c2 == 'd' ) {
+      swing_getoff();
+    }
+  } else if ( c == '1' ) {
+    delay(1);
+    PC.read();
+    char c2 = PC.read();
+    if ( c2 == 'a' ) {
+      seesaw_init();
+    } else if ( c2 == 'b' ) {
+      seesaw_geton();
+    } else if ( c2 == 'c' ) {
+      seesaw();
+    } else if ( c2 == 'd' ) {
+      seesaw_getoff();
+    }
+  }
+
   q_stop();
 }
 

@@ -1,35 +1,26 @@
-#define SS_VEL 255
-#define MID_TIME 500 // both clamps go to mid and go towards home for sli amount of time = MID_TIME
-void seesaw_init()
-{
-
-  PC.println(F(">>>>>>>>>> Setting up Seesaw"));
-  // move left motor to extreme
-  PC.println(F("Need to move both clamps to the extreme."));
+#define SEESAW_TIME     1500
+void seesaw_init() {
+  PC.println(F("SEESAW init"));
+  
+  PC.println(F("next : both home"));
   QUIT_OR_CONTINUE;
-  go_home( BOTH );// moves both motor home simultaenolusly
+  go_home(BOTH, 200);
 
-  PC.println(F("Both clamps go to mid."));
-  QUIT_OR_CONTINUE;
-  go_mid(255);// moves both to home, then moves left to mid and then right
-
-  PC.println(F("Both clamps go out slightly."));
+  PC.println(F("next : both move home with delay"));
   QUIT_OR_CONTINUE;
   long int start_time = millis();
-  run(RIGHT, HOME, SS_VEL);
-  run(RIGHT, HOME, SS_VEL);
+  run(BOTH, MID, 200);
   while (l_running || r_running ) {
-  if ( q_stop() ) break;
-    if ( millis() - start_time > MID_TIME ) {
-      run ( LEFT, STOP, 0 );
-      run ( RIGHT, STOP, 0 );
+  if ( q_stop() )   break;
+    if ( millis() - start_time > SEESAW_TIME ) {
+      run(BOTH, STOP, 0);
       break;
     }
   }
+  PC.println(F("SEESAW init done"));
 }
-void seesaw_geton()
-{
-  PC.println(F(">>>>>>>>>> Getting on to Seesaw"));
+void seesaw_geton() {
+  PC.println(F("SEESAW get on"));
   // Clamp
   PC.println(F("Need to clamp both on seesaw... "));
   update(COMM_TRIP);
@@ -40,24 +31,19 @@ void seesaw_geton()
   piston(LEFT, CLOSE);
 
 }
-void seesaw_getoff()
-{
+void seesaw() {
+}
+void seesaw_getoff() {
   PC.println(F("FINISH SEESAW ... Need to UNclamp both on seesaw."));
-  update(COMM_IR);
+  update(COMM_TRIP);
 
   while ( 1 ) {
-    if (! comm_ir)
+    if (! comm_trip)
       break;
-    update(COMM_IR);
+    update(COMM_TRIP);
   }
   piston(RIGHT, OPEN);
   piston(LEFT, OPEN);
   PC.println(F(">>>>>>>>>> Seesaw fully done"));
-}
-void seesaw()
-{
-  seesaw_init();
-  seesaw_geton();
-  seesaw_getoff();
 }
 

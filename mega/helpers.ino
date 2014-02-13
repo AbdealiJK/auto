@@ -1,79 +1,76 @@
+// ----------------------------------------------------------------- MOTOR RUN
 void run(int c, int dir, int pwm) {
   int m1 = 0, m2 = 0, mp = 0;
-  if ( c == LEFT ) {
-    m1 = L_MOTOR_1;
-    m2 = L_MOTOR_2;
-    mp = L_MOTOR_PWM;
-    l_running = dir;
-    
-   
-  } else if ( c == RIGHT ) {
-    m1 = R_MOTOR_1;
-    m2 = R_MOTOR_2;
-    mp = R_MOTOR_PWM;
-    r_running = dir;
-        
-     }
-     
-       
-  if ( m1 && m2 ) {
-    digitalWrite(m1, dir / 2);
-    digitalWrite(m2, dir % 2);
-    analogWrite(mp, abs(pwm));
+  if ( c == LEFT || c == BOTH ) {
+    update(L_HOME_TRIP);
+    update(MID_TRIP);
+    if ( ! ( (dir == HOME && l_home_trip) || (dir == MID && mid_trip)  ) ) {
+      digitalWrite(L_MOTOR_1, dir / 2);
+      digitalWrite(L_MOTOR_2, dir % 2);
+      analogWrite(L_MOTOR_PWM, abs(pwm));
+      l_running = dir;
+    }
+  }
+  if ( c == RIGHT || c == BOTH ) {
+    update(R_HOME_TRIP);
+    update(MID_TRIP);
+    if ( !( (dir == HOME && r_home_trip) || (dir == MID && mid_trip) ) ) {
+      digitalWrite(R_MOTOR_1, dir / 2);
+      digitalWrite(R_MOTOR_2, dir % 2);
+      analogWrite(R_MOTOR_PWM, abs(pwm));
+      r_running = dir;
+    }
   }
 }
 
-void l_home_trip_isr () {
-  if ( l_running == HOME ) {
-    run(LEFT, STOP, 0);
-    l_running = 0;
+// ----------------------------------------------------------------- MOTOR HELPERS
+void go_home(char ch, int vel) {
+  run( ch,  HOME , vel);
+
+  while ( l_running || r_running ) {
+    if ( q_stop() ) break;
+    if ( ! l_running ) run(LEFT,  STOP, 0);
+    if ( ! r_running ) run(RIGHT, STOP, 0);
   }
-    Serial.print('L');
-}
-void r_home_trip_isr () {
-  if ( r_running == HOME ) {
-    run(RIGHT, STOP, 0);
-    r_running = 0;
-  }
-  Serial.print('R');
-}
-void mid_trip_isr () {
-  if ( l_running == MID) {
-    run(LEFT, STOP, 0);
-    l_running = 0;
-  }
-  if ( r_running == MID) {
-    run(RIGHT, STOP, 0);
-    r_running = 0;
-    
-  }
-    Serial.print('M');
 }
 
+void go_mid(int c, int vel) {
+  if ( c == LEFT || c == BOTH ) {
+    run(LEFT, MID, vel);
+    while (l_running ) {
+      if ( q_stop() ) break;
+      update(MID_IR);
+      if ( mid_ir ) {
+        run ( LEFT, STOP, 0 );
+        PC.print(F("IR reached.... "));
+        break;
+      }
+    }
+  }
+  if ( c == RIGHT || c == BOTH ) {
+    run(RIGHT, MID, vel);
+    while (r_running) {
+      if ( q_stop() ) break;
+    }
+  }
+}
+
+// ----------------------------------------------------------------- SOLENOID
 void piston(int c, int v) {
-  int pin = 0;
-  if ( c == LEFT )
-    pin = L_PISTON_PIN;
-  else if ( c == RIGHT )
-    pin = R_PISTON_PIN;
-  if ( pin ) {
-    digitalWrite(pin, v == CLOSE);
-  }
+  if ( c == LEFT || c == BOTH )
+    digitalWrite(L_PISTON_PIN, v == CLOSE);
+  if ( c == RIGHT || c == BOTH )
+    digitalWrite(R_PISTON_PIN, v == CLOSE);
 }
 
 void pp(int c, int v) {
-  int pin = 0;
-  if ( c == LEFT )
-    pin = L_PP_PIN;
-  else if ( c == RIGHT )
-    pin = R_PP_PIN;
-  if ( pin ) {
-    digitalWrite(pin, v == EXTEND);
-  }
+  if ( c == LEFT || c == BOTH || c == MID )
+    digitalWrite(L_PP_PIN, v == EXTEND);
+  if ( c == RIGHT || c == BOTH )
+    digitalWrite(R_PP_PIN, v == EXTEND);
 }
 
-// -------------------------------------------------
-
+// ----------------------------------------------------------------- TRIP UPDATES
 void update(int tr) {
   long int temp = 0, lim = 0;
   bool *val;
@@ -119,8 +116,35 @@ void update(int tr) {
   }
 }
 
-// -------------------------------------------------
+// ----------------------------------------------------------------- MOTOR TRIP ISR
+void l_home_trip_isr () {
+  if ( l_running == HOME ) {
+    run(LEFT, STOP, 0);
+    l_running = 0;
+  }
+  //  Serial.print('L');
+}
+void r_home_trip_isr () {
+  if ( r_running == HOME ) {
+    run(RIGHT, STOP, 0);
+    r_running = 0;
+  }
+  //  Serial.print('R');
+}
+void mid_trip_isr () {
+  if ( l_running == MID) {
+    run(LEFT, STOP, 0);
+    l_running = 0;
+  }
+  if ( r_running == MID) {
+    run(RIGHT, STOP, 0);
+    r_running = 0;
 
+  }
+  //  Serial.print('M');
+}
+
+// ----------------------------------------------------------------- MISC
 int pc_get_int() {
   int temp = 0, next_val, neg = 1;
   char temp_c;
@@ -153,48 +177,14 @@ int q_stop () {
   return 0;
 }
 
-
-
-void go_home(char ch)
-{
-  
-  if( ch == BOTH )
-  {
-    run( LEFT,  HOME , H_VEL);
-    run( RIGHT, HOME , H_VEL);
-  }
-  else if( ch == LEFT )
-  {
-      run( LEFT,  HOME , H_VEL);
-  }
-  else if( ch == RIGHT )
-  {
-      run( RIGHT,  HOME , H_VEL);
-  }  
-  else
-    return;
-    
-    while ( l_running || r_running ) {
-      if ( q_stop() ) break;
-    }
-}
-void go_mid(int vel)
-{
- // go_home(BOTH);
-  run(LEFT, MID, vel);
-  while (l_running ) {
-    if ( q_stop() ) break;
-    update(MID_IR);
-    if ( mid_ir ) {
-      run ( LEFT, STOP, 0 );
-      PC.print(F("IR reached.... "));
-      break;
+bool quit_or_continue() {
+  PC.println(F("Press 'c' ... "));
+  while ( 1 ) {
+    if ( PC.available() && PC.peek() == 'q' ) return 1;
+    if ( PC.available() && PC.peek() == 'c' ) {
+      PC.read();
+      return 0;
     }
   }
-  run(RIGHT, MID, vel);
-  while (r_running) {
-  if ( q_stop() ) break;
-  }
-
 }
 

@@ -1,78 +1,101 @@
-#define PW_MIRROR 0
-void polewalk_init()
-{// move left motor to extreme
-  PC.println(F("Need to move both clamps to the extreme."));
-  QUIT_OR_CONTINUE;
-  go_home( BOTH );
-  // move both motors to mid
-  PC.println(F("Move both clamps to mid"));
-  QUIT_OR_CONTINUE;
-  go_mid(255);
-  PC.println(F("Stopped both motors !"));
+void polewalk_init() {
+  PC.println(F("POLEWALK init"));
   
-  if( PW_MIRROR )
-  {
-    pp(LEFT,EXTEND);
-    pp(RIGHT,SHRINK);
-  }
-  else
-  {
+  PC.println(F("next : both home"));
+  QUIT_OR_CONTINUE;
+  go_home( BOTH, 200 );
+  
+  PC.println(F("next : both mid"));
+  QUIT_OR_CONTINUE;
+  go_mid(BOTH, 200);
+  PC.println(F("both stopped"));
+  run(BOTH, STOP, 0);
+  
+  PC.println(F("both pp"));
+  if( MIRROR ) {
     pp(RIGHT,EXTEND);
     pp(LEFT,SHRINK);
   }
+  else {
+    pp(LEFT,EXTEND);
+    pp(RIGHT,SHRINK);
+  }
+  PC.println(F("POLEWALK init done"));
 }
 
 void polewalk_geton() {
-
-  PC.println(F(">>>>>>>>>> Getting on to Pole Walk"));
+  PC.println(F("POLEWALK geton"));
 
   // Clamp
-  PC.println(F("Need to clamp both on Pole Walk... "));
+  PC.println(F("next : both clamp ... waiting on comm trip"));
   update(COMM_TRIP);
   while ( comm_trip ) {
     update(COMM_TRIP);
   }
+  PC.println(F("somebody threw me"));
   piston(LEFT,CLOSE);
   piston(RIGHT,CLOSE);
+  
   delay(200);
   pp(LEFT,SHRINK);
   pp(RIGHT,SHRINK);
+  PC.println(F("POLEWALK goton"));
 }
 
 void polewalk() {
-  PC.print(F("............. Starting Pole Walk "));
+  PC.println(F("POLEWALK task"));
 
-  // move left to extreme, move right to extreme
-  PC.println(F("Need to unclamp left and move both to the extreme."));
+  PC.println(F("next : both home"));
   QUIT_OR_CONTINUE;
-  piston(RIGHT, CLOSE);
-  piston(LEFT, OPEN);
-  go_home(BOTH); // moves both motor home simultaenolusly
-  piston(LEFT, CLOSE);
-  delay(500);
-  piston(RIGHT, OPEN);
-  go_mid(255); // moves both to home, then moves left to mid and then right
+  if ( MIRROR ) {
+    piston(RIGHT, CLOSE);
+    piston(LEFT, OPEN);
+  } else {
+    piston(RIGHT, OPEN);
+    piston(LEFT, CLOSE);
+  }
+  go_home(BOTH, 200);
+
+  PC.println(F("next : clamp / unclamp"));
+  QUIT_OR_CONTINUE;
+  if ( MIRROR ) {
+    piston(LEFT, CLOSE);
+    delay(500);
+    piston(RIGHT, OPEN);
+    delay(500);
+  } else {
+    piston(LEFT, OPEN);
+    delay(500);
+    piston(RIGHT, CLOSE);
+    delay(500);
+  }
+  PC.println(F("next : both mid"));
+  QUIT_OR_CONTINUE;
+  go_mid(BOTH, 200); // moves both to home, then moves left to mid and then right
   piston(RIGHT, CLOSE);
   pp(LEFT, EXTEND);
-  PC.println(F("Polewalk completed .... "));
+  pp(RIGHT, SHRINK);
+
+  PC.println(F("POLEWALK task done"));
 
 }
 
 void polewalk_getoff() {
-  PC.println(F("............. Get off of Pole Walk "));
+  PC.println(F("POLEWALK getoff"));
 
-  // move both motors to middle
-  PC.println(F("Need to UNclamp both on pole walk... "));
+  PC.println(F("next : unclamp ... waiting on comm ir"));
   update(COMM_IR);
   while ( ! comm_ir ) {
     update(COMM_IR);
   }
-  PC.println(F("Fingers detected! Waiting for the manual bot to stabilize"));
-  delay(3000);
-  pp(LEFT, SHRINK);
-  pp(RIGHT, SHRINK);
+  PC.println(F("fingers detected"));
+  delay(1000);
   piston(LEFT, OPEN);
   piston(RIGHT, OPEN);
+  delay(250);
+  pp(LEFT, SHRINK);
+  pp(RIGHT, SHRINK);
   
+  PC.println(F("POLEWALK gotoff"));
 }
 

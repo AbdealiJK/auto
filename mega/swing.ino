@@ -1,39 +1,47 @@
-
-void swing_init()
-{
-
-  PC.println(F(">>>>>>>>>> Setting up Swing"));
-  // move left motor to extreme
-  PC.println(F("Need to move both clamps to the extreme."));
+#define SWING_TIME     1000
+void swing_init() {
+  PC.println(F("SWING init"));
+  
+  PC.println(F("next : both home"));
   QUIT_OR_CONTINUE;
-  go_home( BOTH );// moves both motor home simultaenolusly
+  go_home(BOTH, 200);
 
-  PC.println(F("Both clamps go to mid."));
+  PC.println(F("next : both move home with delay"));
   QUIT_OR_CONTINUE;
-  go_mid(255);// moves both to home, then moves left to mid and then right
-
-
+  long int start_time = millis();
+  run(BOTH, MID, 200);
+  while (l_running || r_running ) {
+  if ( q_stop() )   break;
+    if ( millis() - start_time > SEESAW_TIME ) {
+      run(BOTH, STOP, 0);
+      break;
+    }
+  }  
+  PC.println(F("SWING init done"));
 }
-void swing_geton()
-{
-  PC.println(F(">>>>>>>>>> Getting on to Swing"));
-  // Clamp
-  PC.println(F("Need to clamp both on swing... "));
+void swing_geton() {
+  PC.println(F("SWING get on"));
+  
+  PC.println(F("next : clamp both ... waiting on comm trip"));
   update(COMM_TRIP);
   while ( comm_trip ) {
     update(COMM_TRIP);
   }
   piston(RIGHT, CLOSE);
   piston(LEFT, CLOSE);
-  
-  // !!!!!!!!!!!!!!!!!!!!! code for middle PP to be written !!!!!!!!!!!!!
 
+  PC.println(F("SWING got on"));
 }
-void swing_getoff()
-{
-  PC.println(F("FINISH SWING ... Need to UNclamp both on swing."));
+void swing() {
+  PC.println(F("SWING task"));
+  pp(MID, EXTEND);
+  PC.println(F("SWING task done"));
+}
+void swing_getoff() {
+  PC.println(F("SWING get off"));
   update(COMM_TRIP);
 
+  PC.println(F("next : unclamp both ... waiting on comm trip"));
   while ( 1 ) {
     if (! comm_trip)
       break;
@@ -41,12 +49,7 @@ void swing_getoff()
   }
   piston(RIGHT, OPEN);
   piston(LEFT, OPEN);
-  PC.println(F(">>>>>>>>>> Swing fully done"));
-}
-void swing()
-{
-  swing_init();
-  swing_geton();
-  swing_getoff();
+  pp(MID, SHRINK);
+  PC.println(F("SWING got off"));
 }
 
