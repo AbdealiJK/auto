@@ -175,6 +175,13 @@ void ui() {
     } else if ( c2 == 'd' ) {
       swing_getoff();
     }
+    else{
+        swing_init();
+        swing_geton();
+        swing();
+        swing_getoff();
+    
+    }
   } else if ( c == '1' ) {
     delay(1);
     PC.read();

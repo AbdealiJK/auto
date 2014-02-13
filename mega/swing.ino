@@ -12,7 +12,7 @@ void swing_init() {
   run(BOTH, MID, 200);
   while (l_running || r_running ) {
   if ( q_stop() )   break;
-    if ( millis() - start_time > SEESAW_TIME ) {
+    if ( millis() - start_time > SWING_TIME ) {
       run(BOTH, STOP, 0);
       break;
     }
@@ -34,7 +34,7 @@ void swing_geton() {
 }
 void swing() {
   PC.println(F("SWING task"));
-  pp(MID, EXTEND);
+  //pp(MID, EXTEND);
   PC.println(F("SWING task done"));
 }
 void swing_getoff() {
@@ -43,7 +43,7 @@ void swing_getoff() {
 
   PC.println(F("next : unclamp both ... waiting on comm trip"));
   while ( 1 ) {
-    if (! comm_trip)
+    if ( comm_trip)
       break;
     update(COMM_TRIP);
   }

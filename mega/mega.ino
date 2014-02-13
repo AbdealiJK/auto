@@ -52,11 +52,12 @@
 
 int l_running = 0, r_running = 0;
 
-#define QUIT_OR_CONTINUE if(quit_or_continue()) return
-  //delay(200);
+//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+ #define QUIT_OR_CONTINUE delay(200);
 
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0;
+bool a=0;
 
 void setup() {
   PC.begin(57600);
@@ -88,6 +89,16 @@ void setup() {
 
 void loop() {
   ui();
+ 
+ // swing test
+ /*if(!a)
+ {
+        swing_init();
+        swing_geton();
+        swing();
+        swing_getoff();
+        a=1;
+ } */
 
   while (PC.available())
     PC.read();
