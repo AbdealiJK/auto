@@ -1,4 +1,4 @@
-#define SEESAW_TIME     1500
+
 void seesaw_init() {
   PC.println(F("SEESAW init"));
   

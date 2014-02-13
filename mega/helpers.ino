@@ -55,6 +55,55 @@ void go_mid(int c, int vel) {
   }
 }
 
+void go_away(int c, int vel) {
+  if ( c == LEFT ) {
+    run(LEFT, MID, vel);
+    while (l_running ) {
+      if ( q_stop() ) break;
+    }
+  }
+  if ( c == RIGHT ) {
+    run(RIGHT, MID, vel);
+    while (r_running) {
+      if ( q_stop() ) break;
+    }
+  }
+}
+
+void go_up(int vel, int no) {
+  update(LADDER_IR);
+  int flag = 0, target_flag = 0, init_ladder_ir = ladder_ir;
+
+  run(LEFT, HOME, 200);
+  while ( l_running || r_running ) {
+    if ( q_stop() ) break;
+    update(LADDER_IR);
+    if ( flag % 2 == 0 && ladder_ir != init_ladder_ir ) {
+      flag++;
+    } else if ( flag % 2 == 1 && ladder_ir == init_ladder_ir ) {
+      flag++;
+    }
+    if ( flag == target_flag ) {
+      run( LEFT, STOP, 0 );
+      PC.print(target_flag);
+      PC.println(F(" changes detected by IR "));
+      break;
+    }
+  }
+
+  long start_time = millis();
+  run( LEFT, MID, 255 );
+  while ( l_running ) {
+    if ( q_stop() ) break;
+    if ( millis() - start_time > LADDER_TIME ) {
+      run(BOTH, STOP, 0);
+      PC.println(F(" time delay done "));
+      break;
+    }
+  }
+
+}
+
 // ----------------------------------------------------------------- SOLENOID
 void piston(int c, int v) {
   if ( c == LEFT || c == BOTH )

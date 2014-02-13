@@ -1,6 +1,9 @@
 #define PC                  Serial
 
 #define MIRROR              0
+#define LADDER_TIME         200
+#define SEESAW_TIME         1500
+#define SWING_TIME     1000
 
 #define L_MOTOR_1           4
 #define L_MOTOR_2           6

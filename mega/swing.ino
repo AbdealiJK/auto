@@ -1,4 +1,4 @@
-#define SWING_TIME     1000
+
 void swing_init() {
   PC.println(F("SWING init"));
   
