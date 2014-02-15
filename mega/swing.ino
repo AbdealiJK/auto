@@ -38,9 +38,21 @@ void swing() {
 }
 void swing_getoff() {
   PC.println(F("SWING get off"));
-  update(COMM_IR);
+  
+  PC.println(F("next : waiting for trip for a long time to arm it"));
+  update(COMM_TRIP);
+  long int start_time = millis();
+  while (1) {
+    if (comm_trip && millis() - start_time > 2000) {
+      break;
+    }
+    if ( ! comm_trip ) {
+      start_time = millis();
+    }
+  }
 
   PC.println(F("next : unclamp both ... waiting on comm trip"));
+  update(COMM_IR);
   while ( ! comm_ir ) {
     update(COMM_IR);
   }

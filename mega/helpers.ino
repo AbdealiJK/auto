@@ -11,11 +11,11 @@ void run(int c, int dir, int pwm) {
       l_running = dir;
     } else {
       if ( dir == MID && mid_trip )
-        Serial.print("Left motor trip middle");
-      else if ( dir == HOME && mid_trip )
-        Serial.print("Left motor trip middle");
-          
-       digitalWrite(L_MOTOR_1, 0);
+        PC.println("Left motor trip middle");
+      else if ( dir == HOME && l_home_trip )
+        PC.println("Left motor trip home");
+
+      digitalWrite(L_MOTOR_1, 0);
       digitalWrite(L_MOTOR_2, 0);
       analogWrite(L_MOTOR_PWM, 0);
       l_running = STOP;
@@ -30,7 +30,10 @@ void run(int c, int dir, int pwm) {
       analogWrite(R_MOTOR_PWM, abs(pwm));
       r_running = dir;
     } else {
-      Serial.print("Right motor trip");
+      if ( dir == MID && mid_trip )
+        PC.println("Right motor trip middle");
+      else if ( dir == HOME && r_home_trip )
+        PC.println("Right motor trip home");
       digitalWrite(R_MOTOR_1, 0);
       digitalWrite(R_MOTOR_2, 0);
       analogWrite(R_MOTOR_PWM, 0);
@@ -53,7 +56,7 @@ void go_home(char ch, int vel) {
 void go_mid(int c, int vel) {
   if ( c == LEFT || c == BOTH ) {
     run(LEFT, MID, vel);
-    while (l_running ) {
+    while ( l_running ) {
       if ( q_stop() ) break;
       update(MID_IR);
       if ( mid_ir ) {
@@ -90,12 +93,12 @@ void go_up(int vel, int no) {
   update(LADDER_IR);
   int flag = 0, target_flag = no, init_ladder_ir = ladder_ir;
   Serial.println("Entered go up");
-  
+
   run(LEFT, HOME, 200);
   while ( l_running || r_running ) {
     if ( q_stop() ) break;
     update(LADDER_IR);
-    
+
     if ( flag % 2 == 0 && ladder_ir != init_ladder_ir ) {
       flag++;
       Serial.println("Changed");
@@ -191,14 +194,14 @@ void l_home_trip_isr () {
     run(LEFT, STOP, 0);
     l_running = 0;
   }
-  //  Serial.print('L');
+//  Serial.print('L');
 }
 void r_home_trip_isr () {
   if ( r_running == HOME ) {
     run(RIGHT, STOP, 0);
     r_running = 0;
   }
-  //  Serial.print('R');
+//  Serial.print('R');
 }
 void mid_trip_isr () {
   if ( l_running == MID) {
@@ -210,7 +213,7 @@ void mid_trip_isr () {
     r_running = 0;
 
   }
-  //  Serial.print('M');
+//  Serial.print('M');
 }
 
 // ----------------------------------------------------------------- MISC
@@ -245,7 +248,7 @@ int q_stop () {
   }
   if ( ps2_on ) {
     ps2x.read_gamepad(false, vibrate);          //read controller and set large motor to spin at 'vibrate' speed
-    if ( ps2x.Button(PSB_L1) ) { // print stick values if either is TRUE
+    if ( ps2x.ButtonPressed(PSB_L1) ) { // print stick values if either is TRUE
       return 1;
     }
   }
@@ -261,11 +264,11 @@ bool quit_or_continue() {
       PC.read();
       return 0;
     }
-  }
-  if ( ps2_on ) {
-    ps2x.read_gamepad(false, vibrate);
-    if ( ps2x.Button(PSB_L1) ) {
-      return 0;
+    if ( ps2_on ) {
+      ps2x.read_gamepad(false, vibrate);
+      if ( ps2x.ButtonPressed(PSB_L1) ) {
+        return 0;
+      }
     }
   }
 }

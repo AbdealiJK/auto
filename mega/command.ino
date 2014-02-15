@@ -117,7 +117,7 @@ void pc_ui() {
     PC.println(mid_ir);
     PC.print(F(" comm-ir:"));
     PC.println(comm_ir);
-    delay(300);
+    delay(1000);
     PC.println(F(" >> begun"));
   } else if ( c == 'm') {
     PC.read();

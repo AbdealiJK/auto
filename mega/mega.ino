@@ -3,12 +3,12 @@
 #define PC                  Serial
 
 #define MIRROR              0
-#define LADDER_TIME         200
-#define SEESAW_TIME         1500
+#define SEESAW_TIME         1250
 #define SWING_TIME          1000
+#define LADDER_TIME         200
 
-#define QUIT_OR_CONTINUE if(quit_or_continue()) return
-//#define QUIT_OR_CONTINUE delay(200);
+//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+#define QUIT_OR_CONTINUE delay(200);
 
 #define L_MOTOR_1           6
 #define L_MOTOR_2           4

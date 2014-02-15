@@ -1,23 +1,13 @@
 void polewalk_init() {
   PC.println(F("POLEWALK init"));
   update(COMM_TRIP);
-  if ( ! comm_ir) {
-    PC.println(F("next : both home"));
-    QUIT_OR_CONTINUE;
-    go_home( BOTH, 255 );
+  PC.println(F("next : both home"));
+  QUIT_OR_CONTINUE;
+  go_home( BOTH, 255 );
 
-    PC.println(F("next : both mid"));
-    QUIT_OR_CONTINUE;
-    go_mid(BOTH, 255);
-  }
-  else {
-    PC.println(F("Left already at middle. moving right to middle"));
-    QUIT_OR_CONTINUE;
-    go_mid(RIGHT, 255);
-  }
-
-  PC.println(F("both stopped"));
-  run(BOTH, STOP, 0);
+  PC.println(F("next : both mid"));
+  QUIT_OR_CONTINUE;
+  go_mid(BOTH, 255);
 
   PC.println(F("both pp"));
   if ( MIRROR ) {
@@ -52,7 +42,7 @@ void polewalk_geton() {
   }
   piston(BOTH, CLOSE);
   PC.println(F("somebody threw me"));
-  
+
   delay(255);
   pp(BOTH, SHRINK);
   PC.println(F("POLEWALK goton"));
@@ -105,14 +95,14 @@ void polewalk() {
 
 void polewalk_getoff() {
   PC.println(F("POLEWALK getoff"));
-  
+
   PC.println(F("next : unclamp ... waiting on comm ir"));
   update(COMM_IR);
   while ( ! comm_ir ) {
     update(COMM_IR);
   }
   PC.println(F("fingers detected"));
- // delay(1000);
+  // delay(1000);
   piston(BOTH, OPEN);
   delay(250);
   pp(BOTH, SHRINK);

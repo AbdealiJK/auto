@@ -1,6 +1,6 @@
 
 void ps2_init() {
-  error = ps2x.config_gamepad(52,51,53,50, true, true);   //setup pins and settings:  GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
+  error = ps2x.config_gamepad(52, 51, 53, 50, true, true); //setup pins and settings:  GamePad(clock, command, attention, data, Pressures?, Rumble?) check for error
 
   if (error == 0) {
     PC.println("Found Controller, configured successful");
@@ -34,8 +34,8 @@ void ps2_init() {
 }
 
 void ps2_ui() {
-  
-    delay(20);
+
+  delay(20);
   if ( ps2_on == 0 ) {
     ps2x.read_gamepad(false, vibrate);
     if (ps2x.Button(PSB_START))
@@ -50,10 +50,10 @@ void ps2_ui() {
     run(BOTH, STOP, 0);
   }
 
-  if ( ps2x.Button(PSB_PAD_DOWN) ) {
+  if ( ps2x.Button(PSB_PAD_UP) ) {
     PC.println("SEESAW");
     if ( ps2x.Button(PSB_GREEN) ) {
-      seesaw_init();  
+      seesaw_init();
     } else if ( ps2x.Button(PSB_PINK) ) {
       seesaw_geton();
     } else if ( ps2x.Button(PSB_RED) ) {
@@ -61,7 +61,7 @@ void ps2_ui() {
     } else if ( ps2x.Button(PSB_BLUE) ) {
       seesaw_getoff();
     } else if ( ps2x.ButtonPressed(PSB_R1) ) {
-      seesaw_init();  
+      seesaw_init();
       seesaw_geton();
       seesaw();
       seesaw_getoff();
@@ -69,8 +69,8 @@ void ps2_ui() {
   }
   else if ( ps2x.Button(PSB_PAD_LEFT) ) {
     PC.println("SWING");
-     if ( ps2x.Button(PSB_GREEN) ) {
-      swing_init();  
+    if ( ps2x.Button(PSB_GREEN) ) {
+      swing_init();
     } else if ( ps2x.Button(PSB_PINK) ) {
       swing_geton();
     } else if ( ps2x.Button(PSB_RED) ) {
@@ -78,7 +78,7 @@ void ps2_ui() {
     } else if ( ps2x.Button(PSB_BLUE) ) {
       swing_getoff();
     } else if ( ps2x.ButtonPressed(PSB_R1) ) {
-      swing_init();  
+      swing_init();
       swing_geton();
       swing();
       swing_getoff();
@@ -86,8 +86,8 @@ void ps2_ui() {
   }
   else if ( ps2x.Button(PSB_PAD_RIGHT) ) {
     PC.println("POLEWALK");
-     if ( ps2x.Button(PSB_GREEN) ) {
-      polewalk_init();  
+    if ( ps2x.Button(PSB_GREEN) ) {
+      polewalk_init();
     } else if ( ps2x.Button(PSB_PINK) ) {
       polewalk_geton();
     } else if ( ps2x.Button(PSB_RED) ) {
@@ -95,10 +95,27 @@ void ps2_ui() {
     } else if ( ps2x.Button(PSB_BLUE) ) {
       polewalk_getoff();
     } else if ( ps2x.ButtonPressed(PSB_R1) ) {
-      polewalk_init();  
+      polewalk_init();
       polewalk_geton();
       polewalk();
       polewalk_getoff();
+    }
+  }
+  if ( ps2x.Button(PSB_PAD_DOWN) ) {
+    PC.println("LADDER");
+    if ( ps2x.Button(PSB_GREEN) ) {
+      ladder_init();
+    } else if ( ps2x.Button(PSB_PINK) ) {
+      ladder_geton();
+    } else if ( ps2x.Button(PSB_RED) ) {
+      ladder();
+    } else if ( ps2x.Button(PSB_BLUE) ) {
+      ladder_getoff();
+    } else if ( ps2x.ButtonPressed(PSB_R1) ) {
+      ladder_init();
+      ladder_geton();
+      ladder();
+      ladder_getoff();
     }
   }
 
@@ -162,15 +179,15 @@ void ps2_ui() {
     } else {
       run(RIGHT, STOP, 0);
     }
-    
-            Serial.print("Stick Values:");
-        Serial.print(ps2x.Analog(PSS_LY), DEC); //Left stick, Y axis. Other options: LX, RY, RX  
-        Serial.print(",");
-        Serial.print(ps2x.Analog(PSS_LX), DEC); 
-        Serial.print(",");
-        Serial.print(ps2x.Analog(PSS_RY), DEC); 
-        Serial.print(",");
-        Serial.println(ps2x.Analog(PSS_RX), DEC); 
+
+    Serial.print("Stick Values:");
+//    Serial.print(ps2x.Analog(PSS_LY), DEC); //Left stick, Y axis. Other options: LX, RY, RX
+//    Serial.print(",");
+    Serial.print(ps2x.Analog(PSS_LX), DEC);
+    Serial.print(",");
+//    Serial.print(ps2x.Analog(PSS_RY), DEC);
+//    Serial.print(",");
+    Serial.println(ps2x.Analog(PSS_RX), DEC);
 
   } else {
     run(RIGHT, STOP, 0);
