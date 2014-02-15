@@ -117,13 +117,14 @@ void pc_ui() {
     PC.println(mid_ir);
     PC.print(F(" comm-ir:"));
     PC.println(comm_ir);
+    delay(300);
     PC.println(F(" >> begun"));
   } else if ( c == 'm') {
     PC.read();
     go_mid(BOTH, 255);
   } else if ( c == '4' ) {
     PC.read();
-/*    delay(1);
+    delay(1);
     if ( PC.available() ) {
       char c2 = PC.read();
       if ( c2 == 'a' ) {
@@ -141,7 +142,6 @@ void pc_ui() {
       ladder();
       ladder_getoff();
     }
-*/
   } else if ( c == '3' ) {
     PC.read();
     delay(1);

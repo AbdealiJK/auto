@@ -9,6 +9,16 @@ void run(int c, int dir, int pwm) {
       digitalWrite(L_MOTOR_2, dir % 2);
       analogWrite(L_MOTOR_PWM, abs(pwm));
       l_running = dir;
+    } else {
+      if ( dir == MID && mid_trip )
+        Serial.print("Left motor trip middle");
+      else if ( dir == HOME && mid_trip )
+        Serial.print("Left motor trip middle");
+          
+       digitalWrite(L_MOTOR_1, 0);
+      digitalWrite(L_MOTOR_2, 0);
+      analogWrite(L_MOTOR_PWM, 0);
+      l_running = STOP;
     }
   }
   if ( c == RIGHT || c == BOTH ) {
@@ -19,6 +29,12 @@ void run(int c, int dir, int pwm) {
       digitalWrite(R_MOTOR_2, dir % 2);
       analogWrite(R_MOTOR_PWM, abs(pwm));
       r_running = dir;
+    } else {
+      Serial.print("Right motor trip");
+      digitalWrite(R_MOTOR_1, 0);
+      digitalWrite(R_MOTOR_2, 0);
+      analogWrite(R_MOTOR_PWM, 0);
+      r_running = STOP;
     }
   }
 }
@@ -72,18 +88,22 @@ void go_away(int c, int vel) {
 
 void go_up(int vel, int no) {
   update(LADDER_IR);
-  int flag = 0, target_flag = 0, init_ladder_ir = ladder_ir;
-
+  int flag = 0, target_flag = no, init_ladder_ir = ladder_ir;
+  Serial.println("Entered go up");
+  
   run(LEFT, HOME, 200);
   while ( l_running || r_running ) {
     if ( q_stop() ) break;
     update(LADDER_IR);
+    
     if ( flag % 2 == 0 && ladder_ir != init_ladder_ir ) {
       flag++;
+      Serial.println("Changed");
     } else if ( flag % 2 == 1 && ladder_ir == init_ladder_ir ) {
-      flag++;
+      flag++;      Serial.println("Changed");
     }
     if ( flag == target_flag ) {
+      delay(600);// to be changed for battery voltage
       run( LEFT, STOP, 0 );
       PC.print(target_flag);
       PC.println(F(" changes detected by IR "));
@@ -228,7 +248,6 @@ int q_stop () {
     if ( ps2x.Button(PSB_L1) ) { // print stick values if either is TRUE
       return 1;
     }
-    delay(10);
   }
 
   return 0;
@@ -248,7 +267,6 @@ bool quit_or_continue() {
     if ( ps2x.Button(PSB_L1) ) {
       return 0;
     }
-    delay(10);
   }
 }
 

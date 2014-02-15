@@ -7,11 +7,11 @@
 #define SEESAW_TIME         1500
 #define SWING_TIME          1000
 
-//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
- #define QUIT_OR_CONTINUE delay(200);
+#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+//#define QUIT_OR_CONTINUE delay(200);
 
-#define L_MOTOR_1           4
-#define L_MOTOR_2           6
+#define L_MOTOR_1           6
+#define L_MOTOR_2           4
 #define L_MOTOR_PWM         5
 #define L_PISTON_PIN        31
 #define L_HOME_TRIP         2 //
@@ -32,7 +32,7 @@
 #define MID_TRIP            3 //
 #define MID_TRIP_INT        1
 #define COMM_TRIP           21 //
-#define LADDER_IR           -1 
+#define LADDER_IR           A1 
 #define COMM_IR             19
 #define MID_IR              18 //
 #define MID_TRIPPED         LOW
@@ -100,8 +100,18 @@ void setup() {
 }
 
 void loop() {
-  pc_ui();
   ps2_ui();
+  pc_ui();
+/*
+  polewalk_init();
+  polewalk_geton();
+  delay(20000);
+  while(1);
+  polewalk();
+  delay(20000);
+  polewalk_getoff();
+  delay(30000);
+*/  
   
   while (PC.available())
     PC.read();
@@ -125,7 +135,7 @@ void loop() {
     Serial.print(digitalRead(MID_IR));
   */
 
-  delay(10);
+  delay(20);
 
 
 }
