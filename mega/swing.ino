@@ -49,6 +49,7 @@ void swing_getoff() {
     if ( ! comm_trip ) {
       start_time = millis();
     }
+    update(COMM_TRIP);
   }
 
   PC.println(F("next : unclamp both ... waiting on comm trip"));

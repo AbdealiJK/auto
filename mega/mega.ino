@@ -3,8 +3,8 @@
 #define PC                  Serial
 
 #define MIRROR              0
-#define SEESAW_TIME         1250
-#define SWING_TIME          1000
+#define SEESAW_TIME         1000//1250
+#define SWING_TIME          800//1000
 #define LADDER_TIME         200
 
 //#define QUIT_OR_CONTINUE if(quit_or_continue()) return

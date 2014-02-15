@@ -81,6 +81,7 @@ void polewalk() {
   QUIT_OR_CONTINUE;
   go_mid(BOTH, 255); // moves both to home, then moves left to mid and then right
   piston(RIGHT, CLOSE);
+  piston(LEFT, CLOSE);
   if ( MIRROR ) {
     pp(RIGHT, SHRINK);
     pp(LEFT, EXTEND);
