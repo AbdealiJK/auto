@@ -3,7 +3,7 @@
 #define PC                  Serial
 
 #define MIRROR              0
-#define SEESAW_TIME         1000//1250
+#define SEESAW_TIME         1200//1250
 #define SWING_TIME          800//1000
 #define LADDER_TIME         200
 
@@ -31,7 +31,7 @@
 
 #define MID_TRIP            3 //
 #define MID_TRIP_INT        1
-#define COMM_TRIP           21 //
+#define COMM_TRIP           A0 //
 #define LADDER_IR           A1 
 #define COMM_IR             19
 #define MID_IR              18 //
@@ -102,16 +102,6 @@ void setup() {
 void loop() {
   ps2_ui();
   pc_ui();
-/*
-  polewalk_init();
-  polewalk_geton();
-  delay(20000);
-  while(1);
-  polewalk();
-  delay(20000);
-  polewalk_getoff();
-  delay(30000);
-*/  
   
   while (PC.available())
     PC.read();

@@ -37,6 +37,7 @@ void seesaw_geton() {
 
 }
 void seesaw() {
+  delay(10000);
 }
 void seesaw_getoff() {
   PC.println(F("FINISH SEESAW ... Need to UNclamp both on seesaw."));

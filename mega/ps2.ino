@@ -50,6 +50,23 @@ void ps2_ui() {
     run(BOTH, STOP, 0);
   }
 
+  if ( ps2x.Button(PSB_L1) && ps2x.Button(PSB_L2) && ps2x.Button(PSB_R1) && ps2x.Button(PSB_R2) ) {
+      seesaw_init();
+      seesaw_geton();
+      seesaw();
+      seesaw_getoff();
+      delay(10000);
+      swing_init();
+      swing_geton();
+      swing();
+      swing_getoff();
+      delay(10000);
+      polewalk_init();
+      polewalk_geton();
+      polewalk();
+      polewalk_getoff();
+  }
+
   if ( ps2x.Button(PSB_PAD_UP) ) {
     PC.println("SEESAW");
     if ( ps2x.Button(PSB_GREEN) ) {
@@ -120,7 +137,7 @@ void ps2_ui() {
   }
 
   // ---------------------------------- SOLENOID ACTUATIONS
-  if (ps2x.ButtonPressed(PSB_L3)) {
+  if (ps2x.ButtonPressed(PSB_L2)) {
     l_piston_state = ! l_piston_state;
     if ( l_piston_state ) {
       piston(LEFT, OPEN);
@@ -130,7 +147,7 @@ void ps2_ui() {
       PC.println(F("Left piston closed"));
     }
   }
-  if (ps2x.ButtonPressed(PSB_SELECT)) {
+  if (ps2x.ButtonPressed(PSB_R2)) {
     r_piston_state = ! r_piston_state;
     if ( r_piston_state ) {
       piston(RIGHT, OPEN);
@@ -141,7 +158,7 @@ void ps2_ui() {
     }
   }
 
-  if (ps2x.ButtonPressed(PSB_L2)) {
+  if (ps2x.ButtonPressed(PSB_L3)) {
     l_pp_state = ! l_pp_state;
     if ( l_pp_state ) {
       pp(LEFT, EXTEND);
@@ -151,7 +168,7 @@ void ps2_ui() {
       PC.println(F("Left PP shrunk"));
     }
   }
-  if (ps2x.ButtonPressed(PSB_R2)) {
+  if (ps2x.ButtonPressed(PSB_SELECT)) {
     r_pp_state = ! r_pp_state;
     if ( r_pp_state ) {
       pp(RIGHT, EXTEND);
