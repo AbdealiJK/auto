@@ -14,27 +14,27 @@
 #define L_MOTOR_2           4
 #define L_MOTOR_PWM         5
 #define L_PISTON_PIN        31
-#define L_HOME_TRIP         2 //
-#define L_HOME_TRIP_INT     0
-#define L_HOME_TRIPPED      LOW
+#define L_HOME_TRIP         19 //
+#define L_HOME_TRIP_INT     4
+#define L_HOME_TRIPPED      HIGH
 
 #define R_MOTOR_1           9
 #define R_MOTOR_2           7
 #define R_MOTOR_PWM         8
 #define R_PISTON_PIN        27
-#define R_HOME_TRIP         20 //
-#define R_HOME_TRIP_INT     3
-#define R_HOME_TRIPPED      LOW
+#define R_HOME_TRIP         2 //
+#define R_HOME_TRIP_INT     0
+#define R_HOME_TRIPPED      HIGH
 
 #define L_PP_PIN            29
 #define R_PP_PIN            33
 
 #define MID_TRIP            3 //
 #define MID_TRIP_INT        1
-#define COMM_TRIP           A0 //
-#define LADDER_IR           A1 
-#define COMM_IR             19
-#define MID_IR              18 //
+#define COMM_TRIP           A1
+#define LADDER_IR           20
+#define COMM_IR             18
+#define MID_IR              21
 #define MID_TRIPPED         LOW
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
@@ -106,9 +106,8 @@ void loop() {
   while (PC.available())
     PC.read();
 
-  Serial.println(F("loop"));
 
-  /*
+  
     Serial.print("\tL_HOME_TRIP : ");
     Serial.print(digitalRead(L_HOME_TRIP));
     Serial.print("\tR_HOME_TRIP : ");
@@ -123,7 +122,8 @@ void loop() {
     Serial.print(digitalRead(COMM_IR));
     Serial.print("\tMID_IR : ");
     Serial.print(digitalRead(MID_IR));
-  */
+
+  Serial.println(F("\tloop"));  
 
   delay(20);
 
