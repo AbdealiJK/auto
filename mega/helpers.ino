@@ -1,6 +1,12 @@
 // ----------------------------------------------------------------- MOTOR RUN
-void run(int c, int dir, int pwm) {
-  int m1 = 0, m2 = 0, mp = 0;
+int run(int c, int dir, int pwm) {
+  int m1 = 0, m2 = 0, mp = 0, stopped = 0;
+  if ( q_stop() ) { 
+    Serial.print("QUIT");  
+    return 0;
+    
+  }
+
   if ( c == LEFT || c == BOTH ) {
     update(L_HOME_TRIP);
     update(MID_TRIP);
@@ -8,7 +14,7 @@ void run(int c, int dir, int pwm) {
       digitalWrite(L_MOTOR_1, dir / 2);
       digitalWrite(L_MOTOR_2, dir % 2);
       analogWrite(L_MOTOR_PWM, abs(pwm));
-      l_running = dir;
+      stopped = stopped & 0x01;
     } else {
       if ( dir == MID && mid_trip )
         PC.println("Left motor trip middle");
@@ -18,7 +24,7 @@ void run(int c, int dir, int pwm) {
       digitalWrite(L_MOTOR_1, 0);
       digitalWrite(L_MOTOR_2, 0);
       analogWrite(L_MOTOR_PWM, 0);
-      l_running = STOP;
+      stopped = stopped | 0x02;
     }
   }
   if ( c == RIGHT || c == BOTH ) {
@@ -28,7 +34,7 @@ void run(int c, int dir, int pwm) {
       digitalWrite(R_MOTOR_1, dir / 2);
       digitalWrite(R_MOTOR_2, dir % 2);
       analogWrite(R_MOTOR_PWM, abs(pwm));
-      r_running = dir;
+      stopped = stopped & 0x02;
     } else {
       if ( dir == MID && mid_trip )
         PC.println("Right motor trip middle");
@@ -37,27 +43,28 @@ void run(int c, int dir, int pwm) {
       digitalWrite(R_MOTOR_1, 0);
       digitalWrite(R_MOTOR_2, 0);
       analogWrite(R_MOTOR_PWM, 0);
-      r_running = STOP;
+      stopped = stopped | 0x01;
     }
   }
+  
+  if ( stopped == 3 && c == BOTH ) {
+    return 0;
+  } else if ( stopped == 2 && c == LEFT ) {
+    return 0;
+  } else if ( stopped == 1 && c == RIGHT ) {
+    return 0;
+  }
+  return 1;
 }
 
 // ----------------------------------------------------------------- MOTOR HELPERS
 void go_home(char ch, int vel) {
-  run( ch,  HOME , vel);
-
-  while ( l_running || r_running ) {
-    if ( q_stop() ) break;
-    if ( ! l_running ) run(LEFT,  STOP, 0);
-    if ( ! r_running ) run(RIGHT, STOP, 0);
-  }
+  while ( run( ch,  HOME , vel) );
 }
 
 void go_mid(int c, int vel) {
   if ( c == LEFT || c == BOTH ) {
-    run(LEFT, MID, vel);
-    while ( l_running ) {
-      if ( q_stop() ) break;
+    while ( run(LEFT, MID, vel) ) {
       update(MID_IR);
       if ( mid_ir ) {
         run ( LEFT, STOP, 0 );
@@ -67,25 +74,16 @@ void go_mid(int c, int vel) {
     }
   }
   if ( c == RIGHT || c == BOTH ) {
-    run(RIGHT, MID, vel);
-    while (r_running) {
-      if ( q_stop() ) break;
-    }
+    while ( run(RIGHT, MID, vel) );
   }
 }
 
 void go_away(int c, int vel) {
   if ( c == LEFT ) {
-    run(LEFT, MID, vel);
-    while (l_running ) {
-      if ( q_stop() ) break;
-    }
+    while ( run(LEFT, MID, vel) );
   }
   if ( c == RIGHT ) {
-    run(RIGHT, MID, vel);
-    while (r_running) {
-      if ( q_stop() ) break;
-    }
+    while ( run(RIGHT, MID, vel) );
   }
 }
 
@@ -94,19 +92,18 @@ void go_up(int vel, int no) {
   int flag = 0, target_flag = no, init_ladder_ir = ladder_ir;
   Serial.println("Entered go up");
 
-  run(LEFT, HOME, 200);
-  while ( l_running || r_running ) {
-    if ( q_stop() ) break;
+  ;
+  while ( run(LEFT, HOME, vel) ) {
     update(LADDER_IR);
 
     if ( flag % 2 == 0 && ladder_ir != init_ladder_ir ) {
       flag++;
       Serial.println("Changed");
     } else if ( flag % 2 == 1 && ladder_ir == init_ladder_ir ) {
-      flag++;      Serial.println("Changed");
+      flag++;      
+      Serial.println("Changed");
     }
     if ( flag == target_flag ) {
-      delay(600);// to be changed for battery voltage
       run( LEFT, STOP, 0 );
       PC.print(target_flag);
       PC.println(F(" changes detected by IR "));
@@ -115,9 +112,7 @@ void go_up(int vel, int no) {
   }
 
   long start_time = millis();
-  run( LEFT, MID, 255 );
-  while ( l_running ) {
-    if ( q_stop() ) break;
+  while ( run( LEFT, MID, 255 ) ) {
     if ( millis() - start_time > LADDER_TIME ) {
       run(BOTH, STOP, 0);
       PC.println(F(" time delay done "));
@@ -188,34 +183,6 @@ void update(int tr) {
   }
 }
 
-// ----------------------------------------------------------------- MOTOR TRIP ISR
-void l_home_trip_isr () {
-  if ( l_running == HOME ) {
-    run(LEFT, STOP, 0);
-    l_running = 0;
-  }
-//  Serial.print('L');
-}
-void r_home_trip_isr () {
-  if ( r_running == HOME ) {
-    run(RIGHT, STOP, 0);
-    r_running = 0;
-  }
-//  Serial.print('R');
-}
-void mid_trip_isr () {
-  if ( l_running == MID) {
-    run(LEFT, STOP, 0);
-    l_running = 0;
-  }
-  if ( r_running == MID) {
-    run(RIGHT, STOP, 0);
-    r_running = 0;
-
-  }
-//  Serial.print('M');
-}
-
 // ----------------------------------------------------------------- MISC
 int pc_get_int() {
   int temp = 0, next_val, neg = 1;
@@ -273,3 +240,23 @@ bool quit_or_continue() {
   }
 }
 
+/*
+  10, 11, 12 - Motor 1
+  A0,  8,  9 - Motor 2
+ 
+ Piston 44, 46, 30, 28
+
+ Middle trip - 6
+ 
+ 4 - comm tsop
+ 3 - right trip
+ 2 - comm trip
+ 
+ A4  - LEFT TRIP
+ SDA - MIDDLE TSOP
+ SCL - LADDER IR
+ 
+ 
+
+
+*/

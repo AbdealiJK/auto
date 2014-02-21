@@ -180,32 +180,38 @@ void ps2_ui() {
   }
 
   // ----------------------------------------- MOTOR MOVEMENT
-  if ( ps2x.Button(PSB_R1) ) { // print stick values if either is TRUE
-    if ( ps2x.Analog(PSS_LX) < 75 ) {
-      run(LEFT, HOME, 255);
-    } else if ( ps2x.Analog(PSS_LX) > 200 ) {
-      run(LEFT, MID, 255);
+  if ( ps2x.Button(PSB_R1) && ps2x.Button(PSB_L1) ) { // print stick values if either is TRUE
+    if ( ps2x.Analog(PSS_LX) < 65 ) {
+      run(LEFT, HOME, 250);
+    } else if ( ps2x.Analog(PSS_LX) > 165 ) {
+      run(LEFT, MID, 250);
     } else {
       run(LEFT, STOP, 0);
     }
 
-    if ( ps2x.Analog(PSS_RX) < 75 ) {
-      run(RIGHT, MID, 255);
-    } else if ( ps2x.Analog(PSS_RX) > 200 ) {
-      run(RIGHT, HOME, 255);
+    if ( ps2x.Analog(PSS_RX) > 165 ) {
+      run(RIGHT, HOME, 250);   
+    } else if ( ps2x.Analog(PSS_RX) < 65 ) {
+      run(RIGHT, MID, 250);
     } else {
       run(RIGHT, STOP, 0);
     }
+  } else if ( ps2x.Button(PSB_R1) ) { // print stick values if either is TRUE
+    if ( ps2x.Analog(PSS_LX) < 65 ) {
+      run(LEFT, HOME, 75);   
+    } else if ( ps2x.Analog(PSS_LX) > 165 ) {
+      run(LEFT, MID, 75);
+    } else {
+      run(LEFT, STOP, 0);
+    }
 
-    Serial.print("Stick Values:");
-//    Serial.print(ps2x.Analog(PSS_LY), DEC); //Left stick, Y axis. Other options: LX, RY, RX
-//    Serial.print(",");
-    Serial.print(ps2x.Analog(PSS_LX), DEC);
-    Serial.print(",");
-//    Serial.print(ps2x.Analog(PSS_RY), DEC);
-//    Serial.print(",");
-    Serial.println(ps2x.Analog(PSS_RX), DEC);
-
+    if ( ps2x.Analog(PSS_RX) > 165 ) {
+      run(RIGHT, HOME, 75);   
+    } else if ( ps2x.Analog(PSS_RX) < 65 ) {
+      run(RIGHT, MID, 75);
+    } else {
+      run(RIGHT, STOP, 0);
+    }
   } else {
     run(RIGHT, STOP, 0);
     run(LEFT, STOP, 0);

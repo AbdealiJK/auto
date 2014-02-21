@@ -8,11 +8,9 @@ void seesaw_init() {
 
   PC.println(F("next : both move mid with delay"));
   QUIT_OR_CONTINUE;
-  run(BOTH, MID, 255);
+  ;
   long int start_time = millis();
-  while (l_running != STOP || r_running != STOP ) {
-    PC.print(l_running);
-    PC.println(r_running);
+  while ( run(BOTH, MID, 255) ) {
     if ( q_stop() )   break;
     if ( millis() - start_time > SEESAW_TIME ) {
       run(BOTH, STOP, 0);
@@ -20,8 +18,6 @@ void seesaw_init() {
       break;
     }
   }
-  PC.print(l_running);
-  PC.println(r_running);
   PC.println(F("SEESAW init done"));
 }
 void seesaw_geton() {

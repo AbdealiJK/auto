@@ -3,38 +3,40 @@
 #define PC                  Serial
 
 #define MIRROR              0
-#define SEESAW_TIME         1200//1250
-#define SWING_TIME          800//1000
+#define SEESAW_TIME         1200 // 1250
+#define SWING_TIME          800 //1000
 #define LADDER_TIME         200
+
+#define SEESAW_PWM          0
+#define SWING_PWM           0
+#define POLEWALK_PWM        0
+#define LADDER_PWM          0
 
 //#define QUIT_OR_CONTINUE if(quit_or_continue()) return
 #define QUIT_OR_CONTINUE delay(200);
 
-#define L_MOTOR_1           9
-#define L_MOTOR_2           7
-#define L_MOTOR_PWM         8
-#define L_PISTON_PIN        31
-#define L_HOME_TRIP         19 //
-#define L_HOME_TRIP_INT     4
+#define L_MOTOR_1           A0
+#define L_MOTOR_2           8
+#define L_MOTOR_PWM         9
+#define L_PISTON_PIN        28
+#define L_HOME_TRIP         A4
 #define L_HOME_TRIPPED      LOW
 
-#define R_MOTOR_1           4
-#define R_MOTOR_2           6
-#define R_MOTOR_PWM         5
-#define R_PISTON_PIN        27
-#define R_HOME_TRIP         2 //
-#define R_HOME_TRIP_INT     0
+#define R_MOTOR_1           10
+#define R_MOTOR_2           11
+#define R_MOTOR_PWM         12
+#define R_PISTON_PIN        30 
+#define R_HOME_TRIP         3
 #define R_HOME_TRIPPED      LOW
 
-#define L_PP_PIN            29
-#define R_PP_PIN            33
+#define L_PP_PIN            44
+#define R_PP_PIN            46
 
-#define MID_TRIP            3 //
-#define MID_TRIP_INT        1
-#define COMM_TRIP           A1
-#define LADDER_IR           20
-#define COMM_IR             18
-#define MID_IR              21
+#define MID_TRIP            6
+#define COMM_TRIP           2
+#define LADDER_IR           SCL
+#define COMM_IR             4
+#define MID_IR              SDA
 #define MID_TRIPPED         LOW
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
@@ -58,8 +60,6 @@
 #define H_VEL       255
 
 
-int l_running = 0, r_running = 0;
-
 PS2X ps2x;
 int error = 0;
 byte type = 0, vibrate = 0, ps2_on = 0,
@@ -70,7 +70,7 @@ bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0;
 
 void setup() {
-  PC.begin(57600);
+  PC.begin(9600);
 
   pinMode(L_MOTOR_1, OUTPUT);
   pinMode(L_MOTOR_2, OUTPUT);
@@ -84,18 +84,18 @@ void setup() {
   pinMode(L_PP_PIN, OUTPUT);
   pinMode(R_PP_PIN, OUTPUT);
   
-  //  pinMode(L_HOME_TRIP, INPUT);
-  //  pinMode(R_HOME_TRIP, INPUT);
-  //  pinMode(MID_TRIP, INPUT);
+  pinMode(L_HOME_TRIP, INPUT);
+  pinMode(R_HOME_TRIP, INPUT);
+  pinMode(MID_TRIP, INPUT);
   pinMode(LADDER_IR, INPUT);
   pinMode(COMM_TRIP, INPUT);
   pinMode(COMM_IR, INPUT);
   pinMode(MID_IR, INPUT);
 
-  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
+/*  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
   attachInterrupt(R_HOME_TRIP_INT, r_home_trip_isr, HIGH);
   attachInterrupt(MID_TRIP_INT, mid_trip_isr, HIGH);
-  
+  */
   ps2_init();
 }
 
@@ -123,7 +123,7 @@ void loop() {
     Serial.print("\tMID_IR : ");
     Serial.print(digitalRead(MID_IR));
   */
-    
+  /*  
     update(L_HOME_TRIP);
     update(R_HOME_TRIP);
     update(MID_TRIP);
@@ -145,9 +145,9 @@ void loop() {
     Serial.print(comm_ir);
     Serial.print("\tMID_IRval : ");
     Serial.print(mid_ir);
+  */
+    Serial.println(F("\tloop"));  
   
-  Serial.println(F("\tloop"));  
-
   delay(20);
 
 

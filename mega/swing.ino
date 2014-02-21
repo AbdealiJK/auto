@@ -8,9 +8,7 @@ void swing_init() {
   PC.println(F("next : both move home with delay"));
   QUIT_OR_CONTINUE;
   long int start_time = millis();
-  run(BOTH, MID, 200);
-  while (l_running || r_running ) {
-  if ( q_stop() )   break;
+  while (run(BOTH, MID, 200)) {
     if ( millis() - start_time > SWING_TIME ) {
       run(BOTH, STOP, 0);
       break;

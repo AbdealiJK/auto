@@ -27,10 +27,8 @@ void pc_ui() {
       PC.print(F("motor moving at pwm = "));
       PC.print(vel);
       PC.print(F(" ... "));
-      run( c, ( vel < 0 ) ? HOME : MID, abs(vel));
-      while ( ( c == LEFT && l_running ) || ( c == RIGHT && r_running ) ) {
-        if ( q_stop() ) break;
-      }
+      ;
+      while ( run( c, ( vel < 0 ) ? HOME : MID, abs(vel)) );
       PC.println(F("DONE"));
     } else if ( c2 == 'f' ) { // >>>>>>>>>>>>>>>>>>>>>>>>>>>>> MOTION with fixed clamp also
       int vel = pc_get_int();
@@ -39,9 +37,8 @@ void pc_ui() {
       PC.print(F("motor moving (with fixed clamp) at pwm = "));
       PC.print(vel);
       PC.print(F(" ... "));
-      run( c, ( vel < 0 ) ? HOME : MID, abs(vel) );
-      while ( ( c == LEFT && l_running ) || ( c == RIGHT && r_running ) ) {
-        if ( q_stop() ) break;
+      ;
+      while ( run( c, ( vel < 0 ) ? HOME : MID, abs(vel) ) ) {
         update(LADDER_IR);
         if ( ladder_ir ) {
           run ( c, STOP, 0 );
@@ -57,9 +54,8 @@ void pc_ui() {
       PC.print(F("motor moving at pwm = "));
       PC.print(vel);
       PC.print(F(" ... "));
-      run( c, ( vel < 0 ) ? HOME : MID, abs(vel) );
-      while ( ( c == LEFT && l_running ) || ( c == RIGHT && r_running ) ) {
-        if ( q_stop() ) break;
+      ;
+      while ( run( c, ( vel < 0 ) ? HOME : MID, abs(vel) ) ) {
         update(MID_IR);
         if ( mid_ir ) {
           run ( c, STOP, 0 );

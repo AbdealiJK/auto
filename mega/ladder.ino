@@ -39,9 +39,7 @@ void ladder() {
       delay(250);
       
       start_time = millis();
-      run( LEFT, MID, 255 );
-      while ( l_running ) {
-        if ( q_stop() ) break;
+      while ( run( LEFT, MID, 255 ) ) {
         if ( millis() - start_time > LADDER_TIME ) {
           run(BOTH, STOP, 0);
           PC.println(F(" time delay done "));
@@ -74,8 +72,7 @@ void ladder() {
   
   start_time = millis();
   int close_tail_flag = 0;
-  run ( LEFT, HOME, 255 );
-  while ( l_running ) { // Bot goes down a little
+  while ( run ( LEFT, HOME, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
     if ( close_tail_flag == 0 && millis() - start_time > 300 ) { // % calib
       PC.println(F("Time delay done "));
