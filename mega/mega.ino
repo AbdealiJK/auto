@@ -3,8 +3,8 @@
 #define PC                  Serial
 
 #define MIRROR              0
-#define SEESAW_TIME         1200 // 1250
-#define SWING_TIME          800 //1000
+#define SEESAW_TIME         1200
+#define SWING_TIME          800
 #define LADDER_TIME         200
 
 #define SEESAW_PWM          0
@@ -15,24 +15,20 @@
 //#define QUIT_OR_CONTINUE if(quit_or_continue()) return
 #define QUIT_OR_CONTINUE delay(200);
 
-#define L_MOTOR_1           A0
-#define L_MOTOR_2           8
-#define L_MOTOR_PWM         9
-#define L_PISTON_PIN        28
+#define L_MOTOR             8, A1, 9
+#define L_PISTON_PIN        46
 #define L_HOME_TRIP         A4
 #define L_HOME_TRIPPED      LOW
 
-#define R_MOTOR_1           10
-#define R_MOTOR_2           11
-#define R_MOTOR_PWM         12
-#define R_PISTON_PIN        30 
+#define R_MOTOR             12, 7, 10
+#define R_PISTON_PIN        28 
 #define R_HOME_TRIP         3
 #define R_HOME_TRIPPED      LOW
 
 #define L_PP_PIN            44
-#define R_PP_PIN            46
+#define R_PP_PIN            30
 
-#define MID_TRIP            6
+#define MID_TRIP            A2
 #define COMM_TRIP           2
 #define LADDER_IR           SCL
 #define COMM_IR             4
@@ -71,14 +67,11 @@ bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
 
 void setup() {
   PC.begin(9600);
-
-  pinMode(L_MOTOR_1, OUTPUT);
-  pinMode(L_MOTOR_2, OUTPUT);
-  pinMode(L_MOTOR_PWM, OUTPUT);
+  
+  
+  motor_init(L_MOTOR);
+  motor_init(R_MOTOR);
   pinMode(L_PISTON_PIN, OUTPUT);
-  pinMode(R_MOTOR_1, OUTPUT);
-  pinMode(R_MOTOR_2, OUTPUT);
-  pinMode(R_MOTOR_PWM, OUTPUT);
   pinMode(R_PISTON_PIN, OUTPUT);
 
   pinMode(L_PP_PIN, OUTPUT);
@@ -125,7 +118,7 @@ void loop() {
     Serial.print("\tMID_IR : ");
     Serial.print(digitalRead(MID_IR));
   */
-  /*  
+    
     update(L_HOME_TRIP);
     update(R_HOME_TRIP);
     update(MID_TRIP);
@@ -147,7 +140,7 @@ void loop() {
     Serial.print(comm_ir);
     Serial.print("\tMID_IRval : ");
     Serial.print(mid_ir);
-  */
+  
     Serial.println(F("\tloop"));  
   
   delay(20);

@@ -1,29 +1,35 @@
 // ----------------------------------------------------------------- MOTOR RUN
+void motor_init(int p_1, int p_2, int p_pwm) {
+  pinMode(p_1, OUTPUT);
+  pinMode(p_2, OUTPUT);
+  pinMode(p_pwm, OUTPUT);
+}
+void motor(int p_1, int p_2, int p_pwm, int dir, int pwm) {
+  digitalWrite(p_1, dir / 2);
+  digitalWrite(p_2, dir % 2);
+  analogWrite(p_pwm, abs(pwm));
+}
+
 int run(int c, int dir, int pwm) {
   int m1 = 0, m2 = 0, mp = 0, stopped = 0;
-  if ( q_stop() ) { 
-    Serial.print("QUIT");  
+  if ( q_stop() ) {
+    Serial.print("QUIT");
     return 0;
-    
+
   }
 
   if ( c == LEFT || c == BOTH ) {
     update(L_HOME_TRIP);
     update(MID_TRIP);
     if ( ! ( (dir == HOME && l_home_trip) || (dir == MID && mid_trip)  ) ) {
-      digitalWrite(L_MOTOR_1, dir / 2);
-      digitalWrite(L_MOTOR_2, dir % 2);
-      analogWrite(L_MOTOR_PWM, abs(pwm));
+      motor(L_MOTOR, dir, pwm);
       stopped = stopped & 0x01;
     } else {
       if ( dir == MID && mid_trip )
         PC.println("Left motor trip middle");
       else if ( dir == HOME && l_home_trip )
         PC.println("Left motor trip home");
-
-      digitalWrite(L_MOTOR_1, 0);
-      digitalWrite(L_MOTOR_2, 0);
-      analogWrite(L_MOTOR_PWM, 0);
+      motor(L_MOTOR, 0, 0);
       stopped = stopped | 0x02;
     }
   }
@@ -31,27 +37,21 @@ int run(int c, int dir, int pwm) {
     update(R_HOME_TRIP);
     update(MID_TRIP);
     if ( !( (dir == HOME && r_home_trip) || (dir == MID && mid_trip) ) ) {
-      digitalWrite(R_MOTOR_1, dir / 2);
-      digitalWrite(R_MOTOR_2, dir % 2);
-      analogWrite(R_MOTOR_PWM, abs(pwm));
+      motor(R_MOTOR, dir, pwm);
       stopped = stopped & 0x02;
     } else {
       if ( dir == MID && mid_trip )
         PC.println("Right motor trip middle");
       else if ( dir == HOME && r_home_trip )
         PC.println("Right motor trip home");
-      digitalWrite(R_MOTOR_1, 0);
-      digitalWrite(R_MOTOR_2, 0);
-      analogWrite(R_MOTOR_PWM, 0);
+      motor(R_MOTOR, 0, 0);
       stopped = stopped | 0x01;
     }
   }
-  
-  if ( stopped == 3 && c == BOTH ) {
-    return 0;
-  } else if ( stopped == 2 && c == LEFT ) {
-    return 0;
-  } else if ( stopped == 1 && c == RIGHT ) {
+
+  if ( ( stopped == 3 && c == BOTH ) || 
+    ( stopped == 2 && c == LEFT ) ||
+    ( stopped == 1 && c == RIGHT ) ) {
     return 0;
   }
   return 1;
@@ -100,7 +100,7 @@ void go_up(int vel, int no) {
       flag++;
       Serial.println("Changed");
     } else if ( flag % 2 == 1 && ladder_ir == init_ladder_ir ) {
-      flag++;      
+      flag++;
       Serial.println("Changed");
     }
     if ( flag == target_flag ) {
@@ -241,22 +241,24 @@ bool quit_or_continue() {
 }
 
 /*
+  Left Motor
+  Right Motor
   10, 11, 12 - Motor 1
   A0,  8,  9 - Motor 2
- 
+
  Piston 44, 46, 30, 28
 
  Middle trip - 6
- 
+
  4 - comm tsop
  3 - right trip
  2 - comm trip
- 
+
  A4  - LEFT TRIP
  SDA - MIDDLE TSOP
  SCL - LADDER IR
- 
- 
+
+
 
 
 */
