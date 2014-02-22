@@ -92,11 +92,13 @@ void setup() {
   pinMode(COMM_IR, INPUT);
   pinMode(MID_IR, INPUT);
 
+// run(BOTH, STOP, 0);
 /*  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
   attachInterrupt(R_HOME_TRIP_INT, r_home_trip_isr, HIGH);
   attachInterrupt(MID_TRIP_INT, mid_trip_isr, HIGH);
   */
   ps2_init();
+
 }
 
 void loop() {
