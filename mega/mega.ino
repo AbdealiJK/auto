@@ -9,7 +9,7 @@
 
 #define SEESAW_PWM          100
 #define SWING_PWM           200
-#define POLEWALK_PWM        100
+#define POLEWALK_PWM        200
 #define LADDER_PWM          100
 
 //#define QUIT_OR_CONTINUE if(quit_or_continue()) return

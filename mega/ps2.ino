@@ -158,9 +158,6 @@ void ps2_ui() {
     }
   }
 
-  if (ps2x.ButtonPressed(PSB_R3)) {
-     PC.println("Pressed R3"); 
-  }
   if (ps2x.ButtonPressed(PSB_L3)) {
     l_pp_state = ! l_pp_state;
     if ( l_pp_state ) {
@@ -171,7 +168,7 @@ void ps2_ui() {
       PC.println(F("Left PP shrunk"));
     }
   }
-  if (ps2x.ButtonPressed(PSB_SELECT)) {
+  if (ps2x.ButtonPressed(PSB_SELECT) || ps2x.ButtonPressed(PSB_R3)) {
     r_pp_state = ! r_pp_state;
     if ( r_pp_state ) {
       pp(RIGHT, EXTEND);

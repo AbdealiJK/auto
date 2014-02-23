@@ -9,7 +9,6 @@ void motor(int p_1, int p_2, int p_pwm, int dir, int pwm) {
   digitalWrite(p_2, dir % 2);
   analogWrite(p_pwm, abs(pwm));
 }
-
 int run(int c, int dir, int pwm) {
   int m1 = 0, m2 = 0, mp = 0, stopped = 0;
   if ( q_stop() ) {

@@ -3,11 +3,11 @@ void polewalk_init() {
   update(COMM_TRIP);
   PC.println(F("next : both home"));
   QUIT_OR_CONTINUE;
-  go_home( BOTH, 255 );
+  go_home( BOTH, POLEWALK_PWM );
 
   PC.println(F("next : both mid"));
   QUIT_OR_CONTINUE;
-  go_mid(BOTH, 255);
+  go_mid(BOTH, POLEWALK_PWM);
 
   PC.println(F("both pp"));
   if ( MIRROR ) {
@@ -62,7 +62,7 @@ void polewalk() {
     delay(500);
     piston(RIGHT, OPEN);
   }
-  go_home(BOTH, 255);
+  go_home(BOTH, POLEWALK_PWM);
 
   PC.println(F("next : clamp / unclamp"));
   QUIT_OR_CONTINUE;
@@ -79,7 +79,7 @@ void polewalk() {
   }
   PC.println(F("next : both mid"));
   QUIT_OR_CONTINUE;
-  go_mid(BOTH, 255); // moves both to home, then moves left to mid and then right
+  go_mid(BOTH, POLEWALK_PWM); // moves both to home, then moves left to mid and then right
   piston(RIGHT, CLOSE);
   piston(LEFT, CLOSE);
   if ( MIRROR ) {
