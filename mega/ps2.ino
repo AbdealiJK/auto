@@ -158,6 +158,9 @@ void ps2_ui() {
     }
   }
 
+  if (ps2x.ButtonPressed(PSB_R3)) {
+     PC.println("Pressed R3"); 
+  }
   if (ps2x.ButtonPressed(PSB_L3)) {
     l_pp_state = ! l_pp_state;
     if ( l_pp_state ) {
@@ -181,33 +184,33 @@ void ps2_ui() {
 
   // ----------------------------------------- MOTOR MOVEMENT
   if ( ps2x.Button(PSB_R1) && ps2x.Button(PSB_L1) ) { // print stick values if either is TRUE
-    if ( ps2x.Analog(PSS_LX) < 65 ) {
+    if ( ps2x.Analog(PSS_LX) < 45 ) {
       run(LEFT, HOME, 250);
-    } else if ( ps2x.Analog(PSS_LX) > 165 ) {
+    } else if ( ps2x.Analog(PSS_LX) > 210 ) {
       run(LEFT, MID, 250);
     } else {
       run(LEFT, STOP, 0);
     }
 
-    if ( ps2x.Analog(PSS_RX) > 165 ) {
+    if ( ps2x.Analog(PSS_RX) > 210 ) {
       run(RIGHT, HOME, 250);   
-    } else if ( ps2x.Analog(PSS_RX) < 65 ) {
+    } else if ( ps2x.Analog(PSS_RX) < 45 ) {
       run(RIGHT, MID, 250);
     } else {
       run(RIGHT, STOP, 0);
     }
   } else if ( ps2x.Button(PSB_R1) ) { // print stick values if either is TRUE
-    if ( ps2x.Analog(PSS_LX) < 65 ) {
+    if ( ps2x.Analog(PSS_LX) < 45 ) {
       run(LEFT, HOME, 75);   
-    } else if ( ps2x.Analog(PSS_LX) > 165 ) {
+    } else if ( ps2x.Analog(PSS_LX) > 210 ) {
       run(LEFT, MID, 75);
     } else {
       run(LEFT, STOP, 0);
     }
 
-    if ( ps2x.Analog(PSS_RX) > 165 ) {
+    if ( ps2x.Analog(PSS_RX) > 210 ) {
       run(RIGHT, HOME, 75);   
-    } else if ( ps2x.Analog(PSS_RX) < 65 ) {
+    } else if ( ps2x.Analog(PSS_RX) < 45 ) {
       run(RIGHT, MID, 75);
     } else {
       run(RIGHT, STOP, 0);

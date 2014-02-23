@@ -3,12 +3,12 @@ void swing_init() {
   
   PC.println(F("next : both home"));
   QUIT_OR_CONTINUE;
-  go_home(BOTH, 200);
+  go_home(BOTH, SWING_PWM);
 
   PC.println(F("next : both move home with delay"));
   QUIT_OR_CONTINUE;
   long int start_time = millis();
-  while (run(BOTH, MID, 200)) {
+  while (run(BOTH, MID, SWING_PWM)) { // >>>>>>>>>>>>>>>>. NOTICE : had to put 0.8 as motors are not responding same. or maybe MD ?
     if ( millis() - start_time > SWING_TIME ) {
       run(BOTH, STOP, 0);
       break;

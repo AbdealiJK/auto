@@ -4,13 +4,13 @@ void seesaw_init() {
 
   PC.println(F("next : both home"));
   QUIT_OR_CONTINUE;
-  go_home(BOTH, 255);
+  go_home(BOTH, SEESAW_PWM);
 
   PC.println(F("next : both move mid with delay"));
   QUIT_OR_CONTINUE;
   ;
   long int start_time = millis();
-  while ( run(BOTH, MID, 255) ) {
+  while ( run(LEFT, MID, SEESAW_PWM * 0.8) && run(RIGHT, MID, SEESAW_PWM) ) { // >>>>>>>>>>>>>>>>. NOTICE : had to put 0.8 as motors are not responding same. or maybe MD ?
     if ( q_stop() )   break;
     if ( millis() - start_time > SEESAW_TIME ) {
       run(BOTH, STOP, 0);

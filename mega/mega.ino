@@ -4,13 +4,13 @@
 
 #define MIRROR              0
 #define SEESAW_TIME         1200
-#define SWING_TIME          800
+#define SWING_TIME          400
 #define LADDER_TIME         200
 
-#define SEESAW_PWM          0
-#define SWING_PWM           0
-#define POLEWALK_PWM        0
-#define LADDER_PWM          0
+#define SEESAW_PWM          100
+#define SWING_PWM           200
+#define POLEWALK_PWM        100
+#define LADDER_PWM          100
 
 //#define QUIT_OR_CONTINUE if(quit_or_continue()) return
 #define QUIT_OR_CONTINUE delay(200);
@@ -21,7 +21,7 @@
 #define L_HOME_TRIPPED      LOW
 
 #define R_MOTOR             12, 7, 10
-#define R_PISTON_PIN        28 
+#define R_PISTON_PIN        28
 #define R_HOME_TRIP         3
 #define R_HOME_TRIPPED      LOW
 
@@ -67,16 +67,18 @@ bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
 
 void setup() {
   PC.begin(9600);
-  
-  
+
+
   motor_init(L_MOTOR);
   motor_init(R_MOTOR);
+//  TCCR2A = (TCCR2A & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV8);
+//  TCCR2B = (TCCR2B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV8);
   pinMode(L_PISTON_PIN, OUTPUT);
   pinMode(R_PISTON_PIN, OUTPUT);
 
   pinMode(L_PP_PIN, OUTPUT);
   pinMode(R_PP_PIN, OUTPUT);
-  
+
   pinMode(L_HOME_TRIP, INPUT);
   pinMode(R_HOME_TRIP, INPUT);
   pinMode(MID_TRIP, INPUT);
@@ -85,11 +87,11 @@ void setup() {
   pinMode(COMM_IR, INPUT);
   pinMode(MID_IR, INPUT);
 
-// run(BOTH, STOP, 0);
-/*  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
-  attachInterrupt(R_HOME_TRIP_INT, r_home_trip_isr, HIGH);
-  attachInterrupt(MID_TRIP_INT, mid_trip_isr, HIGH);
-  */
+  // run(BOTH, STOP, 0);
+  /*  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
+    attachInterrupt(R_HOME_TRIP_INT, r_home_trip_isr, HIGH);
+    attachInterrupt(MID_TRIP_INT, mid_trip_isr, HIGH);
+    */
   ps2_init();
 
 }
@@ -97,52 +99,53 @@ void setup() {
 void loop() {
   ps2_ui();
   pc_ui();
-  
+
   while (PC.available())
     PC.read();
 
 
- /* 
-    Serial.print("\tL_HOME_TRIP : ");
-    Serial.print(digitalRead(L_HOME_TRIP));
-    Serial.print("\tR_HOME_TRIP : ");
-    Serial.print(digitalRead(R_HOME_TRIP));
-    Serial.print("\tCOMM_TRIP : ");
-    Serial.print(digitalRead(COMM_TRIP));
-    Serial.print("\tMID_TRIP : ");
-    Serial.print(digitalRead(MID_TRIP));
-    Serial.print("\tLADDER_IR : ");
-    Serial.print(digitalRead(LADDER_IR));
-    Serial.print("\tCOMM_IR : ");
-    Serial.print(digitalRead(COMM_IR));
-    Serial.print("\tMID_IR : ");
-    Serial.print(digitalRead(MID_IR));
-  */
-    
-    update(L_HOME_TRIP);
-    update(R_HOME_TRIP);
-    update(MID_TRIP);
-    update(COMM_TRIP);
-    update(LADDER_IR);
-    update(MID_IR);
-    update(COMM_IR);
-    Serial.print("\tL_HOME_TRIPval : ");
-    Serial.print(l_home_trip);
-    Serial.print("\tR_HOME_TRIPval : ");
-    Serial.print(r_home_trip);
-    Serial.print("\tCOMM_TRIPval : ");
-    Serial.print(comm_trip);
-    Serial.print("\tMID_TRIPval : ");
-    Serial.print(mid_trip);
-    Serial.print("\tLADDER_IRval : ");
-    Serial.print(ladder_ir);
-    Serial.print("\tCOMM_IRval : ");
-    Serial.print(comm_ir);
-    Serial.print("\tMID_IRval : ");
-    Serial.print(mid_ir);
-  
-    Serial.println(F("\tloop"));  
-  
+  /*
+     Serial.print("\tL_HOME_TRIP : ");
+     Serial.print(digitalRead(L_HOME_TRIP));
+     Serial.print("\tR_HOME_TRIP : ");
+     Serial.print(digitalRead(R_HOME_TRIP));
+     Serial.print("\tCOMM_TRIP : ");
+     Serial.print(digitalRead(COMM_TRIP));
+     Serial.print("\tMID_TRIP : ");
+     Serial.print(digitalRead(MID_TRIP));
+     Serial.print("\tLADDER_IR : ");
+     Serial.print(digitalRead(LADDER_IR));
+     Serial.print("\tCOMM_IR : ");
+     Serial.print(digitalRead(COMM_IR));
+     Serial.print("\tMID_IR : ");
+     Serial.print(digitalRead(MID_IR));
+   */
+
+  /*
+      update(L_HOME_TRIP);
+      update(R_HOME_TRIP);
+      update(MID_TRIP);
+      update(COMM_TRIP);
+      update(LADDER_IR);
+      update(MID_IR);
+      update(COMM_IR);
+      Serial.print("\tL_HOME_TRIPval : ");
+      Serial.print(l_home_trip);
+      Serial.print("\tR_HOME_TRIPval : ");
+      Serial.print(r_home_trip);
+      Serial.print("\tCOMM_TRIPval : ");
+      Serial.print(comm_trip);
+      Serial.print("\tMID_TRIPval : ");
+      Serial.print(mid_trip);
+      Serial.print("\tLADDER_IRval : ");
+      Serial.print(ladder_ir);
+      Serial.print("\tCOMM_IRval : ");
+      Serial.print(comm_ir);
+      Serial.print("\tMID_IRval : ");
+      Serial.print(mid_ir);
+    */
+  Serial.println(F("\tloop"));
+
   delay(20);
 
 

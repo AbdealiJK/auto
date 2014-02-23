@@ -29,7 +29,7 @@ int run(int c, int dir, int pwm) {
         PC.println("Left motor trip middle");
       else if ( dir == HOME && l_home_trip )
         PC.println("Left motor trip home");
-      motor(L_MOTOR, 0, 0);
+      motor(L_MOTOR, 0, 255);
       stopped = stopped | 0x02;
     }
   }
@@ -44,7 +44,7 @@ int run(int c, int dir, int pwm) {
         PC.println("Right motor trip middle");
       else if ( dir == HOME && r_home_trip )
         PC.println("Right motor trip home");
-      motor(R_MOTOR, 0, 0);
+      motor(R_MOTOR, 0, 255);
       stopped = stopped | 0x01;
     }
   }
