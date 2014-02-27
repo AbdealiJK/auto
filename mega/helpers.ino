@@ -86,7 +86,7 @@ void go_away(int c, int vel) {
   }
 }
 
-void go_up(int vel, int no) {
+void go_up(int vel, int no, bool tail) {
   update(LADDER_IR);
   int flag = 0, target_flag = no, init_ladder_ir = ladder_ir;
   Serial.println("Entered go up");
@@ -110,17 +110,26 @@ void go_up(int vel, int no) {
       run( LEFT, STOP, 0 );
       PC.print(target_flag);
       PC.println(F(" changes detected by IR "));
+      if(tail)
+      {
+        piston(RIGHT,CLOSE);
+        delay(500);
+      }
       break;
     }
   }
+  
 
   long start_time = millis();
+  if(!tail)
+  {
   while ( run( LEFT, HOME, 255 ) ) {
     if ( millis() - start_time > LADDER_TIME ) {
       run(BOTH, STOP, 0);
       PC.println(F(" time delay done "));
       break;
     }
+  }
   }
 
 }

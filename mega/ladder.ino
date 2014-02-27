@@ -12,10 +12,14 @@ void ladder_geton() {
   //  piston(CLOSE);
 
   PC.println(F("LADDER got on"));
-}      
+}
 void ladder() {
   PC.println(F("LADDER task"));
   long start_time = 0;
+
+  PC.println(F("next - left away"));
+  QUIT_OR_CONTINUE;
+  go_away(LEFT, 255);
 
   int n = 3;
   while (n--) {
@@ -28,15 +32,21 @@ void ladder() {
     PC.println(F("next : bot up - left home for ladder rungs"));
     QUIT_OR_CONTINUE;
     update(LADDER_IR);
-    if ( ladder_ir )  go_up(255, 2); // i guess its only till for the initial thing i tink it must be 2 
-    else              go_up(255, 3);
-    
+    if(n)
+    {
+    if ( ladder_ir )  go_up(255, 2,0); // i guess its only till for the initial thing i tink it must be 2
+    else              go_up(255, 3,0);
+    }
     if ( n == 0 ) {
-      PC.println(F("next : tail open and going down a little more"));
-      QUIT_OR_CONTINUE;
-      piston(RIGHT, CLOSE);
+    if ( ladder_ir )  go_up(255, 2,1); // i guess its only till for the initial thing i tink it must be 2
+    else              go_up(255, 3,1);
+   
+
+     
+//      piston(RIGHT, CLOSE);
+            PC.println(F("next : tail open and going down a little more"));
+       QUIT_OR_CONTINUE;
       delay(250);
-      
       start_time = millis();
       while ( run( LEFT, MID, 255 ) ) {
         if ( millis() - start_time > LADDER_TIME ) {
@@ -46,11 +56,11 @@ void ladder() {
         }
       }
     }
-    
+
     PC.println(F("next : unclamp rung"));
     QUIT_OR_CONTINUE;
     piston(LEFT, OPEN);
-    
+
     PC.println(F("next - left away"));
     QUIT_OR_CONTINUE;
     go_away(LEFT, 255);
@@ -63,14 +73,15 @@ void ladder() {
 
   PC.println(F("next : go up"));
   QUIT_OR_CONTINUE;
-  go_up(255, 1);
-    piston(LEFT, OPEN);
-  
+ piston(RIGHT, OPEN);  
+  go_up(255, 3,1);
+
+
   start_time = millis();
   int close_tail_flag = 0;
   while ( run ( LEFT, HOME, 255 ) ) { // Bot goes down a little
     if ( q_stop() ) break;
-    if ( close_tail_flag == 0 && millis() - start_time > 300 ) { // % calib
+    if ( close_tail_flag == 0 && millis() - start_time > 800 ) { // % calib
       PC.println(F("Time delay done "));
       PC.println(F("Switching off tail piston through slave"));
       piston(RIGHT, OPEN);

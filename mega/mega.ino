@@ -5,7 +5,7 @@
 #define MIRROR              0
 #define SEESAW_TIME         1200
 #define SWING_TIME          400
-#define LADDER_TIME         200
+#define LADDER_TIME         400
 
 #define SEESAW_PWM          100
 #define SWING_PWM           200
