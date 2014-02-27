@@ -48,9 +48,9 @@ int run(int c, int dir, int pwm) {
     }
   }
 
-  if ( ( stopped == 3 && c == BOTH ) || 
-    ( stopped == 2 && c == LEFT ) ||
-    ( stopped == 1 && c == RIGHT ) ) {
+  if ( ( stopped == 3 && c == BOTH ) ||
+       ( stopped == 2 && c == LEFT ) ||
+       ( stopped == 1 && c == RIGHT ) ) {
     return 0;
   }
   return 1;
@@ -86,14 +86,14 @@ void go_away(int c, int vel) {
   }
 }
 
-void go_up(int vel, int no, bool tail) {
+void go_up(int vel, int no) {
   update(LADDER_IR);
   int flag = 0, target_flag = no, init_ladder_ir = ladder_ir;
   Serial.println("Entered go up");
 
-  
-      Serial.print("INITIAL, now it is ");
-      Serial.println(ladder_ir);
+
+  Serial.print("INITIAL, now it is ");
+  Serial.println(ladder_ir);
   while ( run(LEFT, HOME, vel) ) {
     update(LADDER_IR);
 
@@ -110,28 +110,9 @@ void go_up(int vel, int no, bool tail) {
       run( LEFT, STOP, 0 );
       PC.print(target_flag);
       PC.println(F(" changes detected by IR "));
-      if(tail)
-      {
-        piston(RIGHT,CLOSE);
-        delay(500);
-      }
       break;
     }
   }
-  
-
-  long start_time = millis();
-  if(!tail)
-  {
-  while ( run( LEFT, HOME, 255 ) ) {
-    if ( millis() - start_time > LADDER_TIME ) {
-      run(BOTH, STOP, 0);
-      PC.println(F(" time delay done "));
-      break;
-    }
-  }
-  }
-
 }
 
 // ----------------------------------------------------------------- SOLENOID
@@ -165,7 +146,7 @@ void update(int tr) {
   } else if ( tr == COMM_TRIP ) {
     val = &comm_trip;  pin = COMM_TRIP;   tripped = COMM_TRIPPED;   loops = 1;
   } else if ( tr == LADDER_IR ) {
-    val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 50000;
+    val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 25000;
   } else if ( tr == COMM_IR ) {
     val = &comm_ir;  pin = COMM_IR;   tripped = COMM_IR_FOUND;   loops = 10000;
   } else if ( tr == MID_IR ) {
@@ -177,9 +158,9 @@ void update(int tr) {
     long int temp = 0;
     for ( long int lim = 0; lim < loops; lim++ ) {
       temp += digitalRead(pin);
-//      if ( temp < 0.3 * lim && lim > 500 ) {
- //       break;
-  //    }
+      //      if ( temp < 0.3 * lim && lim > 500 ) {
+      //       break;
+      //    }
     }
 
     if ( temp > 0.9 * loops ) {

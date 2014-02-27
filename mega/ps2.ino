@@ -198,9 +198,9 @@ void ps2_ui() {
     }
   } else if ( ps2x.Button(PSB_R1) ) { // print stick values if either is TRUE
     if ( ps2x.Analog(PSS_LX) < 45 ) {
-      run(LEFT, HOME, 200);   
+      run(LEFT, HOME, 75);   
     } else if ( ps2x.Analog(PSS_LX) > 210 ) {
-      run(LEFT, MID, 150);
+      run(LEFT, MID, 75);
     } else {
       run(LEFT, STOP, 0);
     }

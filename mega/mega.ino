@@ -5,12 +5,20 @@
 #define MIRROR              0
 #define SEESAW_TIME         1200
 #define SWING_TIME          400
-#define LADDER_TIME         400
+int LADDER_TIME(int n) {
+  if ( n == 0 ) {
+    return 100;
+  } else if ( n == 1 ) {
+    return 550;
+  } else if ( n == 2 ) {
+    return 250;
+  }
+}
 
 #define SEESAW_PWM          100
 #define SWING_PWM           200
 #define POLEWALK_PWM        200
-#define LADDER_PWM          100
+#define LADDER_PWM          255
 
 #define QUIT_OR_CONTINUE if(quit_or_continue()) return
 //#define QUIT_OR_CONTINUE delay(200);

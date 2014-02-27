@@ -19,7 +19,8 @@ void ladder() {
 
   PC.println(F("next - left away"));
   QUIT_OR_CONTINUE;
-  go_away(LEFT, 255);
+  go_home(RIGHT, LADDER_PWM);
+  go_away(LEFT, LADDER_PWM);
 
   int n = 3;
   while (n--) {
@@ -32,24 +33,27 @@ void ladder() {
     PC.println(F("next : bot up - left home for ladder rungs"));
     QUIT_OR_CONTINUE;
     update(LADDER_IR);
-    if(n)
-    {
-    if ( ladder_ir )  go_up(255, 2,0); // i guess its only till for the initial thing i tink it must be 2
-    else              go_up(255, 3,0);
-    }
-    if ( n == 0 ) {
-    if ( ladder_ir )  go_up(255, 2,1); // i guess its only till for the initial thing i tink it must be 2
-    else              go_up(255, 3,1);
-   
+    if ( ladder_ir )  go_up(LADDER_PWM, 2);
+    else              go_up(LADDER_PWM, 3);
 
-     
-//      piston(RIGHT, CLOSE);
-            PC.println(F("next : tail open and going down a little more"));
-       QUIT_OR_CONTINUE;
-      delay(250);
+    if ( n != 0 ) {
+      long start_time = millis();
+      while ( run( LEFT, HOME, LADDER_PWM ) ) {
+        if ( millis() - start_time > LADDER_TIME(n) ) {
+          run(BOTH, STOP, 0);
+          PC.println(millis() - start_time );
+          PC.println(F(" time delay done "));
+          break;
+        }
+      }
+    } if ( n == 0 ) {
+      PC.println(F("next : tail open and going down a little more"));
+      QUIT_OR_CONTINUE;
+      piston(RIGHT, CLOSE);
+      delay(1500);
       start_time = millis();
       while ( run( LEFT, MID, 255 ) ) {
-        if ( millis() - start_time > LADDER_TIME ) {
+        if ( millis() - start_time > LADDER_TIME(n) ) {
           run(BOTH, STOP, 0);
           PC.println(F(" time delay done "));
           break;
@@ -60,7 +64,13 @@ void ladder() {
     PC.println(F("next : unclamp rung"));
     QUIT_OR_CONTINUE;
     piston(LEFT, OPEN);
-
+    
+    if ( n == 0 ) {
+      PC.println(F("next : tail open"));
+      delay(500); 
+      piston(RIGHT, OPEN);
+      delay(500); 
+    }
     PC.println(F("next - left away"));
     QUIT_OR_CONTINUE;
     go_away(LEFT, 255);
@@ -71,27 +81,27 @@ void ladder() {
   QUIT_OR_CONTINUE;
   piston(LEFT, CLOSE);
 
-  PC.println(F("next : go up"));
+  PC.println(F("next : go up, open and close tail to tip off"));
   QUIT_OR_CONTINUE;
- piston(RIGHT, OPEN);  
-  go_up(255, 3,1);
-
-
+  go_up(255, 3);
+  piston(RIGHT, CLOSE);
+  delay(500);
+  
   start_time = millis();
   int close_tail_flag = 0;
-  while ( run ( LEFT, HOME, 255 ) ) { // Bot goes down a little
+  while ( run ( LEFT, HOME, 255 ) ) {
     if ( q_stop() ) break;
-    if ( close_tail_flag == 0 && millis() - start_time > 800 ) { // % calib
-      PC.println(F("Time delay done "));
-      PC.println(F("Switching off tail piston through slave"));
+    if ( close_tail_flag == 0 && millis() - start_time > 500 ) {
+      PC.println(F("Time delay done - Switching off tail piston"));
       piston(RIGHT, OPEN);
       close_tail_flag = 1;
     }
   }
 
-  PC.println(F("next : leave ladder"));
+  PC.println(F("next : leave ladder and go to mid"));
   QUIT_OR_CONTINUE;
-
+  piston(LEFT, OPEN);
+  go_mid(LEFT, LADDER_PWM);
 
   PC.println(F("next : go onto platform"));
   QUIT_OR_CONTINUE;
