@@ -19,9 +19,9 @@ int LADDER_TIME(int n) {
 #define SWING_PWM           200
 #define POLEWALK_PWM        200
 #define LADDER_PWM          255
-
-#define QUIT_OR_CONTINUE if(quit_or_continue()) return
-//#define QUIT_OR_CONTINUE delay(200);
+#define LAD_THRESHOLD       150.0
+//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+#define QUIT_OR_CONTINUE delay(200);
 
 #define L_MOTOR             A1, 8, 9
 #define L_PISTON_PIN        46

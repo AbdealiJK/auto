@@ -146,37 +146,64 @@ void update(int tr) {
   } else if ( tr == COMM_TRIP ) {
     val = &comm_trip;  pin = COMM_TRIP;   tripped = COMM_TRIPPED;   loops = 1;
   } else if ( tr == LADDER_IR ) {
-    val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 25000;
+    val = &ladder_ir;  pin = LADDER_IR;   tripped = LADDER_IR_FOUND;   loops = 500;
   } else if ( tr == COMM_IR ) {
     val = &comm_ir;  pin = COMM_IR;   tripped = COMM_IR_FOUND;   loops = 10000;
   } else if ( tr == MID_IR ) {
     val = &mid_ir;  pin = MID_IR;   tripped = MID_IR_FOUND;   loops = 10000;
   }
 
-  if ( loops > 0 && pin >= 0) {
+  if ( loops > 0 && pin >= 0 ) {
 
     long int temp = 0;
-    for ( long int lim = 0; lim < loops; lim++ ) {
-      temp += digitalRead(pin);
-      //      if ( temp < 0.3 * lim && lim > 500 ) {
-      //       break;
-      //    }
-    }
-
-    if ( temp > 0.9 * loops ) {
-      if ( tripped == 1 ) {
-        *val = 1;
-      } else {
-        *val = 0;
+    if ( pin != LADDER_IR)
+    {
+      for ( long int lim = 0; lim < loops; lim++ ) {
+        temp += digitalRead(pin);
+        //      if ( temp < 0.3 * lim && lim > 500 ) {
+        //       break;
+        //    }
       }
-    } else {
-      if ( tripped == 1 ) {
-        *val = 0;
+
+      if ( temp > 0.9 * loops ) {
+        if ( tripped == 1 ) {
+          *val = 1;
+        } else {
+          *val = 0;
+        }
       } else {
-        *val = 1;
+        if ( tripped == 1 ) {
+          *val = 0;
+        } else {
+          *val = 1;
+        }
+      }
+    }
+    else
+    {
+      for ( long int lim = 0; lim < loops; lim++ ) {
+        temp += analogRead(pin);
+        //      if ( temp < 0.3 * lim && lim > 500 ) {
+        //       break;
+        //    }
+      }
+
+      if ( temp > 0.9 * loops * LAD_THRESHOLD / 1024.0 ) {
+        if ( tripped == 1 ) {
+          *val = 1;
+        } else {
+          *val = 0;
+        }
+      } else {
+        if ( tripped == 1 ) {
+          *val = 0;
+        } else {
+          *val = 1;
+        }
       }
     }
   }
+
 }
 
 // ----------------------------------------------------------------- MISC
