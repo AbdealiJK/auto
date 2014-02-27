@@ -151,57 +151,36 @@ void update(int tr) {
     val = &comm_ir;  pin = COMM_IR;   tripped = COMM_IR_FOUND;   loops = 10000;
   } else if ( tr == MID_IR ) {
     val = &mid_ir;  pin = MID_IR;   tripped = MID_IR_FOUND;   loops = 10000;
+  } else if ( tr == L_SEESAW_IR ) {
+    val = &l_seesaw_ir;  pin = L_SEESAW_IR;   tripped = L_SEESAW_IR_FOUND;   loops = 1000;
+  } else if ( tr == R_SEESAW_IR ) {
+    val = &r_seesaw_ir;  pin = R_SEESAW_IR;   tripped = R_SEESAW_IR_FOUND;   loops = 1000;
   }
 
   if ( loops > 0 && pin >= 0 ) {
 
     long int temp = 0;
-    if ( pin != LADDER_IR)
-    {
-      for ( long int lim = 0; lim < loops; lim++ ) {
-        temp += digitalRead(pin);
-        //      if ( temp < 0.3 * lim && lim > 500 ) {
-        //       break;
-        //    }
-      }
+    for ( long int lim = 0; lim < loops; lim++ ) {
+      temp += digitalRead(pin);
+      //      if ( temp < 0.3 * lim && lim > 500 ) {
+      //       break;
+      //    }
+    }
 
-      if ( temp > 0.9 * loops ) {
-        if ( tripped == 1 ) {
-          *val = 1;
-        } else {
-          *val = 0;
-        }
+    if ( temp > 0.9 * loops ) {
+      if ( tripped == 1 ) {
+        *val = 1;
       } else {
-        if ( tripped == 1 ) {
-          *val = 0;
-        } else {
-          *val = 1;
-        }
+        *val = 0;
+      }
+    } else {
+      if ( tripped == 1 ) {
+        *val = 0;
+      } else {
+        *val = 1;
       }
     }
-    else
-    {
-      for ( long int lim = 0; lim < loops; lim++ ) {
-        temp += analogRead(pin);
-        //      if ( temp < 0.3 * lim && lim > 500 ) {
-        //       break;
-        //    }
-      }
 
-      if ( temp > 0.9 * loops * LAD_THRESHOLD / 1024.0 ) {
-        if ( tripped == 1 ) {
-          *val = 1;
-        } else {
-          *val = 0;
-        }
-      } else {
-        if ( tripped == 1 ) {
-          *val = 0;
-        } else {
-          *val = 1;
-        }
-      }
-    }
   }
 
 }

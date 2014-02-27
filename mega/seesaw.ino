@@ -8,7 +8,7 @@ void seesaw_init() {
 
   PC.println(F("next : both move mid with delay"));
   QUIT_OR_CONTINUE;
-  ;
+  
   long int start_time = millis();
   while ( run(LEFT, MID, SEESAW_PWM * 0.8) && run(RIGHT, MID, SEESAW_PWM) ) { // >>>>>>>>>>>>>>>>. NOTICE : had to put 0.8 as motors are not responding same. or maybe MD ?
     if ( q_stop() )   break;
@@ -18,6 +18,23 @@ void seesaw_init() {
       break;
     }
   }
+  /*while ( run(LEFT, MID, SEESAW_PWM) ) {
+    if ( q_stop() )   break;
+    update(L_SEESAW_IR);
+    if ( l_seesaw_trip ) {
+      run(LEFT, STOP, 255);
+      break;
+    }
+  }
+  while ( run(RIGHT, MID, SEESAW_PWM) ) {
+    if ( q_stop() )   break;
+    update(R_SEESAW_IR);
+    if ( R_seesaw_trip ) {
+      run(RIGHT, STOP, 255);
+      break;
+    }
+  }*/
+  
   PC.println(F("SEESAW init done"));
 }
 void seesaw_geton() {

@@ -36,6 +36,7 @@ void ladder() {
     if ( ladder_ir )  go_up(LADDER_PWM, 2);
     else              go_up(LADDER_PWM, 3);
 
+
     if ( n != 0 ) {
       long start_time = millis();
       while ( run( LEFT, HOME, LADDER_PWM ) ) {

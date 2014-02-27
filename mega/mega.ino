@@ -37,13 +37,19 @@ int LADDER_TIME(int n) {
 #define R_PP_PIN            30
 
 #define MID_TRIP            A2
+#define L_SEESAW_IR         A2
+#define R_SEESAW_IR         A2
 #define COMM_TRIP           3
 #define LADDER_IR           A4
+#define LADDER_FORCE        A4
 #define COMM_IR             4
 #define MID_IR              SCL
 #define MID_TRIPPED         HIGH
+#define L_SEESAW_IR_FOUND   LOW
+#define R_SEESAW_IR_FOUND   LOW
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
+#define LADDER_FORCE_VALUE  30
 #define COMM_IR_FOUND       LOW
 #define MID_IR_FOUND        LOW
 
@@ -71,7 +77,7 @@ byte type = 0, vibrate = 0, ps2_on = 0,
      l_pp_state = 0, r_pp_state = 0;
 
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
-     ladder_ir = 0, comm_ir = 0, mid_ir = 0;
+     ladder_ir = 0, comm_ir = 0, mid_ir = 0, l_seesaw_ir = 0, r_seesaw_ir = 0;
 
 void setup() {
   PC.begin(57600);
