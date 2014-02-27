@@ -17,10 +17,10 @@ void ladder() {
   PC.println(F("LADDER task"));
   long start_time = 0;
 
-  int n = 4;
+  int n = 3;
   while (n--) {
-   PC.print(n);
-   PC.println(" start");
+    PC.print(n);
+    PC.println(" start<<<<<");
     PC.println(F("next : clamp ladder"));
     QUIT_OR_CONTINUE;
     piston(LEFT, CLOSE);
@@ -30,8 +30,7 @@ void ladder() {
     update(LADDER_IR);
     if ( ladder_ir )  go_up(255, 2); // i guess its only till for the initial thing i tink it must be 2 
     else              go_up(255, 3);
-    PC.print(n);
-    PC.println(" middle");
+    
     if ( n == 0 ) {
       PC.println(F("next : tail open and going down a little more"));
       QUIT_OR_CONTINUE;
@@ -46,15 +45,12 @@ void ladder() {
           break;
         }
       }
-
     }
-
+    
     PC.println(F("next : unclamp rung"));
     QUIT_OR_CONTINUE;
     piston(LEFT, OPEN);
-
     
-
     PC.println(F("next - left away"));
     QUIT_OR_CONTINUE;
     go_away(LEFT, 255);

@@ -12,28 +12,28 @@
 #define POLEWALK_PWM        200
 #define LADDER_PWM          100
 
-//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
-#define QUIT_OR_CONTINUE delay(200);
+#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+//#define QUIT_OR_CONTINUE delay(200);
 
-#define L_MOTOR             8, A1, 9
+#define L_MOTOR             A1, 8, 9
 #define L_PISTON_PIN        46
-#define L_HOME_TRIP         A4
+#define L_HOME_TRIP         SDA
 #define L_HOME_TRIPPED      LOW
 
-#define R_MOTOR             12, 7, 10
+#define R_MOTOR             6, 7, 10
 #define R_PISTON_PIN        28
-#define R_HOME_TRIP         3
-#define R_HOME_TRIPPED      LOW
+#define R_HOME_TRIP         2
+#define R_HOME_TRIPPED      HIGH
 
 #define L_PP_PIN            44
 #define R_PP_PIN            30
 
 #define MID_TRIP            A2
-#define COMM_TRIP           2
-#define LADDER_IR           SCL
+#define COMM_TRIP           3
+#define LADDER_IR           A4
 #define COMM_IR             4
-#define MID_IR              SDA
-#define MID_TRIPPED         LOW
+#define MID_IR              SCL
+#define MID_TRIPPED         HIGH
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
 #define COMM_IR_FOUND       LOW
@@ -66,7 +66,7 @@ bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0;
 
 void setup() {
-  PC.begin(9600);
+  PC.begin(57600);
 
 
   motor_init(L_MOTOR);
