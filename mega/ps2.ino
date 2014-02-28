@@ -47,37 +47,45 @@ void ps2_ui() {
   ps2x.read_gamepad(false, vibrate);
 
   if ( ps2x.Button(PSB_L1) ) {
+    blink();
     run(BOTH, STOP, 0);
   }
 
   if ( ps2x.Button(PSB_L1) && ps2x.Button(PSB_L2) && ps2x.Button(PSB_R1) && ps2x.Button(PSB_R2) ) {
-      seesaw_init();
-      seesaw_geton();
-      seesaw();
-      seesaw_getoff();
-      delay(10000);
-      swing_init();
-      swing_geton();
-      swing();
-      swing_getoff();
-      delay(10000);
-      polewalk_init();
-      polewalk_geton();
-      polewalk();
-      polewalk_getoff();
+    blink();
+    seesaw_init();
+    seesaw_geton();
+    seesaw();
+    seesaw_getoff();
+    delay(10000);
+    swing_init();
+    swing_geton();
+    swing();
+    swing_getoff();
+    delay(10000);
+    polewalk_init();
+    polewalk_geton();
+    polewalk();
+    polewalk_getoff();
   }
 
   if ( ps2x.Button(PSB_PAD_UP) ) {
     PC.println("SEESAW");
     if ( ps2x.Button(PSB_GREEN) ) {
+      blink();
+
       seesaw_init();
     } else if ( ps2x.Button(PSB_PINK) ) {
+      blink();
       seesaw_geton();
     } else if ( ps2x.Button(PSB_RED) ) {
+      blink();
       seesaw();
     } else if ( ps2x.Button(PSB_BLUE) ) {
+      blink();
       seesaw_getoff();
     } else if ( ps2x.ButtonPressed(PSB_R1) ) {
+      blink();
       seesaw_init();
       seesaw_geton();
       seesaw();
@@ -87,14 +95,19 @@ void ps2_ui() {
   else if ( ps2x.Button(PSB_PAD_LEFT) ) {
     PC.println("SWING");
     if ( ps2x.Button(PSB_GREEN) ) {
+      blink();
       swing_init();
     } else if ( ps2x.Button(PSB_PINK) ) {
+      blink();
       swing_geton();
     } else if ( ps2x.Button(PSB_RED) ) {
+      blink();
       swing();
     } else if ( ps2x.Button(PSB_BLUE) ) {
+      blink();
       swing_getoff();
     } else if ( ps2x.ButtonPressed(PSB_R1) ) {
+      blink();
       swing_init();
       swing_geton();
       swing();
@@ -104,14 +117,19 @@ void ps2_ui() {
   else if ( ps2x.Button(PSB_PAD_RIGHT) ) {
     PC.println("POLEWALK");
     if ( ps2x.Button(PSB_GREEN) ) {
+      blink();
       polewalk_init();
     } else if ( ps2x.Button(PSB_PINK) ) {
+      blink();
       polewalk_geton();
     } else if ( ps2x.Button(PSB_RED) ) {
+      blink();
       polewalk();
     } else if ( ps2x.Button(PSB_BLUE) ) {
+      blink();
       polewalk_getoff();
     } else if ( ps2x.ButtonPressed(PSB_R1) ) {
+      blink();
       polewalk_init();
       polewalk_geton();
       polewalk();
@@ -121,14 +139,19 @@ void ps2_ui() {
   if ( ps2x.Button(PSB_PAD_DOWN) ) {
     PC.println("LADDER");
     if ( ps2x.Button(PSB_GREEN) ) {
+      blink();
       ladder_init();
     } else if ( ps2x.Button(PSB_PINK) ) {
+      blink();
       ladder_geton();
     } else if ( ps2x.Button(PSB_RED) ) {
+      blink();
       ladder();
     } else if ( ps2x.Button(PSB_BLUE) ) {
+      blink();
       ladder_getoff();
     } else if ( ps2x.ButtonPressed(PSB_R1) ) {
+      blink();
       ladder_init();
       ladder_geton();
       ladder();
@@ -140,9 +163,11 @@ void ps2_ui() {
   if (ps2x.ButtonPressed(PSB_L2)) {
     l_piston_state = ! l_piston_state;
     if ( l_piston_state ) {
+      blink();
       piston(LEFT, OPEN);
       PC.println(F("Left piston opened"));
     } else {
+      blink();
       piston(LEFT, CLOSE);
       PC.println(F("Left piston closed"));
     }
@@ -150,9 +175,11 @@ void ps2_ui() {
   if (ps2x.ButtonPressed(PSB_R2)) {
     r_piston_state = ! r_piston_state;
     if ( r_piston_state ) {
+      blink();
       piston(RIGHT, OPEN);
       PC.println(F("Right piston opened"));
     } else {
+      blink();
       piston(RIGHT, CLOSE);
       PC.println(F("Right piston closed"));
     }
@@ -161,9 +188,11 @@ void ps2_ui() {
   if (ps2x.ButtonPressed(PSB_L3)) {
     l_pp_state = ! l_pp_state;
     if ( l_pp_state ) {
+      blink();
       pp(LEFT, EXTEND);
       PC.println(F("Left PP extended"));
     } else {
+      blink();
       pp(LEFT, SHRINK);
       PC.println(F("Left PP shrunk"));
     }
@@ -171,9 +200,11 @@ void ps2_ui() {
   if (ps2x.ButtonPressed(PSB_SELECT) || ps2x.ButtonPressed(PSB_R3)) {
     r_pp_state = ! r_pp_state;
     if ( r_pp_state ) {
+      blink();
       pp(RIGHT, EXTEND);
       PC.println(F("Right PP extended"));
     } else {
+      blink();
       pp(RIGHT, SHRINK);
       PC.println(F("Right PP shrunk"));
     }
@@ -182,37 +213,50 @@ void ps2_ui() {
   // ----------------------------------------- MOTOR MOVEMENT
   if ( ps2x.Button(PSB_R1) && ps2x.Button(PSB_L1) ) { // print stick values if either is TRUE
     if ( ps2x.Analog(PSS_LX) < 45 ) {
+      blink();
       run(LEFT, HOME, 250);
     } else if ( ps2x.Analog(PSS_LX) > 210 ) {
+      blink();
       run(LEFT, MID, 250);
     } else {
+      blink();
       run(LEFT, STOP, 0);
     }
 
     if ( ps2x.Analog(PSS_RX) > 210 ) {
-      run(RIGHT, HOME, 250);   
+      blink();
+      run(RIGHT, HOME, 250);
     } else if ( ps2x.Analog(PSS_RX) < 45 ) {
+      blink();
       run(RIGHT, MID, 250);
     } else {
+      blink();
       run(RIGHT, STOP, 0);
     }
   } else if ( ps2x.Button(PSB_R1) ) { // print stick values if either is TRUE
     if ( ps2x.Analog(PSS_LX) < 45 ) {
-      run(LEFT, HOME, 75);   
+      blink();
+      run(LEFT, HOME, 75);
     } else if ( ps2x.Analog(PSS_LX) > 210 ) {
+      blink();
       run(LEFT, MID, 75);
     } else {
+      blink();
       run(LEFT, STOP, 0);
     }
 
     if ( ps2x.Analog(PSS_RX) > 210 ) {
-      run(RIGHT, HOME, 75);   
+      blink();
+      run(RIGHT, HOME, 75);
     } else if ( ps2x.Analog(PSS_RX) < 45 ) {
+      blink();
       run(RIGHT, MID, 75);
     } else {
+      blink();
       run(RIGHT, STOP, 0);
     }
   } else {
+    blink();
     run(RIGHT, STOP, 0);
     run(LEFT, STOP, 0);
   }

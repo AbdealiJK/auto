@@ -98,7 +98,7 @@ void pc_ui() {
     update(MID_TRIP);
     update(COMM_TRIP);
     update(LADDER_IR);
-    update(LADDER_FORCE);
+    update_force();
     update(MID_IR);
     update(COMM_IR);
     PC.println(F(">>> DATA : "));

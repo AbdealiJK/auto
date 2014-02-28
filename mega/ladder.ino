@@ -19,7 +19,7 @@ void ladder() {
 
   PC.println(F("next - left away"));
   QUIT_OR_CONTINUE;
-  go_home(RIGHT, LADDER_PWM);
+//  go_home(RIGHT, LADDER_PWM);
   go_away(LEFT, LADDER_PWM);
 
   int n = 3;

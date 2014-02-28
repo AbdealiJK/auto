@@ -26,6 +26,7 @@ void swing_geton() {
   }
   piston(RIGHT, CLOSE);
   piston(LEFT, CLOSE);
+  pp(MID, EXTEND);
 
   PC.println(F("SWING got on"));
 }

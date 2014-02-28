@@ -3,6 +3,7 @@ void motor_init(int p_1, int p_2, int p_pwm) {
   pinMode(p_1, OUTPUT);
   pinMode(p_2, OUTPUT);
   pinMode(p_pwm, OUTPUT);
+  
 }
 void motor(int p_1, int p_2, int p_pwm, int dir, int pwm) {
   digitalWrite(p_1, dir / 2);
@@ -62,18 +63,18 @@ void go_home(char ch, int vel) {
 }
 
 void go_mid(int c, int vel) {
-  if ( c == LEFT || c == BOTH ) {
-    while ( run(LEFT, MID, vel) ) {
+  if ( c == RIGHT || c == BOTH ) {
+    while ( run(RIGHT, MID, vel) ) {
       update(MID_IR);
       if ( mid_ir ) {
-        run ( LEFT, STOP, 0 );
+        run ( RIGHT, STOP, 0 );
         PC.print(F("IR reached.... "));
         break;
       }
     }
   }
-  if ( c == RIGHT || c == BOTH ) {
-    while ( run(RIGHT, MID, vel) );
+  if ( c == LEFT || c == BOTH ) {
+    while ( run(LEFT, MID, vel) );
   }
 }
 
@@ -118,12 +119,19 @@ void go_away(int c, int vel) {
 void go_up(int vel) {
   PC.println("Entered go up");
   update_force();
-  float last_ladder_force = ladder_force;
+  float last_ladder_force = ladder_force, ladder_forced_flag = 0;
   while ( run(LEFT, HOME, vel) ) {
     update_force();
-    last_ladder_force = ladder_force;
+    PC.println(ladder_force);
+    if ( ladder_force < 900 ) {
+      ladder_forced_flag = 1;
+    }
+    /*last_ladder_force = ladder_force;
     if ( ladder_force - last_ladder_force > LADDER_FORCE_VALUE ) {
+    */
+    if ( ladder_forced_flag && ladder_force > 1000 ) {
       run( LEFT, STOP, 0 );
+
       PC.println(F(" Fixed clamp opened ! "));
       break;
     }
@@ -147,7 +155,7 @@ void pp(int c, int v) {
 
 // ----------------------------------------------------------------- TRIP UPDATES
 void update_force() {
-  int loops = 1000;
+  int loops = 1;
   long int temp = 0;
   for ( long int lim = 0; lim < loops; lim++ ) {
     temp += analogRead(LADDER_FORCE);
@@ -266,6 +274,12 @@ bool quit_or_continue() {
   }
 }
 
+void blink() {
+/*  digitalWrite(13, HIGH);
+  delay(200);
+  digitalWrite(13, LOW);
+  delay(200);*/
+}
 /*
   Left Motor
   Right Motor

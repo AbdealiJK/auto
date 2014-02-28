@@ -7,11 +7,11 @@
 #define SWING_TIME          400
 int LADDER_TIME(int n) {
   if ( n == 0 ) {
-    return 100;
+    return 0;
   } else if ( n == 1 ) {
-    return 550;
+    return 0;
   } else if ( n == 2 ) {
-    return 250;
+    return 0;
   }
 }
 
@@ -88,8 +88,6 @@ void setup() {
 
   motor_init(L_MOTOR);
   motor_init(R_MOTOR);
-//  TCCR2A = (TCCR2A & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV8);
-//  TCCR2B = (TCCR2B & ~TIMER_PRESCALE_MASK) | TIMER_CLK_DIV8);
   pinMode(L_PISTON_PIN, OUTPUT);
   pinMode(R_PISTON_PIN, OUTPUT);
 
@@ -165,8 +163,9 @@ void loop() {
       Serial.print("\tMID_IRval : ");
       Serial.print(mid_ir);
     */
-  Serial.println(F("\tloop"));
-
+//  Serial.println(F("\tloop"));
+  Serial.println(analogRead(A4));
+ 
   delay(20);
 
 
