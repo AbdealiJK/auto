@@ -87,52 +87,30 @@ void go_away(int c, int vel) {
   }
 }
 
-/*void go_up(int vel, int no) {
-  update(LADDER_IR);
-  int flag = 0, target_flag = no, init_ladder_ir = ladder_ir;
+void go_up(int vel) {
+  update(LADDER_MID_IR);
+  int flag = 0;
   Serial.println("Entered go up");
 
 
   Serial.print("INITIAL, now it is ");
-  Serial.println(ladder_ir);
+  Serial.println(ladder_mid_ir);
   while ( run(LEFT, HOME, vel) ) {
-    update(LADDER_IR);
+    update(LADDER_MID_IR);
 
-    if ( flag % 2 == 0 && ladder_ir != init_ladder_ir ) {
-      flag++;
-      Serial.print("Changed, now it is ");
-      Serial.println(ladder_ir);
-    } else if ( flag % 2 == 1 && ladder_ir == init_ladder_ir ) {
-      flag++;
-      Serial.print("Changed, now it is ");
-      Serial.println(ladder_ir);
-    }
-    if ( flag == target_flag ) {
+    if ( flag == 0 && ladder_mid_ir ) {
+      flag = 1;
       run( LEFT, STOP, 0 );
-      PC.print(target_flag);
-      PC.println(F(" changes detected by IR "));
-      break;
-    }
-  }
-}*/
-
-void go_up(int vel) {
-  PC.println("Entered go up");
-  update_force();
-  float last_ladder_force = ladder_force, ladder_forced_flag = 0;
-  while ( run(LEFT, HOME, vel) ) {
-    update_force();
-    PC.println(ladder_force);
-    if ( ladder_force < 900 ) {
-      ladder_forced_flag = 1;
-    }
-    /*last_ladder_force = ladder_force;
-    if ( ladder_force - last_ladder_force > LADDER_FORCE_VALUE ) {
-    */
-    if ( ladder_forced_flag && ladder_force > 1000 ) {
+      QUIT_OR_CONTINUE;
+      Serial.println("Detected HIGH");
+    } else if ( flag == 1 && ! ladder_mid_ir ) {
+      flag = 2;
       run( LEFT, STOP, 0 );
-
-      PC.println(F(" Fixed clamp opened ! "));
+      QUIT_OR_CONTINUE;
+      Serial.println("Detected LOW");
+    } else if ( flag == 2 && ladder_mid_ir ) {
+      Serial.println("Detected NEXT RUNGGGGG");
+      run( LEFT, STOP, 0 );
       break;
     }
   }
@@ -154,15 +132,6 @@ void pp(int c, int v) {
 }
 
 // ----------------------------------------------------------------- TRIP UPDATES
-void update_force() {
-  int loops = 1;
-  long int temp = 0;
-  for ( long int lim = 0; lim < loops; lim++ ) {
-    temp += analogRead(LADDER_FORCE);
-  }
-  ladder_force = (float(temp)) / loops;
-  
-}
 void update(int tr) {
   long int temp = 0, lim = 0;
   bool *val;
@@ -187,8 +156,9 @@ void update(int tr) {
     val = &l_seesaw_ir;  pin = L_SEESAW_IR;   tripped = L_SEESAW_IR_FOUND;   loops = 10000;
   } else if ( tr == R_SEESAW_IR ) {
     val = &r_seesaw_ir;  pin = R_SEESAW_IR;   tripped = R_SEESAW_IR_FOUND;   loops = 10000;
+  } else if ( tr == LADDER_MID_IR ) {
+    val = &ladder_mid_ir;  pin = LADDER_MID_IR;   tripped = LADDER_MID_IR_FOUND;   loops = 50000;
   } 
-
   if ( loops > 0 && pin >= 0 ) {
 
     long int temp = 0;
@@ -274,12 +244,6 @@ bool quit_or_continue() {
   }
 }
 
-void blink() {
-/*  digitalWrite(13, HIGH);
-  delay(200);
-  digitalWrite(13, LOW);
-  delay(200);*/
-}
 /*
   Left Motor
   Right Motor

@@ -20,8 +20,8 @@ int LADDER_TIME(int n) {
 #define POLEWALK_PWM        200
 #define LADDER_PWM          255
 
-//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
-#define QUIT_OR_CONTINUE delay(200);
+#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+//#define QUIT_OR_CONTINUE delay(200);
 
 #define L_MOTOR             A1, 8, 9
 #define L_PISTON_PIN        46
@@ -39,7 +39,7 @@ int LADDER_TIME(int n) {
 #define MID_TRIP            A2
 #define COMM_TRIP           3
 #define LADDER_IR           SCL
-#define LADDER_FORCE        A4
+#define LADDER_MID_IR           A4
 #define COMM_IR             4
 #define MID_IR              45
 #define L_SEESAW_IR         47
@@ -49,7 +49,7 @@ int LADDER_TIME(int n) {
 #define R_SEESAW_IR_FOUND   LOW
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
-#define LADDER_FORCE_VALUE  300
+#define LADDER_MID_IR_FOUND LOW
 #define COMM_IR_FOUND       LOW
 #define MID_IR_FOUND        LOW
 
@@ -80,7 +80,6 @@ byte type = 0, vibrate = 0, ps2_on = 0,
 
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0, l_seesaw_ir = 0, r_seesaw_ir = 0;
-float ladder_force = 0;
 
 void setup() {
   PC.begin(57600);
@@ -104,7 +103,6 @@ void setup() {
 
   pinMode(L_SEESAW_IR, INPUT);
   pinMode(R_SEESAW_IR, INPUT);
-  pinMode(LADDER_FORCE, INPUT);
 
   // run(BOTH, STOP, 0);
   /*  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
@@ -163,8 +161,7 @@ void loop() {
       Serial.print("\tMID_IRval : ");
       Serial.print(mid_ir);
     */
-//  Serial.println(F("\tloop"));
-  Serial.println(analogRead(A4));
+  Serial.println(F("\tloop"));
  
   delay(20);
 

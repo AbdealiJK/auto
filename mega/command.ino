@@ -98,7 +98,7 @@ void pc_ui() {
     update(MID_TRIP);
     update(COMM_TRIP);
     update(LADDER_IR);
-    update_force();
+    update(LADDER_MID_IR);
     update(MID_IR);
     update(COMM_IR);
     PC.println(F(">>> DATA : "));
@@ -114,8 +114,8 @@ void pc_ui() {
     PC.println(r_seesaw_ir);
     PC.print(F("LADDER : \n ladder-ir: \t"));
     PC.println(ladder_ir);
-    PC.print(F(" ladder-force: \t"));
-    PC.println(ladder_force);
+    PC.print(F(" ladder-mid-ir: \t"));
+    PC.println(ladder_mid_ir);
     PC.print(F("POLEWALK : \n mid-ir: \t"));
     PC.println(mid_ir);
     PC.print(F("COMM : \n comm-ir: \t"));

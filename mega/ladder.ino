@@ -33,34 +33,24 @@ void ladder() {
     PC.println(F("next : bot up - left home for ladder rungs"));
     QUIT_OR_CONTINUE;
     update(LADDER_IR);
-    //if ( ladder_ir )  go_up(LADDER_PWM, 2);
-    //else              go_up(LADDER_PWM, 3);
-    go_up(LADDER_PWM);
-
-
     if ( n != 0 ) {
-      long start_time = millis();
-      while ( run( LEFT, HOME, LADDER_PWM ) ) {
-        if ( millis() - start_time > LADDER_TIME(n) ) {
-          run(BOTH, STOP, 0);
-          PC.println(millis() - start_time );
-          PC.println(F(" time delay done "));
-          break;
-        }
-      }
-    } if ( n == 0 ) {
+      go_up(LADDER_PWM);
+    }
+    else if ( n == 0 ) {
+      go_up(LADDER_PWM);
       PC.println(F("next : tail open and going down a little more"));
       QUIT_OR_CONTINUE;
       piston(RIGHT, CLOSE);
       delay(1500);
       start_time = millis();
       while ( run( LEFT, MID, 255 ) ) {
-        if ( millis() - start_time > LADDER_TIME(n) ) {
+        if ( millis() - start_time > 200 ) {
           run(BOTH, STOP, 0);
           PC.println(F(" time delay done "));
           break;
         }
       }
+      delay(1500);
     }
 
     PC.println(F("next : unclamp rung"));
@@ -85,8 +75,32 @@ void ladder() {
 
   PC.println(F("next : go up, open and close tail to tip off"));
   QUIT_OR_CONTINUE;
-  //go_up(255, 3);
-  go_up(LADDER_PWM);
+  update(LADDER_IR);
+  int flag = 0, target_flag = 1, init_ladder_ir = ladder_ir;
+  Serial.println("Entered go up");
+
+
+  Serial.print("INITIAL, now it is ");
+  Serial.println(ladder_ir);
+  while ( run(LEFT, HOME, LADDER_PWM) ) {
+    update(LADDER_IR);
+
+    if ( flag % 2 == 0 && ladder_ir != init_ladder_ir ) {
+      flag++;
+      Serial.print("Changed, now it is ");
+      Serial.println(ladder_ir);
+    } else if ( flag % 2 == 1 && ladder_ir == init_ladder_ir ) {
+      flag++;
+      Serial.print("Changed, now it is ");
+      Serial.println(ladder_ir);
+    }
+    if ( flag == target_flag ) {
+      run( LEFT, STOP, 0 );
+      PC.print(target_flag);
+      PC.println(F(" changes detected by IR "));
+      break;
+    }
+  }
   piston(RIGHT, CLOSE);
   delay(500);
   
