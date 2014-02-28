@@ -100,17 +100,17 @@ void go_up(int vel) {
 
     if ( flag == 0 && ladder_mid_ir ) {
       flag = 1;
-      run( LEFT, STOP, 0 );
-      QUIT_OR_CONTINUE;
+      run( LEFT, STOP, 255 );
+      delay(20);//QUIT_OR_CONTINUE;
       Serial.println("Detected HIGH");
     } else if ( flag == 1 && ! ladder_mid_ir ) {
       flag = 2;
-      run( LEFT, STOP, 0 );
-      QUIT_OR_CONTINUE;
+      run( LEFT, STOP, 255 );
+      delay(20);//QUIT_OR_CONTINUE;
       Serial.println("Detected LOW");
     } else if ( flag == 2 && ladder_mid_ir ) {
       Serial.println("Detected NEXT RUNGGGGG");
-      run( LEFT, STOP, 0 );
+      run( LEFT, STOP, 255 );
       break;
     }
   }
@@ -157,7 +157,7 @@ void update(int tr) {
   } else if ( tr == R_SEESAW_IR ) {
     val = &r_seesaw_ir;  pin = R_SEESAW_IR;   tripped = R_SEESAW_IR_FOUND;   loops = 10000;
   } else if ( tr == LADDER_MID_IR ) {
-    val = &ladder_mid_ir;  pin = LADDER_MID_IR;   tripped = LADDER_MID_IR_FOUND;   loops = 50000;
+    val = &ladder_mid_ir;  pin = LADDER_MID_IR;   tripped = LADDER_MID_IR_FOUND;   loops = 5000;
   } 
   if ( loops > 0 && pin >= 0 ) {
 

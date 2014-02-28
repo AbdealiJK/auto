@@ -27,29 +27,31 @@ void ladder() {
     PC.print(n);
     PC.println(" start<<<<<");
     PC.println(F("next : clamp ladder"));
-    QUIT_OR_CONTINUE;
+    delay(20);//QUIT_OR_CONTINUE;
     piston(LEFT, CLOSE);
 
     PC.println(F("next : bot up - left home for ladder rungs"));
-    QUIT_OR_CONTINUE;
+    delay(20);//QUIT_OR_CONTINUE;
     update(LADDER_IR);
     if ( n != 0 ) {
       go_up(LADDER_PWM);
     }
     else if ( n == 0 ) {
-      go_up(LADDER_PWM);
+      
+      update(LADDER_IR);
+             while ( run( LEFT, HOME, 250 ) && ladder_ir ) {
+         update(LADDER_IR);}
+          update(LADDER_IR);
+       while ( run( LEFT, HOME, 250 ) && !ladder_ir ) {
+         update(LADDER_IR);}
+      run( LEFT, STOP, 0 );
+      
       PC.println(F("next : tail open and going down a little more"));
       QUIT_OR_CONTINUE;
       piston(RIGHT, CLOSE);
       delay(1500);
       start_time = millis();
-      while ( run( LEFT, MID, 255 ) ) {
-        if ( millis() - start_time > 200 ) {
-          run(BOTH, STOP, 0);
-          PC.println(F(" time delay done "));
-          break;
-        }
-      }
+     
       delay(1500);
     }
 
@@ -111,7 +113,11 @@ void ladder() {
     if ( close_tail_flag == 0 && millis() - start_time > 500 ) {
       PC.println(F("Time delay done - Switching off tail piston"));
       piston(RIGHT, OPEN);
-      close_tail_flag = 1;
+      close_tail_flag = 1; 
+    }
+    if ( millis() - start_time > 2000 ) {
+      run(LEFT, STOP, 0);
+      break;
     }
   }
 

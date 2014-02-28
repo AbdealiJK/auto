@@ -20,8 +20,8 @@ int LADDER_TIME(int n) {
 #define POLEWALK_PWM        200
 #define LADDER_PWM          255
 
-#define QUIT_OR_CONTINUE if(quit_or_continue()) return
-//#define QUIT_OR_CONTINUE delay(200);
+//#define QUIT_OR_CONTINUE if(quit_or_continue()) return
+#define QUIT_OR_CONTINUE delay(200);
 
 #define L_MOTOR             A1, 8, 9
 #define L_PISTON_PIN        46
@@ -78,8 +78,8 @@ byte type = 0, vibrate = 0, ps2_on = 0,
      l_piston_state = 0, r_piston_state = 0,
      l_pp_state = 0, r_pp_state = 0;
 
-bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
-     ladder_ir = 0, comm_ir = 0, mid_ir = 0, l_seesaw_ir = 0, r_seesaw_ir = 0;
+bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0, ladder_ir = 0,
+     ladder_mid_ir = 0, comm_ir = 0, mid_ir = 0, l_seesaw_ir = 0, r_seesaw_ir = 0;
 
 void setup() {
   PC.begin(57600);
