@@ -33,8 +33,9 @@ void ladder() {
     PC.println(F("next : bot up - left home for ladder rungs"));
     QUIT_OR_CONTINUE;
     update(LADDER_IR);
-    if ( ladder_ir )  go_up(LADDER_PWM, 2);
-    else              go_up(LADDER_PWM, 3);
+    //if ( ladder_ir )  go_up(LADDER_PWM, 2);
+    //else              go_up(LADDER_PWM, 3);
+    go_up(LADDER_PWM);
 
 
     if ( n != 0 ) {
@@ -84,7 +85,8 @@ void ladder() {
 
   PC.println(F("next : go up, open and close tail to tip off"));
   QUIT_OR_CONTINUE;
-  go_up(255, 3);
+  //go_up(255, 3);
+  go_up(LADDER_PWM);
   piston(RIGHT, CLOSE);
   delay(500);
   

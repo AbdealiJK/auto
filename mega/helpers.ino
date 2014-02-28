@@ -86,7 +86,7 @@ void go_away(int c, int vel) {
   }
 }
 
-void go_up(int vel, int no) {
+/*void go_up(int vel, int no) {
   update(LADDER_IR);
   int flag = 0, target_flag = no, init_ladder_ir = ladder_ir;
   Serial.println("Entered go up");
@@ -113,6 +113,21 @@ void go_up(int vel, int no) {
       break;
     }
   }
+}*/
+
+void go_up(int vel) {
+  PC.println("Entered go up");
+  update_force();
+  float last_ladder_force = ladder_force;
+  while ( run(LEFT, HOME, vel) ) {
+    update_force();
+    last_ladder_force = ladder_force;
+    if ( ladder_force - last_ladder_force > LADDER_FORCE_VALUE ) {
+      run( LEFT, STOP, 0 );
+      PC.println(F(" Fixed clamp opened ! "));
+      break;
+    }
+  }
 }
 
 // ----------------------------------------------------------------- SOLENOID
@@ -131,6 +146,15 @@ void pp(int c, int v) {
 }
 
 // ----------------------------------------------------------------- TRIP UPDATES
+void update_force() {
+  int loops = 1000;
+  long int temp = 0;
+  for ( long int lim = 0; lim < loops; lim++ ) {
+    temp += analogRead(LADDER_FORCE);
+  }
+  ladder_force = (float(temp)) / loops;
+  
+}
 void update(int tr) {
   long int temp = 0, lim = 0;
   bool *val;
@@ -152,10 +176,10 @@ void update(int tr) {
   } else if ( tr == MID_IR ) {
     val = &mid_ir;  pin = MID_IR;   tripped = MID_IR_FOUND;   loops = 10000;
   } else if ( tr == L_SEESAW_IR ) {
-    val = &l_seesaw_ir;  pin = L_SEESAW_IR;   tripped = L_SEESAW_IR_FOUND;   loops = 1000;
+    val = &l_seesaw_ir;  pin = L_SEESAW_IR;   tripped = L_SEESAW_IR_FOUND;   loops = 10000;
   } else if ( tr == R_SEESAW_IR ) {
-    val = &r_seesaw_ir;  pin = R_SEESAW_IR;   tripped = R_SEESAW_IR_FOUND;   loops = 1000;
-  }
+    val = &r_seesaw_ir;  pin = R_SEESAW_IR;   tripped = R_SEESAW_IR_FOUND;   loops = 10000;
+  } 
 
   if ( loops > 0 && pin >= 0 ) {
 
@@ -180,7 +204,7 @@ void update(int tr) {
         *val = 1;
       }
     }
-
+    
   }
 
 }

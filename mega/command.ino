@@ -93,33 +93,43 @@ void pc_ui() {
     // Display initial values :
     update(L_HOME_TRIP);
     update(R_HOME_TRIP);
+    update(L_SEESAW_IR);
+    update(R_SEESAW_IR);
     update(MID_TRIP);
     update(COMM_TRIP);
     update(LADDER_IR);
+    update(LADDER_FORCE);
     update(MID_IR);
     update(COMM_IR);
     PC.println(F(">>> DATA : "));
-    PC.print(F(" LEFT home-trip:"));
+    PC.print(F("TRIPS : \n LEFT home-trip: \t"));
     PC.println(l_home_trip);
-    PC.print(F(" RIGHT home-trip:"));
+    PC.print(F(" RIGHT home-trip: \t"));
     PC.println(r_home_trip);
-    PC.print(F(" mid-trip:"));
+    PC.print(F(" mid-trip: \t"));
     PC.println(mid_trip);
-    PC.print(F(" comm-trip:"));
-    PC.println(comm_trip);
-    PC.print(F(" ladder-ir:"));
+    PC.print(F("SEESAW : \n LEFT seesaw-ir: \t"));
+    PC.println(l_seesaw_ir);
+    PC.print(F(" RIGHT seesaw-ir: \t"));
+    PC.println(r_seesaw_ir);
+    PC.print(F("LADDER : \n ladder-ir: \t"));
     PC.println(ladder_ir);
-    PC.print(F(" mid-ir:"));
+    PC.print(F(" ladder-force: \t"));
+    PC.println(ladder_force);
+    PC.print(F("POLEWALK : \n mid-ir: \t"));
     PC.println(mid_ir);
-    PC.print(F(" comm-ir:"));
+    PC.print(F("COMM : \n comm-ir: \t"));
     PC.println(comm_ir);
-    delay(1000);
-    PC.println(F(" >> begun"));
+    PC.print(F(" comm-trip: \t"));
+    PC.println(comm_trip);
+    PC.println(F(" Press a key to continue ...."));
+    while(!PC.available());
   } else if ( c == 'm') {
     PC.read();
     go_mid(BOTH, 255);
   } else if ( c == '4' ) {
     PC.read();
+    
     delay(1);
     if ( PC.available() ) {
       char c2 = PC.read();

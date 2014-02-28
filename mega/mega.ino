@@ -19,7 +19,7 @@ int LADDER_TIME(int n) {
 #define SWING_PWM           200
 #define POLEWALK_PWM        200
 #define LADDER_PWM          255
-#define LAD_THRESHOLD       150.0
+
 //#define QUIT_OR_CONTINUE if(quit_or_continue()) return
 #define QUIT_OR_CONTINUE delay(200);
 
@@ -37,19 +37,19 @@ int LADDER_TIME(int n) {
 #define R_PP_PIN            30
 
 #define MID_TRIP            A2
-#define L_SEESAW_IR         A2
-#define R_SEESAW_IR         A2
 #define COMM_TRIP           3
-#define LADDER_IR           A4
+#define LADDER_IR           SCL
 #define LADDER_FORCE        A4
 #define COMM_IR             4
-#define MID_IR              SCL
+#define MID_IR              45
+#define L_SEESAW_IR         47
+#define R_SEESAW_IR         43
 #define MID_TRIPPED         HIGH
 #define L_SEESAW_IR_FOUND   LOW
 #define R_SEESAW_IR_FOUND   LOW
 #define COMM_TRIPPED        HIGH
 #define LADDER_IR_FOUND     LOW
-#define LADDER_FORCE_VALUE  30
+#define LADDER_FORCE_VALUE  300
 #define COMM_IR_FOUND       LOW
 #define MID_IR_FOUND        LOW
 
@@ -78,6 +78,7 @@ byte type = 0, vibrate = 0, ps2_on = 0,
 
 bool l_home_trip = 0, r_home_trip = 0, mid_trip = 0, comm_trip = 0,
      ladder_ir = 0, comm_ir = 0, mid_ir = 0, l_seesaw_ir = 0, r_seesaw_ir = 0;
+float ladder_force = 0;
 
 void setup() {
   PC.begin(57600);
@@ -100,6 +101,10 @@ void setup() {
   pinMode(COMM_TRIP, INPUT);
   pinMode(COMM_IR, INPUT);
   pinMode(MID_IR, INPUT);
+
+  pinMode(L_SEESAW_IR, INPUT);
+  pinMode(R_SEESAW_IR, INPUT);
+  pinMode(LADDER_FORCE, INPUT);
 
   // run(BOTH, STOP, 0);
   /*  attachInterrupt(L_HOME_TRIP_INT, l_home_trip_isr, HIGH);
