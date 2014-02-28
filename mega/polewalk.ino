@@ -10,14 +10,8 @@ void polewalk_init() {
   go_mid(BOTH, POLEWALK_PWM);
 
   PC.println(F("both pp"));
-  if ( MIRROR ) {
-    pp(RIGHT, EXTEND);
-    pp(LEFT, SHRINK);
-  }
-  else {
-    pp(LEFT, EXTEND);
-    pp(RIGHT, SHRINK);
-  }
+  pp(SIDES, EXTEND);
+  pp(MID, SHRINK);
   PC.println(F("POLEWALK init done"));
 }
 
@@ -25,14 +19,8 @@ void polewalk_geton() {
   PC.println(F("POLEWALK geton"));
 
   PC.println(F("both pp"));
-  if ( MIRROR ) {
-    pp(RIGHT, EXTEND);
-    pp(LEFT, SHRINK);
-  }
-  else {
-    pp(LEFT, EXTEND);
-    pp(RIGHT, SHRINK);
-  }
+  pp(SIDES, EXTEND);
+  pp(MID, SHRINK);
 
   // Clamp
   PC.println(F("next : both clamp ... waiting on comm trip"));
@@ -44,7 +32,7 @@ void polewalk_geton() {
   PC.println(F("somebody threw me"));
 
   delay(255);
-  pp(BOTH, SHRINK);
+  pp(SIDES, SHRINK);
   PC.println(F("POLEWALK goton"));
 }
 
@@ -82,15 +70,9 @@ void polewalk() {
   go_mid(BOTH, POLEWALK_PWM); // moves both to home, then moves left to mid and then right
   piston(RIGHT, CLOSE);
   piston(LEFT, CLOSE);
-  if ( MIRROR ) {
-    pp(RIGHT, SHRINK);
-    pp(LEFT, EXTEND);
-  }
-  else {
-    pp(LEFT, SHRINK);
-    pp(RIGHT, EXTEND);
-  }
 
+  pp(SIDES, EXTEND);
+  
   PC.println(F("POLEWALK task done"));
 }
 
@@ -106,7 +88,7 @@ void polewalk_getoff() {
   // delay(1000);
   piston(BOTH, OPEN);
   delay(250);
-  pp(BOTH, SHRINK);
+  pp(SIDES, SHRINK);
 
   PC.println(F("POLEWALK gotoff"));
 }

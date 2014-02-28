@@ -139,9 +139,9 @@ void piston(int c, int v) {
 }
 
 void pp(int c, int v) {
-  if ( c == LEFT || c == BOTH || c == MID )
+  if ( c == LEFT || c == SIDES || c == BOTH )
     digitalWrite(L_PP_PIN, v == EXTEND);
-  if ( c == RIGHT || c == BOTH )
+  if ( c == RIGHT || c == MID || c == BOTH )
     digitalWrite(R_PP_PIN, v == EXTEND);
 }
 

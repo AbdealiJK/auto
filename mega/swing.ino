@@ -31,7 +31,7 @@ void swing_geton() {
 }
 void swing() {
   PC.println(F("SWING task"));
-  //pp(MID, EXTEND);
+  pp(MID, EXTEND);
   PC.println(F("SWING task done"));
 }
 void swing_getoff() {

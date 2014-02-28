@@ -62,6 +62,8 @@ int LADDER_TIME(int n) {
 #define BOTH        'b'
 #define QUIT        'q'
 
+#define SIDES       's'
+
 #define CLOSE       1
 #define OPEN        0
 
